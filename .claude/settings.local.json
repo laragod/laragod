@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -r:*)",
+      "Bash(php artisan test:*)",
+      "Bash(where:*)",
+      "Bash(C:Usersfilip.configherdbinphp.bat artisan test)",
+      "Bash(\"C:\\\\Users\\\\filip\\\\.config\\\\herd\\\\bin\\\\php.bat\" artisan test)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(php:*)"
+    ]
+  }
+}

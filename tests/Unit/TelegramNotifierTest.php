@@ -1,0 +1,66 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Services\TelegramNotifier;
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
+
+class TelegramNotifierTest extends TestCase
+{
+    public function test_sends_message_successfully(): void
+    {
+        Http::fake([
+            'api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
+
+        $notifier = new TelegramNotifier('test-token', '123456');
+        $result = $notifier->send('John Doe', 'john@example.com', 'Test message');
+
+        $this->assertTrue($result);
+
+        Http::assertSent(function ($request) {
+            return $request->url() === 'https://api.telegram.org/bottest-token/sendMessage'
+                && $request['chat_id'] === '123456'
+                && str_contains($request['text'], 'John Doe')
+                && str_contains($request['text'], 'john@example.com')
+                && str_contains($request['text'], 'Test message');
+        });
+    }
+
+    public function test_fails_when_credentials_missing(): void
+    {
+        $notifier = new TelegramNotifier(null, null);
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertFalse($result);
+        $this->assertFalse($notifier->isConfigured());
+    }
+
+    public function test_handles_api_errors(): void
+    {
+        Http::fake([
+            'api.telegram.org/*' => Http::response(['ok' => false], 400),
+        ]);
+
+        $notifier = new TelegramNotifier('test-token', '123456');
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertFalse($result);
+    }
+
+    public function test_escapes_html_in_messages(): void
+    {
+        Http::fake([
+            'api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
+
+        $notifier = new TelegramNotifier('test-token', '123456');
+        $notifier->send('<script>alert("xss")</script>', 'test@example.com', '<b>Bold</b>');
+
+        Http::assertSent(function ($request) {
+            return !str_contains($request['text'], '<script>')
+                && str_contains($request['text'], '&lt;script&gt;');
+        });
+    }
+}
