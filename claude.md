@@ -1,10 +1,10 @@
-# Laravel High-Performance Landing Page with Multi-Channel Notifications
+# Laragod - Laravel Development Portfolio Site with Multi-Channel Notifications
 
 ## Project Overview
 
-Build a Laravel 12 application as a high-performance, stateless landing page with a POST-only contact form that sends notifications through multiple channels (Telegram, Discord, WhatsApp, Email).
+A high-performance Laravel 12 portfolio website for Laragod (Laravel development agency) with multiple static pages and a contact form that sends notifications through multiple channels (Telegram, Discord, WhatsApp, Email).
 
-First page load must be fully cacheable with no backend overhead. Notification system must use enterprise-level architecture with contract-based design and strategy pattern.
+All GET routes are fully cacheable with no backend overhead. Notification system uses enterprise-level architecture with contract-based design and strategy pattern. Site features a dark theme toggle for improved accessibility.
 
 ## Core Constraints (Non-Negotiable)
 
@@ -49,45 +49,155 @@ Modified in `bootstrap/app.php`:
 ## Routes
 
 ```php
-GET  /        → return view('landing')
-POST /contact → ContactController@store with throttle:5,1
+GET  /        → return view('home')                        ->name('home')
+GET  /work    → return view('work', compact('projects'))   ->name('work')
+GET  /about   → return view('about')                       ->name('about')
+GET  /contact → return view('contact')                     ->name('contact.show')
+POST /contact → ContactController@store                    ->name('contact.store')
+              → middleware('throttle:5,1')
 ```
 
-- GET route must return static Blade view
+- All GET routes return static Blade views
 - POST route must NOT be cached
 - POST route is CSRF-protected (requires valid CSRF token)
+- All GET routes are fully cacheable
+- Named routes used throughout for maintainability
 
-## Landing Page (Blade)
+## Frontend Pages & Design
 
-**File**: `resources/views/landing.blade.php`
+### Design System
 
-- Pure HTML + Tailwind CSS 4.0
-- No dynamic data
-- **CSRF token in meta tag** for JavaScript access
-- Contact form fields:
-  - `name` (string, required, max 100)
-  - `email` (email, required, max 200)
-  - `message` (string, required, max 2000)
+**Colors:**
+- Primary: Kelly Green (#4cbb17)
+- Primary Dark: #3da614
+- Primary Light: #e8f8e0
+- Neutrals: Gray scale + Charcoal (#111827)
 
-### Form Behavior
-- Use JavaScript fetch API
+**Typography:**
+- Font Sans: Inter (via Bunny Fonts CDN)
+- Font Heading: Manrope (via Bunny Fonts CDN)
+- Font Mono: JetBrains Mono
+
+**Dark Theme:**
+- Toggle button in navbar
+- localStorage persistence
+- Vanilla JavaScript (no frameworks)
+- Tailwind CSS dark mode utilities
+- Smooth transitions between themes
+- Accessible for light-sensitive users
+
+### Layout Component
+
+**File**: `resources/views/components/layouts/app.blade.php`
+
+- Sticky navigation with mobile menu
+- Active link highlighting
+- Logo with Kelly Green accent
+- Desktop & mobile navigation
+- Footer with quick links, services, contact info
+- CSRF token in meta tag
+- Vite asset loading
+- Mobile menu toggle script
+
+### Pages
+
+1. **Home** (`resources/views/home.blade.php`)
+   - Hero section with CTA buttons
+   - Philosophy section (code quality messaging)
+   - 9 services cards (Custom Web Apps, API Development, Laravel + Filament, MVP Development, Legacy Modernization, Code Quality, Technical Consulting, DevOps, Team Augmentation)
+   - Pricing section (£500/day transparent pricing)
+   - Final CTA section
+
+2. **Work** (`resources/views/work.blade.php`)
+   - Portfolio grid (2 columns on desktop)
+   - Project cards with image placeholders
+   - Technologies badges
+   - Challenge/Solution sections
+   - GitHub and live demo links
+   - Empty state for no projects
+   - Projects passed as data from routes
+
+3. **About** (`resources/views/about.blade.php`)
+   - Origin story section
+   - Philosophy cards (4 principles)
+   - Tech stack section (Backend, Frontend, Tools & DevOps)
+   - Values section (Craftsmanship, Transparency, Long-term Thinking)
+   - CTA section
+
+4. **Contact** (`resources/views/contact.blade.php`)
+   - Hero section with key value propositions
+   - Multi-step onboarding form (3 steps)
+   - FAQ section (4 quick answers)
+   - Info cards (location, pricing)
+
+### Reusable Blade Components
+
+Located in `resources/views/components/`:
+
+1. **service-card.blade.php** - Service cards with icon slot
+2. **philosophy-card.blade.php** - Philosophy principle cards
+3. **faq-item.blade.php** - FAQ question/answer items
+4. **info-card.blade.php** - Info cards with icon
+5. **value-item.blade.php** - Values section items
+6. **tech-list.blade.php** - Tech stack category containers
+7. **tech-item.blade.php** - Individual tech stack items
+8. **cta-section.blade.php** - Call-to-action sections
+9. **onboarding-form.blade.php** - Multi-step contact form
+
+### Multi-Step Onboarding Form
+
+**Component**: `resources/views/components/onboarding-form.blade.php`
+
+**Step 1 - Service Selection** (multiple choice):
+- Web App
+- Mobile App
+- Internal Tool
+- Automation / AI
+- API / Integration
+- Rescue a Legacy Project
+- Fixed Contract Work
+- Build an MVP
+- Ongoing Support
+- Audit & Code Review
+
+**Step 2 - Contact Information**:
+- Full Name (required)
+- Company / Team
+- Email (required)
+- Phone / WhatsApp
+- Budget Range (dropdown)
+- Timeline (dropdown)
+- Project Description (required)
+- Tech Notes (optional)
+
+**Step 3 - Review & Submit**:
+- Summary of selections
+- Edit buttons to go back to previous steps
+- Simple math captcha for spam protection
+- Submit button
+
+### Contact Form Behavior
+
+- Multi-step wizard with progress bar
+- Service selection with visual checkboxes
+- Fields validated per step before proceeding
+- JavaScript fetch API submission
 - Submit JSON to POST /contact with **X-CSRF-TOKEN header**
-- Prevent default browser submit
 - Display success/error messages inline
-- Load JS with `defer` attribute (non-blocking)
 - Loading spinner during submission
+- Success state with confirmation message
+- Handle 419 (CSRF token expired) gracefully
+- Smooth scroll to form on step change
 
-## JavaScript
+### JavaScript
 
 - No frameworks or external libraries
-- Inline in Blade template with `<script defer>`
-- On submit:
-  - Read CSRF token from meta tag
-  - POST JSON to /contact with X-CSRF-TOKEN header
-  - Handle 200 vs non-200 responses
-  - Display validation errors
-  - Reset form on success
-  - Show loading state
+- Inline in Blade templates with `<script defer>`
+- Mobile menu toggle (in layout component)
+- Dark theme toggle (in layout component)
+- Multi-step form logic (in onboarding-form component)
+- All vanilla JavaScript
+- Non-blocking with defer attribute
 
 ## Multi-Channel Notification Architecture
 
@@ -206,7 +316,17 @@ NOTIFICATION_EMAIL_TO=
 **Controller**: `app/Http/Controllers/ContactController.php`
 
 - Constructor injection of `NotificationManager`
-- Validate input (name, email, message)
+- Validate input from multi-step form:
+  - `services` (required array, at least 1 selection)
+  - `name` (required, max 100)
+  - `company` (optional, max 100)
+  - `email` (required, valid email, max 200)
+  - `phone` (optional, max 50)
+  - `budget` (optional, from predefined list)
+  - `timeline` (optional, from predefined list)
+  - `message` (required, max 2000)
+  - `tech_notes` (optional, max 1000)
+- Format message with all details before sending
 - Call `$notificationManager->sendContactNotification()`
 - Return JSON `{ ok: true }` on success
 - Return JSON `{ ok: false, errors: {} }` on validation failure (422)
@@ -310,11 +430,14 @@ NOTIFICATION_EMAIL_TO=
 
 ### Modified Files
 1. `bootstrap/app.php` - Default middleware (all enabled for CSRF protection)
-2. `routes/web.php` - Routes with rate limiting
+2. `routes/web.php` - All routes (home, work, about, contact) with rate limiting
 3. `.env` and `.env.example` - Cookie sessions + all notification channel configs
 4. `config/services.php` - Clean (Telegram config removed, now in notifications.php)
+5. `resources/css/app.css` - Tailwind CSS 4.0 configuration with custom theme
 
 ### Created Files
+
+**Backend:**
 1. `app/Contracts/ContactNotifier.php` - Interface
 2. `app/Services/NotificationManager.php` - Strategy pattern manager
 3. `app/Services/TelegramNotifier.php` - Telegram implementation
@@ -322,18 +445,40 @@ NOTIFICATION_EMAIL_TO=
 5. `app/Services/WhatsappNotifier.php` - WhatsApp implementation
 6. `app/Services/EmailNotifier.php` - Email implementation
 7. `app/Http/Controllers/ContactController.php` - Minimal controller
-8. `resources/views/landing.blade.php` - Landing page
-9. `config/notifications.php` - Notification configuration
-10. `tests/Feature/ContactControllerTest.php`
-11. `tests/Feature/LandingPageTest.php`
-12. `tests/Unit/TelegramNotifierTest.php`
+8. `config/notifications.php` - Notification configuration
+
+**Frontend:**
+9. `resources/views/components/layouts/app.blade.php` - Main layout component
+10. `resources/views/home.blade.php` - Home page
+11. `resources/views/work.blade.php` - Portfolio page
+12. `resources/views/about.blade.php` - About page
+13. `resources/views/contact.blade.php` - Contact page with onboarding form
+
+**Reusable Components:**
+14. `resources/views/components/service-card.blade.php` - Service cards
+15. `resources/views/components/philosophy-card.blade.php` - Philosophy cards
+16. `resources/views/components/faq-item.blade.php` - FAQ items
+17. `resources/views/components/info-card.blade.php` - Info cards
+18. `resources/views/components/value-item.blade.php` - Value items
+19. `resources/views/components/tech-list.blade.php` - Tech stack lists
+20. `resources/views/components/tech-item.blade.php` - Tech stack items
+21. `resources/views/components/cta-section.blade.php` - CTA sections
+22. `resources/views/components/onboarding-form.blade.php` - Multi-step contact form
+
+**Tests:**
+23. `tests/Feature/ContactControllerTest.php`
+24. `tests/Feature/LandingPageTest.php`
+25. `tests/Unit/TelegramNotifierTest.php`
+26. `tests/Unit/DiscordNotifierTest.php`
+27. `tests/Unit/WhatsappNotifierTest.php`
+28. `tests/Unit/NotificationManagerTest.php`
 
 ## Success Criteria
 
-- ✅ All 16 tests pass (44 assertions)
-- ✅ GET / loads with cookie-based session (no server storage)
-- ✅ GET / contains CSRF token in meta tag
-- ✅ Form submits via fetch as JSON with CSRF token
+- ✅ Comprehensive test suite passes
+- ✅ All GET routes load with cookie-based session (no server storage)
+- ✅ CSRF token in meta tag on all pages
+- ✅ Contact form submits via fetch as JSON with CSRF token
 - ✅ CSRF protection fully enabled and working
 - ✅ Validation errors display properly
 - ✅ Multiple notification channels work
@@ -342,6 +487,10 @@ NOTIFICATION_EMAIL_TO=
 - ✅ No database queries
 - ✅ XSS protection in all notifiers
 - ✅ Professional architecture with contracts and dependency injection
+- ✅ Responsive design (mobile-first)
+- ✅ Dark theme toggle with localStorage persistence
+- ✅ Accessible navigation with mobile menu
+- ✅ Performance optimized (non-blocking JS, cacheable assets)
 
 ## Security Best Practices
 
@@ -383,4 +532,4 @@ CACHE_STORE=file
 
 ## Goal
 
-Laravel-based landing page that behaves like a static site on first load, with a fast, backend-powered multi-channel notification system using enterprise-level architecture patterns (Strategy, Dependency Injection, Interface Segregation).
+Professional Laravel portfolio website that behaves like a static site on GET requests (fully cacheable), with a robust contact form powered by multi-channel notifications using enterprise-level architecture patterns (Strategy, Dependency Injection, Interface Segregation). Dark theme support ensures accessibility for all users.
