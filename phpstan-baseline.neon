@@ -1,0 +1,193 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Offset ''email'' does not exist on array\{services\: array\<string, string\>, budget\: string, company\: string, timeline\: string, phone\: string, message\: string, tech_notes\: string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Http/Controllers/ContactController.php
+
+		-
+			message: '#^Offset ''name'' does not exist on array\{services\: array\<string, string\>, budget\: string, company\: string, timeline\: string, phone\: string, message\: string, tech_notes\: string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Http/Controllers/ContactController.php
+
+		-
+			message: '#^Class App\\Models\\User uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: app/Providers/NotificationServiceProvider.php
+
+		-
+			message: '#^Method App\\Providers\\NotificationServiceProvider\:\:resolveConfiguredNotifiers\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Providers/NotificationServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$channel of method App\\Providers\\NotificationServiceProvider\:\:resolveNotifier\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/NotificationServiceProvider.php
+
+		-
+			message: '#^Method App\\Services\\DiscordNotifier\:\:buildPayload\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/DiscordNotifier.php
+
+		-
+			message: '#^Method App\\Services\\DiscordNotifier\:\:getWebhookUrl\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/DiscordNotifier.php
+
+		-
+			message: '#^Parameter \#1 \$url of method Illuminate\\Http\\Client\\PendingRequest\<false\>\:\:post\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/DiscordNotifier.php
+
+		-
+			message: '#^Method App\\Services\\EmailNotifier\:\:getTo\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/EmailNotifier.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Method App\\Services\\NotificationManager\:\:__construct\(\) has parameter \$injectedNotifiers with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Method App\\Services\\NotificationManager\:\:getEnabledChannels\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Method App\\Services\\NotificationManager\:\:getNotifiers\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Method App\\Services\\NotificationManager\:\:resolveNotifiers\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Method App\\Services\\NotificationManager\:\:sendToChannel\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:filter\(\) expects \(callable\(mixed, int\|string\)\: bool\)\|null, Closure\(App\\Contracts\\ContactNotifier\)\: bool given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:map\(\) expects callable\(mixed, int\|string\)\: string, Closure\(App\\Contracts\\ContactNotifier\)\: string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Parameter \#1 \$channel of method App\\Services\\NotificationManager\:\:resolveNotifier\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Parameter \#1 \$notifier of method App\\Services\\NotificationManager\:\:sendToChannel\(\) expects App\\Contracts\\ContactNotifier, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Property App\\Services\\NotificationManager\:\:\$notifiers with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/NotificationManager.php
+
+		-
+			message: '#^Method App\\Services\\StorageNotifier\:\:getDisk\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/StorageNotifier.php
+
+		-
+			message: '#^Method App\\Services\\StorageNotifier\:\:getPath\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/StorageNotifier.php
+
+		-
+			message: '#^Method App\\Services\\StorageNotifier\:\:sanitize\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/StorageNotifier.php
+
+		-
+			message: '#^Method App\\Services\\TelegramNotifier\:\:getChatId\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/TelegramNotifier.php
+
+		-
+			message: '#^Method App\\Services\\TelegramNotifier\:\:getToken\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/TelegramNotifier.php
+
+		-
+			message: '#^Method App\\Services\\WhatsappNotifier\:\:getApiToken\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/WhatsappNotifier.php
+
+		-
+			message: '#^Method App\\Services\\WhatsappNotifier\:\:getApiUrl\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/WhatsappNotifier.php
+
+		-
+			message: '#^Method App\\Services\\WhatsappNotifier\:\:getFrom\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/WhatsappNotifier.php
+
+		-
+			message: '#^Method App\\Services\\WhatsappNotifier\:\:getTo\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/WhatsappNotifier.php
+
+		-
+			message: '#^Parameter \#1 \$token of method Illuminate\\Http\\Client\\PendingRequest\<false\>\:\:withToken\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/WhatsappNotifier.php
+
+		-
+			message: '#^Parameter \#1 \$url of method Illuminate\\Http\\Client\\PendingRequest\<false\>\:\:post\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/WhatsappNotifier.php

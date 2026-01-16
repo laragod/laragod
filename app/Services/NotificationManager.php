@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class NotificationManager
 {
-    private Collection $notifiers;
+    private readonly Collection $notifiers;
 
     public function __construct(
-        private readonly Collection $injectedNotifiers = new Collection(),
+        private readonly Collection $injectedNotifiers = new Collection,
     ) {
         $this->notifiers = $this->injectedNotifiers->isNotEmpty()
             ? $this->injectedNotifiers
@@ -26,8 +26,9 @@ class NotificationManager
      */
     public function sendContactNotification(string $name, string $email, string $message): bool
     {
-        $configuredNotifiers = $this->notifiers
-            ->filter(fn (ContactNotifier $notifier) => $notifier->isConfigured());
+        $configuredNotifiers = $this->notifiers->filter(
+            fn (ContactNotifier $notifier): bool => $notifier->isConfigured(),
+        );
 
         if ($configuredNotifiers->isEmpty()) {
             Log::warning('No notification channels are configured');
@@ -86,12 +87,12 @@ class NotificationManager
                 'channel' => $channel,
                 'success' => $success,
             ];
-        } catch (\Throwable $e) {
+        } catch (\Throwable $throwable) {
             // Only log if channel is configured (which it is, since we filtered earlier)
             Log::error('Notification channel threw exception', [
                 'channel' => $channel,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'error' => $throwable->getMessage(),
+                'trace' => $throwable->getTraceAsString(),
             ]);
 
             return [
@@ -115,10 +116,10 @@ class NotificationManager
     public function getEnabledChannels(): array
     {
         return $this->notifiers
-            ->filter(fn (ContactNotifier $notifier) => $notifier->isConfigured())
-            ->map(fn (ContactNotifier $notifier) => $notifier->getChannel())
+            ->filter(fn (ContactNotifier $notifier): bool => $notifier->isConfigured())
+            ->map(fn (ContactNotifier $notifier): string => $notifier->getChannel())
             ->values()
-            ->toArray();
+            ->all();
     }
 
     /**
@@ -146,11 +147,11 @@ class NotificationManager
     private function resolveNotifier(string $channel): ?ContactNotifier
     {
         return match ($channel) {
-            'telegram' => app(TelegramNotifier::class),
-            'discord' => app(DiscordNotifier::class),
-            'whatsapp' => app(WhatsappNotifier::class),
-            'email' => app(EmailNotifier::class),
-            'storage' => app(StorageNotifier::class),
+            'telegram' => resolve(TelegramNotifier::class),
+            'discord' => resolve(DiscordNotifier::class),
+            'whatsapp' => resolve(WhatsappNotifier::class),
+            'email' => resolve(EmailNotifier::class),
+            'storage' => resolve(StorageNotifier::class),
             default => null,
         };
     }

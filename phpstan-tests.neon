@@ -1,0 +1,26 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/nesbot/carbon/extension.neon
+    - phpstan-tests-baseline.neon
+
+parameters:
+    paths:
+        - tests/
+    level: 9
+    tmpDir: /tmp/phpstan-tests
+    reportUnmatchedIgnoredErrors: false
+
+    # Relaxed rules for Pest tests
+    ignoreErrors:
+        # Allow dynamic properties in Pest test closures
+        - '#^Access to an undefined property PHPUnit\\Framework\\TestCase::\$\w+\.$#'
+        - '#^Access to an undefined property object\{.*?\}&PHPUnit\\Framework\\TestCase::\$\w+\.$#'
+        - '#^Access to an undefined property \\Tests\\TestCase&\$this&object\{.*?\}::\$\w+\.$#'
+
+        # Allow property assignments in Pest test closures
+        - '#^Property object\{.*?\}&PHPUnit\\Framework\\TestCase::\$\w+ is not writable\.$#'
+        - '#^Property \\Tests\\TestCase&\$this&object\{.*?\}::\$\w+ is not writable\.$#'
+
+        # Allow Pest helper methods
+        - '#^Call to an undefined method PHPUnit\\Framework\\TestCase::(?:actingAs|get|post|put|delete|patch|json|getJson|postJson|putJson|deleteJson|patchJson|travelTo|freezeTime)\(\)\.$#'
+        - '#^Call to an undefined method Pest\\PendingCalls\\TestCall\|Pest\\Support\\HigherOrderTapProxy::(?:actingAs|get|freezeTime|throws)\(\)\.$#'

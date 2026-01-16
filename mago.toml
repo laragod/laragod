@@ -1,0 +1,222 @@
+# Mago Configuration for laragod
+# PHP version and general settings
+
+php-version = "8.4"
+threads = 8
+
+# ==============================================================================
+# SOURCE CONFIGURATION
+# Defines which files Mago should process
+# ==============================================================================
+
+[source]
+# Include specific paths (empty = all files in workspace)
+paths = [
+    "app",
+    "config",
+    "database",
+    "routes",
+    "resources/views/livewire",
+]
+
+# Exclude patterns
+excludes = [
+    "vendor",
+    "node_modules",
+    "storage",
+    "bootstrap/cache",
+    "public",
+    ".git",
+    "tests",  # We can enable this later if needed
+]
+
+# File extensions to process
+extensions = ["php"]
+
+# ==============================================================================
+# FORMATTER CONFIGURATION
+# Configured to match Laravel Pint (Laravel preset + your custom rules)
+# ==============================================================================
+
+[formatter]
+# Exclude specific paths from formatting
+excludes = [
+    "database/migrations",  # Don't touch migrations (Pint notPath)
+    "tests/TestCase.php",   # Don't touch TestCase (Pint notPath)
+    "tmp",                  # Don't touch tmp (Pint notPath)
+]
+
+# ============ Line Width & Indentation ============
+print-width = 120        # Laravel standard
+tab-width = 4            # PSR-12 standard (4 spaces)
+use-tabs = false         # Use spaces, not tabs
+end-of-line = "Auto"     # Auto-detect (LF on Unix, CRLF on Windows)
+
+# ============ Quote & Comma Style ============
+single-quote = true      # Laravel convention (matches Pint)
+trailing-comma = true    # Add trailing commas in multi-line arrays
+remove-trailing-close-tag = true  # Remove ?> from files
+
+# ============ Brace Styles (PSR-12) ============
+control-brace-style = "SameLine"      # if () {
+closure-brace-style = "SameLine"      # function () {
+function-brace-style = "NextLine"     # function foo()\n{
+method-brace-style = "NextLine"       # public function bar()\n{
+classlike-brace-style = "NextLine"    # class Foo\n{
+
+# ============ Empty Brace Handling ============
+inline-empty-control-braces = false
+inline-empty-closure-braces = true
+inline-empty-function-braces = false
+inline-empty-method-braces = false
+inline-empty-constructor-braces = true  # Constructor can be inline when empty
+inline-empty-classlike-braces = false
+inline-empty-anonymous-class-braces = true
+
+# ============ Method Chaining (Laravel Fluent Style) ============
+method-chain-breaking-style = "NextLine"
+first-method-chain-on-new-line = true
+preserve-breaking-member-access-chain = false
+
+# ============ Argument & Parameter Lists ============
+preserve-breaking-argument-list = true   # Preserve manually broken argument lists
+preserve-breaking-array-like = true      # Preserve array formatting
+preserve-breaking-parameter-list = true  # Preserve manually broken parameter lists (IMPORTANT!)
+preserve-breaking-attribute-list = true  # Preserve manually broken attributes
+preserve-breaking-conditional-expression = false
+break-promoted-properties-list = true    # Break promoted constructor properties
+always-break-named-arguments-list = false
+always-break-attribute-named-argument-lists = false
+
+# ============ Array Formatting ============
+array-table-style-alignment = true   # Align array arrows
+align-assignment-like = false        # Don't align assignments (can be slow)
+
+# ============ Import Statement Handling (matches Pint global_namespace_import) ============
+sort-uses = true           # Sort use statements alphabetically (ordered_interfaces, ordered_traits)
+sort-class-methods = false # Let Pint handle method ordering
+separate-use-types = true  # Separate class/function/const imports
+expand-use-groups = true   # Expand grouped use statements (fully_qualified_strict_types)
+
+# ============ Null Type Hints ============
+null-type-hint = "Question"  # Use ?Type instead of Type|null (modern PHP style)
+
+# ============ Parentheses ============
+parentheses-around-new-in-member-access = false
+parentheses-in-new-expression = false    # IMPORTANT: Matches Pint's new_with_parentheses: false
+parentheses-in-exit-and-die = true
+parentheses-in-attribute = false
+
+# ============ Spacing Preferences ============
+# Arrow functions (fn)
+space-before-arrow-function-parameter-list-parenthesis = true  # fn ($x) NOT fn($x)
+
+# Closures (function)
+space-before-closure-parameter-list-parenthesis = true         # function ($x) NOT function($x)
+space-before-hook-parameter-list-parenthesis = false
+space-before-closure-use-clause-parenthesis = true             # use ($x) NOT use($x)
+
+# Operators
+space-after-cast-unary-prefix-operators = true                 # (int) $x NOT (int)$x
+space-after-reference-unary-prefix-operator = false            # &$var NOT & $var
+space-after-error-control-unary-prefix-operator = false        # @error NOT @ error
+space-after-logical-not-unary-prefix-operator = false          # !$x NOT ! $x (matches Pint)
+space-after-bitwise-not-unary-prefix-operator = false          # ~$x NOT ~ $x
+space-after-increment-unary-prefix-operator = false            # ++$i NOT ++ $i
+space-after-decrement-unary-prefix-operator = false            # --$i NOT -- $i
+space-after-additive-unary-prefix-operator = false             # -$x NOT - $x
+space-around-concatenation-binary-operator = true              # $a . $b NOT $a.$b (Laravel style)
+space-around-assignment-in-declare = false                     # declare(strict_types=1) NOT declare(strict_types = 1)
+space-within-grouping-parenthesis = false                      # ($x) NOT ( $x )
+
+# ============ Empty Lines (PSR-12 + Laravel) ============
+empty-line-after-control-structure = false       # No empty line after if/while/etc
+empty-line-after-opening-tag = true              # <?php\n\n
+empty-line-after-declare = true                  # declare(strict_types=1);\n\n
+empty-line-after-namespace = true                # namespace App;\n\n
+empty-line-after-use = true                      # use Foo;\n\n
+empty-line-after-symbols = true                  # Between top-level symbols
+empty-line-between-same-symbols = true           # Between multiple classes/functions
+empty-line-after-class-like-constant = false
+empty-line-after-enum-case = false
+empty-line-after-trait-use = false
+empty-line-after-property = false
+empty-line-after-method = true                   # Empty line between methods
+empty-line-before-return = false                 # No forced empty line before return
+empty-line-before-dangling-comments = true
+separate-class-like-members = true               # Separate constants/properties/methods with blank lines
+
+# ==============================================================================
+# LINTER CONFIGURATION
+# Code quality and style checks
+# ==============================================================================
+
+[linter]
+# Exclude specific paths from linting
+excludes = [
+    "vendor",
+    "database/migrations",
+    "resources/views/livewire",      # Livewire Volt files break with strict_types
+    "resources/views/components",    # Blade components with Volt syntax
+]
+
+# Baseline file - tracks existing issues, only shows NEW problems
+baseline = "mago-lint-baseline.toml"
+
+# Rule configuration
+# We'll adjust these based on your codebase
+
+# Disable some overly strict rules for Laravel projects
+[linter.rules.too-many-methods]
+enabled = true
+level = "Warning"  # Downgrade from Error
+threshold = 15     # Laravel models often have many methods
+
+[linter.rules.too-many-properties]
+enabled = true
+level = "Warning"
+threshold = 15     # Laravel models often have many properties
+
+[linter.rules.excessive-parameter-list]
+enabled = true
+level = "Warning"
+threshold = 6      # Allow up to 6 parameters
+
+# Laravel-specific adjustments
+[linter.rules.no-empty]
+enabled = false    # Laravel uses empty() frequently
+
+[linter.rules.no-shorthand-ternary]
+enabled = false    # Laravel uses ?: operator commonly
+
+[linter.rules.prefer-static-closure]
+enabled = false    # Laravel closures often use $this
+
+[linter.rules.inline-variable-return]
+enabled = false    # Often clearer to have intermediate variables
+
+[linter.rules.no-else-clause]
+enabled = false    # Sometimes else is clearer than early return
+
+[linter.rules.no-boolean-flag-parameter]
+enabled = false    # Sometimes boolean flags are necessary
+
+[linter.rules.prefer-first-class-callable]
+enabled = false    # Conflicts with PHPStan on Laravel facades (Hash::make, etc.)
+
+# Security rules (keep strict)
+[linter.rules.no-eval]
+enabled = true
+level = "Error"
+
+[linter.rules.no-global]
+enabled = true
+level = "Error"
+
+[linter.rules.tainted-data-to-sink]
+enabled = true
+level = "Error"
+
+[linter.rules.sensitive-parameter]
+enabled = true
+level = "Error"

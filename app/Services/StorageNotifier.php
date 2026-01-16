@@ -36,10 +36,10 @@ class StorageNotifier implements ContactNotifier
             ]);
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::error('Storage notification failed', [
                 'channel' => $this->getChannel(),
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return false;
@@ -78,17 +78,17 @@ class StorageNotifier implements ContactNotifier
         $message = $this->sanitize($message);
 
         return <<<ENTRY
-{$separator}
-CONTACT SUBMISSION
-{$separator}
-Timestamp: {$timestamp}
-Name: {$name}
-Email: {$email}
+        {$separator}
+        CONTACT SUBMISSION
+        {$separator}
+        Timestamp: {$timestamp}
+        Name: {$name}
+        Email: {$email}
 
-Message:
-{$message}
+        Message:
+        {$message}
 
-ENTRY;
+        ENTRY;
     }
 
     private function sanitize(string $value): string

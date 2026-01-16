@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 class TelegramNotifier implements ContactNotifier
 {
     public function __construct(
+        #[\SensitiveParameter]
         private readonly ?string $token = null,
         private readonly ?string $chatId = null,
     ) {}
@@ -29,12 +30,11 @@ class TelegramNotifier implements ContactNotifier
         $chatId = $this->getChatId();
 
         try {
-            $response = Http::timeout(10)
-                ->post("https://api.telegram.org/bot{$token}/sendMessage", [
-                    'chat_id' => $chatId,
-                    'text' => $text,
-                    'parse_mode' => 'HTML',
-                ]);
+            $response = Http::timeout(10)->post(sprintf('https://api.telegram.org/bot%s/sendMessage', $token), [
+                'chat_id' => $chatId,
+                'text' => $text,
+                'parse_mode' => 'HTML',
+            ]);
 
             if ($response->successful()) {
                 Log::info('Contact notification sent successfully', [
@@ -50,10 +50,10 @@ class TelegramNotifier implements ContactNotifier
             ]);
 
             return false;
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::error('Telegram notification failed', [
                 'channel' => $this->getChannel(),
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return false;
@@ -67,7 +67,10 @@ class TelegramNotifier implements ContactNotifier
 
     public function isConfigured(): bool
     {
-        return !empty($this->getToken()) && !empty($this->getChatId());
+        return (
+            !in_array($this->getToken(), [null, '', '0'], true)
+            && !in_array($this->getChatId(), [null, '', '0'], true)
+        );
     }
 
     private function getToken(): ?string
@@ -86,10 +89,13 @@ class TelegramNotifier implements ContactNotifier
         $email = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
         $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 
-        return "📩 <b>New contact request</b>\n\n"
-             . "👤 <b>Name:</b> {$name}\n"
-             . "📧 <b>Email:</b> {$email}\n\n"
-             . "💬 <b>Message:</b>\n{$message}";
+        return (
+            "📩 <b>New contact request</b>\n\n" . sprintf(
+                '👤 <b>Name:</b> %s%s',
+                $name,
+                PHP_EOL,
+            ) . "📧 <b>Email:</b> {$email}\n\n" . ('💬 <b>Message:</b>
+' . $message)
+        );
     }
 }
-

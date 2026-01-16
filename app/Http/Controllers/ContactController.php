@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
+    /**
+     * @var array<string, string>
+     */
     public const SERVICE_LABELS = [
         'web-app' => 'Web App',
         'mobile-app' => 'Mobile App',
@@ -26,6 +29,9 @@ class ContactController extends Controller
         'other' => 'Other',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public const BUDGET_LABELS = [
         'under-5k' => 'Under £5,000',
         '5k-10k' => '£5,000 - £10,000',
@@ -35,6 +41,9 @@ class ContactController extends Controller
         'not-sure' => 'Not sure yet',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public const TIMELINE_LABELS = [
         'asap' => 'ASAP',
         '1-3-months' => '1 - 3 months',
@@ -47,9 +56,6 @@ class ContactController extends Controller
         private readonly NotificationManager $notificationManager,
     ) {}
 
-    /**
-     * Handle contact form submission from multi-step onboarding form.
-     */
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -72,6 +78,9 @@ class ContactController extends Controller
             ], 422);
         }
 
+        /**
+         * @var array{services: array<string,string>, budget: string, company: string, timeline: string, phone: string, message: string, tech_notes: string} $validated
+         */
         $validated = $validator->validated();
 
         // Format message with all details
@@ -92,51 +101,53 @@ class ContactController extends Controller
 
         return response()->json([
             'ok' => true,
-            'message' => 'Thank you! Your request has been received. We\'ll get back to you within 24 hours.',
+            'message' => "Thank you! Your request has been received. We'll get back to you within 24 hours.",
         ]);
     }
 
     /**
-     * Format the contact message with all form details.
+     * @param array{services: array<string,string>, budget: string, company: string, timeline: string, phone: string, message: string, tech_notes: string} $data
      */
     private function formatMessage(array $data): string
     {
         $services = array_map(
-            fn(string $service) => self::SERVICE_LABELS[$service] ?? $service,
-            $data['services']
+            fn (string $service): string => self::SERVICE_LABELS[$service] ?? $service,
+            $data['services'],
         );
 
         $lines = [];
 
         // Services
-        $lines[] = "Services Needed: " . implode(', ', $services);
-        $lines[] = "";
+        $lines[] = 'Services Needed: ' . implode(', ', $services);
+        $lines[] = '';
 
         // Contact details
         if (!empty($data['company'])) {
-            $lines[] = "Company: " . $data['company'];
+            $lines[] = 'Company: ' . $data['company'];
         }
+
         if (!empty($data['phone'])) {
-            $lines[] = "Phone: " . $data['phone'];
+            $lines[] = 'Phone: ' . $data['phone'];
         }
 
         // Budget & Timeline
         if (!empty($data['budget'])) {
-            $lines[] = "Budget: " . (self::BUDGET_LABELS[$data['budget']] ?? $data['budget']);
+            $lines[] = 'Budget: ' . (self::BUDGET_LABELS[$data['budget']] ?? $data['budget']);
         }
+
         if (!empty($data['timeline'])) {
-            $lines[] = "Timeline: " . (self::TIMELINE_LABELS[$data['timeline']] ?? $data['timeline']);
+            $lines[] = 'Timeline: ' . (self::TIMELINE_LABELS[$data['timeline']] ?? $data['timeline']);
         }
 
         // Project description
-        $lines[] = "";
-        $lines[] = "Project Description:";
+        $lines[] = '';
+        $lines[] = 'Project Description:';
         $lines[] = $data['message'];
 
         // Tech notes
         if (!empty($data['tech_notes'])) {
-            $lines[] = "";
-            $lines[] = "Tech Notes:";
+            $lines[] = '';
+            $lines[] = 'Tech Notes:';
             $lines[] = $data['tech_notes'];
         }
 

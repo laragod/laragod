@@ -27,8 +27,7 @@ class DiscordNotifier implements ContactNotifier
         $webhookUrl = $this->getWebhookUrl();
 
         try {
-            $response = Http::timeout(10)
-                ->post($webhookUrl, $payload);
+            $response = Http::timeout(10)->post($webhookUrl, $payload);
 
             if ($response->successful()) {
                 Log::info('Contact notification sent successfully', [
@@ -44,10 +43,10 @@ class DiscordNotifier implements ContactNotifier
             ]);
 
             return false;
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::error('Discord notification failed', [
                 'channel' => $this->getChannel(),
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return false;
@@ -61,7 +60,7 @@ class DiscordNotifier implements ContactNotifier
 
     public function isConfigured(): bool
     {
-        return !empty($this->getWebhookUrl());
+        return !in_array($this->getWebhookUrl(), [null, '', '0'], true);
     }
 
     private function getWebhookUrl(): ?string

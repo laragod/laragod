@@ -4,12 +4,12 @@ use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 // Home
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('home'))->name(
+    'home',
+);
 
 // Work / Portfolio
-Route::get('/work', function () {
+Route::get('/work', function (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View {
     // Placeholder projects - replace with your actual projects
     $projects = [
         [
@@ -31,7 +31,7 @@ Route::get('/work', function () {
             'slug' => 'ecommerce-admin-panel',
             'excerpt' => 'Built custom Filament v4 admin panel for multi-vendor e-commerce platform with advanced inventory management.',
             'description' => 'Complete admin panel solution for managing products, orders, vendors, and inventory.',
-            'challenge' => 'Off-the-shelf solutions couldn\'t handle complex multi-vendor workflows and inventory tracking requirements.',
+            'challenge' => "Off-the-shelf solutions couldn't handle complex multi-vendor workflows and inventory tracking requirements.",
             'solution' => 'Custom Filament v4 admin panel with tailored workflows, real-time inventory sync, and vendor portal integration.',
             'technologies' => ['Laravel 12', 'Filament v4', 'MySQL', 'Vue.js', 'Stripe'],
             'image' => null,
@@ -70,19 +70,17 @@ Route::get('/work', function () {
         ],
     ];
 
-    return view('work', compact('projects'));
+    return view('work', ['projects' => $projects]);
 })->name('work');
 
 // About
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
+Route::get('/about', fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('about'))->name(
+    'about',
+);
 
 // Contact
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact.show');
+Route::get('/contact', fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view(
+    'contact',
+))->name('contact.show');
 
-Route::post('/contact', [ContactController::class, 'store'])
-    ->middleware('throttle:5,1')
-    ->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');

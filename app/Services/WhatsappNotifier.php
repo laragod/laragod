@@ -12,6 +12,7 @@ class WhatsappNotifier implements ContactNotifier
 {
     public function __construct(
         private readonly ?string $apiUrl = null,
+        #[\SensitiveParameter]
         private readonly ?string $apiToken = null,
         private readonly ?string $from = null,
         private readonly ?string $to = null,
@@ -51,10 +52,10 @@ class WhatsappNotifier implements ContactNotifier
             ]);
 
             return false;
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::error('WhatsApp notification failed', [
                 'channel' => $this->getChannel(),
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return false;
@@ -68,10 +69,12 @@ class WhatsappNotifier implements ContactNotifier
 
     public function isConfigured(): bool
     {
-        return !empty($this->getApiUrl())
-            && !empty($this->getApiToken())
-            && !empty($this->getFrom())
-            && !empty($this->getTo());
+        return (
+            !in_array($this->getApiUrl(), [null, '', '0'], true)
+            && !in_array($this->getApiToken(), [null, '', '0'], true)
+            && !in_array($this->getFrom(), [null, '', '0'], true)
+            && !in_array($this->getTo(), [null, '', '0'], true)
+        );
     }
 
     private function getApiUrl(): ?string
@@ -100,9 +103,13 @@ class WhatsappNotifier implements ContactNotifier
         $safeEmail = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
         $safeMessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 
-        return "📩 *New Contact Request*\n\n"
-             . "👤 *Name:* {$safeName}\n"
-             . "📧 *Email:* {$safeEmail}\n\n"
-             . "💬 *Message:*\n{$safeMessage}";
+        return (
+            "📩 *New Contact Request*\n\n" . sprintf(
+                '👤 *Name:* %s%s',
+                $safeName,
+                PHP_EOL,
+            ) . "📧 *Email:* {$safeEmail}\n\n" . ('💬 *Message:*
+' . $safeMessage)
+        );
     }
 }

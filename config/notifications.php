@@ -1,37 +1,35 @@
 <?php
 
 return [
-
     /*
-    |--------------------------------------------------------------------------
-    | Enabled Notification Channels
-    |--------------------------------------------------------------------------
-    |
-    | Define which notification channels are enabled for contact form submissions.
-    | Available channels: telegram, discord, whatsapp, email, storage
-    |
-    | The 'storage' channel is recommended as a backup - it logs all contact
-    | submissions to a local file in case other channels fail.
-    |
-    | Example: ['telegram', 'email']
-    |
-    */
+     |--------------------------------------------------------------------------
+     | Enabled Notification Channels
+     |--------------------------------------------------------------------------
+     |
+     | Define which notification channels are enabled for contact form submissions.
+     | Available channels: telegram, discord, whatsapp, email, storage
+     |
+     | The 'storage' channel is recommended as a backup - it logs all contact
+     | submissions to a local file in case other channels fail.
+     |
+     | Example: ['telegram', 'email']
+     |
+     */
 
     'enabled_channels' => array_filter(
-        explode(',', env('NOTIFICATION_CHANNELS', ''))
+        explode(',', (string) env('NOTIFICATION_CHANNELS', '')),
     ),
 
     /*
-    |--------------------------------------------------------------------------
-    | Channel Configurations
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for each notification channel.
-    |
-    */
+     |--------------------------------------------------------------------------
+     | Channel Configurations
+     |--------------------------------------------------------------------------
+     |
+     | Configuration for each notification channel.
+     |
+     */
 
     'channels' => [
-
         'telegram' => [
             'token' => env('TELEGRAM_BOT_TOKEN'),
             'chat_id' => env('TELEGRAM_CHAT_ID'),
@@ -56,7 +54,5 @@ return [
             'disk' => env('NOTIFICATION_STORAGE_DISK', 'local'),
             'path' => env('NOTIFICATION_STORAGE_PATH', 'contact_submissions.log'),
         ],
-
     ],
-
 ];

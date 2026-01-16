@@ -1,0 +1,17 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/nesbot/carbon/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    paths:
+        - app/
+        - bootstrap
+        - routes
+        - config
+    # Exclude tests - they have their own config
+    excludePaths:
+        - tests/
+    level: 9
+    tmpDir: /tmp/phpstan-app
+    reportUnmatchedIgnoredErrors: false

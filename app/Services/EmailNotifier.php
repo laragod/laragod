@@ -26,8 +26,9 @@ class EmailNotifier implements ContactNotifier
         $recipientEmail = $this->getTo();
 
         try {
-            Mail::send([], [], function ($mail) use ($name, $email, $message, $recipientEmail) {
-                $mail->to($recipientEmail)
+            Mail::send([], [], function ($mail) use ($name, $email, $message, $recipientEmail): void {
+                $mail
+                    ->to($recipientEmail)
                     ->subject('New Contact Form Submission')
                     ->html($this->buildHtml($name, $email, $message))
                     ->replyTo($email, $name);
@@ -38,10 +39,10 @@ class EmailNotifier implements ContactNotifier
             ]);
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             Log::error('Email notification failed', [
                 'channel' => $this->getChannel(),
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return false;
@@ -55,7 +56,7 @@ class EmailNotifier implements ContactNotifier
 
     public function isConfigured(): bool
     {
-        return !empty($this->getTo()) && config('mail.mailer') !== 'log';
+        return !in_array($this->getTo(), [null, '', '0'], true) && config('mail.mailer') !== 'log';
     }
 
     private function getTo(): ?string

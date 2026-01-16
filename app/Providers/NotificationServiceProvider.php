@@ -19,6 +19,7 @@ class NotificationServiceProvider extends ServiceProvider
     /**
      * Register notification services.
      */
+    #[\Override]
     public function register(): void
     {
         // Bind individual notifiers as singletons
@@ -29,16 +30,12 @@ class NotificationServiceProvider extends ServiceProvider
         $this->app->singleton(StorageNotifier::class);
 
         // Bind the NotificationManager with configured notifiers
-        $this->app->singleton(NotificationManager::class, function ($app) {
-            return new NotificationManager(
-                injectedNotifiers: $this->resolveConfiguredNotifiers(),
-            );
-        });
+        $this->app->singleton(fn ($app): \App\Services\NotificationManager => new NotificationManager(
+            injectedNotifiers: $this->resolveConfiguredNotifiers(),
+        ));
 
         // Bind a collection of all available notifiers (for testing/inspection)
-        $this->app->bind('notification.notifiers', function ($app) {
-            return $this->resolveConfiguredNotifiers();
-        });
+        $this->app->bind('notification.notifiers', fn ($app): \Illuminate\Support\Collection => $this->resolveConfiguredNotifiers());
     }
 
     /**
@@ -81,6 +78,5 @@ class NotificationServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
     }
 }
