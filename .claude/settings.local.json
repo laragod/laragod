@@ -11,7 +11,8 @@
       "Bash(php:*)",
       "Bash(C:UsersfilipAppDataLocalProgramsHerdresourcesbinphp.exe artisan test)",
       "Bash(herd php artisan test:*)",
-      "Bash(C:/Users/filip/AppData/Local/Programs/Herd/resources/bin/php/php84/php.exe artisan test:*)"
+      "Bash(C:/Users/filip/AppData/Local/Programs/Herd/resources/bin/php/php84/php.exe artisan test:*)",
+      "Bash(C:UsersfilipAppDataLocalProgramsHerdresourcesbinphpphp84php.exe artisan config:clear)"
     ]
   }
 }

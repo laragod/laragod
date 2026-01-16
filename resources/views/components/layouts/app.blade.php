@@ -59,7 +59,7 @@
                     </svg>
                 </button>
 
-                <a href="{{ route('contact.show') }}" class="inline-flex items-center px-6 py-2 bg-primary hover:bg-primary-dark text-white font-semibold rounded-lg shadow-sm transition-all duration-200 transform hover:-translate-y-0.5">
+                <a href="{{ route('contact.show') }}" class="btn btn-primary hover:-translate-y-0.5">
                     Work With Us
                 </a>
             </div>
@@ -100,7 +100,7 @@
             <a href="{{ route('contact.show') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('contact.*') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
                 Contact
             </a>
-            <a href="{{ route('contact.show') }}" class="block mx-3 mt-4 px-6 py-2 bg-primary hover:bg-primary-dark text-white font-semibold rounded-lg text-center transition-colors">
+            <a href="{{ route('contact.show') }}" class="btn btn-primary block mx-3 mt-4 text-center">
                 Work With Us
             </a>
         </div>

@@ -44,44 +44,44 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 <!-- Quick Wins vs Lasting Foundations -->
-                <x-philosophy-card title="Quick Wins vs. Lasting Foundations">
+                <x-card title="Quick Wins vs. Lasting Foundations">
                     <x-slot:icon>
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                         </svg>
                     </x-slot:icon>
                     You can build a house on sand quickly. We build on concrete—takes a bit longer upfront, but you can actually add a second floor later without it collapsing.
-                </x-philosophy-card>
+                </x-card>
 
                 <!-- Code Quality -->
-                <x-philosophy-card title="Code Quality Isn't Optional">
+                <x-card title="Code Quality Isn't Optional">
                     <x-slot:icon>
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </x-slot:icon>
                     PHPStan, comprehensive testing, proper architecture—these aren't "nice to haves." They're the difference between a codebase that scales and one that becomes your biggest liability.
-                </x-philosophy-card>
+                </x-card>
 
                 <!-- Developer Experience -->
-                <x-philosophy-card title="Developer Experience Matters">
+                <x-card title="Developer Experience Matters">
                     <x-slot:icon>
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
                         </svg>
                     </x-slot:icon>
                     Code smells physically bother us. Messy architectures impact DX for everyone on the team. We standardize, refactor, and document because we actually care about the next person who touches this code.
-                </x-philosophy-card>
+                </x-card>
 
                 <!-- Honest Communication -->
-                <x-philosophy-card title="Straight Talk, Always">
+                <x-card title="Straight Talk, Always">
                     <x-slot:icon>
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                         </svg>
                     </x-slot:icon>
                     If we can't do something, we'll tell you. If there's a better approach than what you asked for, we'll explain why. No sales pitches, no hand-waving—just honest technical guidance.
-                </x-philosophy-card>
+                </x-card>
             </div>
         </div>
     </section>
@@ -189,6 +189,6 @@
         description="If you value code quality, honest communication, and long-term thinking, let's talk about your project."
         buttonText="Work With Us"
         buttonUrl="{{ route('contact.show') }}"
-        background="gray-50">
+        background="gray">
     </x-cta-section>
 </x-layouts.app>

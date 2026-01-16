@@ -8,7 +8,10 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define which notification channels are enabled for contact form submissions.
-    | Available channels: telegram, discord, whatsapp, email
+    | Available channels: telegram, discord, whatsapp, email, storage
+    |
+    | The 'storage' channel is recommended as a backup - it logs all contact
+    | submissions to a local file in case other channels fail.
     |
     | Example: ['telegram', 'email']
     |
@@ -47,6 +50,11 @@ return [
 
         'email' => [
             'to' => env('NOTIFICATION_EMAIL_TO'),
+        ],
+
+        'storage' => [
+            'disk' => env('NOTIFICATION_STORAGE_DISK', 'local'),
+            'path' => env('NOTIFICATION_STORAGE_PATH', 'contact_submissions.log'),
         ],
 
     ],
