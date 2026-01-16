@@ -1,4 +1,4 @@
-<x-layouts.app title="Contact - Laragod">
+<x-layouts.app :title="__('Contact - Laragod')">
     <!-- Hero Section -->
     <section class="relative bg-white dark:bg-gray-900 py-16 lg:py-24 transition-colors duration-200 overflow-hidden">
         {{-- Background decorations --}}
@@ -15,14 +15,14 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                     </span>
-                    <span class="text-sm font-medium text-primary">Available for new projects</span>
+                    <span class="text-sm font-medium text-primary">{{ __('contact.hero.badge') }}</span>
                 </div>
 
                 <h1 class="animate-fade-in-up text-5xl lg:text-6xl font-heading font-bold text-gray-900 dark:text-white leading-[1.1] tracking-tight text-hero" style="animation-delay: 0.1s">
-                    Let's <span class="text-gradient">Talk</span>
+                    {{ __('contact.hero.title_part1') }} <span class="text-gradient">{{ __('contact.hero.title_part2') }}</span>
                 </h1>
                 <p class="animate-fade-in-up mt-6 text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto" style="animation-delay: 0.2s">
-                    No sales pitches. No hand-waving. Just straight talk from developers who care about the craft.
+                    {{ __('contact.hero.description') }}
                 </p>
             </div>
 
@@ -35,8 +35,8 @@
                         </svg>
                     </div>
                     <div>
-                        <span class="font-semibold text-gray-900 dark:text-white text-sm">Integrity</span>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Straight talk</p>
+                        <span class="font-semibold text-gray-900 dark:text-white text-sm">{{ __('contact.features.integrity') }}</span>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('contact.features.integrity_subtitle') }}</p>
                     </div>
                 </div>
 
@@ -47,8 +47,8 @@
                         </svg>
                     </div>
                     <div>
-                        <span class="font-semibold text-gray-900 dark:text-white text-sm">MVP in 6-12 weeks</span>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Depending on scope</p>
+                        <span class="font-semibold text-gray-900 dark:text-white text-sm">{{ __('contact.features.mvp') }}</span>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('contact.features.mvp_subtitle') }}</p>
                     </div>
                 </div>
 
@@ -59,8 +59,8 @@
                         </svg>
                     </div>
                     <div>
-                        <span class="font-semibold text-gray-900 dark:text-white text-sm">24h Response</span>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">We reply fast</p>
+                        <span class="font-semibold text-gray-900 dark:text-white text-sm">{{ __('contact.features.response') }}</span>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('contact.features.response_subtitle') }}</p>
                     </div>
                 </div>
 
@@ -71,8 +71,8 @@
                         </svg>
                     </div>
                     <div>
-                        <span class="font-semibold text-gray-900 dark:text-white text-sm">£500/day</span>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Transparent pricing</p>
+                        <span class="font-semibold text-gray-900 dark:text-white text-sm">{{ __('contact.features.pricing') }}</span>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('contact.features.pricing_subtitle') }}</p>
                     </div>
                 </div>
             </div>
@@ -92,29 +92,29 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                 <!-- FAQ Column -->
                 <div class="lg:col-span-2">
-                    <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-6">Quick Answers</h2>
+                    <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-6">{{ __('contact.faq.title') }}</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <x-faq-item question="How much does a project cost?">
-                            £500/day for development. Full-service projects are priced individually. We'll give you a straight quote based on your actual requirements.
+                        <x-faq-item :question="__('contact.faq.cost_question')">
+                            {{ __('contact.faq.cost_answer') }}
                         </x-faq-item>
 
-                        <x-faq-item question="How long does it take?">
-                            Depends on scope. MVPs can launch in 6-12 weeks. Legacy migrations might take 3-6 months. We'll give you realistic timelines upfront.
+                        <x-faq-item :question="__('contact.faq.time_question')">
+                            {{ __('contact.faq.time_answer') }}
                         </x-faq-item>
 
-                        <x-faq-item question="Do you work with startups?">
-                            Absolutely. We build MVPs that can actually scale. Just be prepared for honest feedback if requirements don't match your timeline or budget.
+                        <x-faq-item :question="__('contact.faq.startups_question')">
+                            {{ __('contact.faq.startups_answer') }}
                         </x-faq-item>
 
-                        <x-faq-item question="Can you take over an existing project?">
-                            Yes. We've salvaged plenty of legacy projects. We'll audit your codebase and give you an honest assessment.
+                        <x-faq-item :question="__('contact.faq.existing_question')">
+                            {{ __('contact.faq.existing_answer') }}
                         </x-faq-item>
                     </div>
                 </div>
 
                 <!-- Info Column -->
                 <div class="space-y-6">
-                    <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-6">Get in Touch</h2>
+                    <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-6">{{ __('contact.info.title') }}</h2>
 
                     <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700">
                         <div class="flex items-start gap-4">
@@ -125,9 +125,9 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">Location</h3>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Based in St Helens, UK</p>
-                                <p class="text-gray-500 dark:text-gray-500 text-xs mt-1">Available for remote & on-site</p>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{{ __('contact.info.location') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">{{ __('contact.info.location_value') }}</p>
+                                <p class="text-gray-500 dark:text-gray-500 text-xs mt-1">{{ __('contact.info.location_note') }}</p>
                             </div>
                         </div>
                     </div>
@@ -140,9 +140,9 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">Availability</h3>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Mon - Fri, 9am - 6pm GMT</p>
-                                <p class="text-gray-500 dark:text-gray-500 text-xs mt-1">Flexible for urgent projects</p>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{{ __('contact.info.availability') }}</h3>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">{{ __('contact.info.availability_value') }}</p>
+                                <p class="text-gray-500 dark:text-gray-500 text-xs mt-1">{{ __('contact.info.availability_note') }}</p>
                             </div>
                         </div>
                     </div>

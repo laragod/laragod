@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between mb-3">
         <h3 class="font-semibold text-gray-900 dark:text-white text-sm">{{ $title }}</h3>
         @if($editStep)
-            <button type="button" onclick="goToStep({{ $editStep }})" class="text-primary hover:text-primary-dark text-xs font-medium">Edit</button>
+            <button type="button" onclick="goToStep({{ $editStep }})" class="text-primary hover:text-primary-dark text-xs font-medium">{{ __('form.edit') }}</button>
         @endif
     </div>
     {{ $slot }}

@@ -5,8 +5,8 @@
     <!-- Progress Bar -->
     <div class="bg-gray-50 dark:bg-gray-800 px-6 lg:px-10 py-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Step <span id="current-step">1</span> of 3</span>
-            <span id="step-title" class="text-sm font-medium text-primary">Select Services</span>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('form.step_of', ['current' => '<span id="current-step">1</span>', 'total' => '3']) }}</span>
+            <span id="step-title" class="text-sm font-medium text-primary">{{ __('form.step1.title') }}</span>
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
             <div id="progress-bar" class="bg-primary h-1.5 rounded-full transition-all duration-300"
@@ -18,8 +18,8 @@
         <!-- Step 1: Service Selection -->
         <div id="step-1" class="step-content">
             <div class="mb-6">
-                <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">What do you need?</h2>
-                <p class="text-gray-600 dark:text-gray-400 mt-2">Select all that apply</p>
+                <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">{{ __('form.step1.heading') }}</h2>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">{{ __('form.step1.description') }}</p>
             </div>
 
             <div class="flex flex-wrap gap-3" id="service-options">
@@ -28,62 +28,62 @@
                 @endforeach
             </div>
 
-            <p id="step1-error" class="mt-4 text-sm text-red-500 hidden">Please select at least one service.</p>
+            <p id="step1-error" class="mt-4 text-sm text-red-500 hidden">{{ __('form.step1.error') }}</p>
         </div>
 
         <!-- Step 2: Contact Information -->
         <div id="step-2" class="step-content hidden">
             <div class="mb-8">
-                <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">Your Details</h2>
-                <p class="text-gray-600 dark:text-gray-400 mt-2">We'll get back to you within 24 hours</p>
+                <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">{{ __('form.step2.heading') }}</h2>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">{{ __('form.step2.description') }}</p>
             </div>
 
             <div class="space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <x-form-input name="name" label="Full Name" :required="true" maxlength="100"
+                    <x-form-input name="name" :label="__('form.field.name')" :required="true" maxlength="100"
                                   placeholder="John Doe"/>
-                    <x-form-input name="company" label="Company" maxlength="100" placeholder="Acme Inc."/>
-                    <x-form-input name="email" label="Email" type="email" :required="true" maxlength="200"
+                    <x-form-input name="company" :label="__('form.field.company')" maxlength="100" placeholder="Acme Inc."/>
+                    <x-form-input name="email" :label="__('form.field.email')" type="email" :required="true" maxlength="200"
                                   placeholder="john@example.com"/>
-                    <x-form-input name="phone" label="Phone / WhatsApp" type="tel" maxlength="50"
+                    <x-form-input name="phone" :label="__('form.field.phone')" type="tel" maxlength="50"
                                   placeholder="+44 7XXX XXXXXX"/>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <x-form-select name="budget" label="Budget Range" placeholder="Select a range"
+                    <x-form-select name="budget" :label="__('form.field.budget')" :placeholder="__('form.field.budget_placeholder')"
                                    :options="$budgetOptions"/>
-                    <x-form-select name="timeline" label="Timeline" placeholder="Select a timeline"
+                    <x-form-select name="timeline" :label="__('form.field.timeline')" :placeholder="__('form.field.timeline_placeholder')"
                                    :options="$timelineOptions"/>
                 </div>
 
-                <x-form-textarea name="message" label="Project Description" :required="true" rows="4" maxlength="2000"
-                                 placeholder="Tell us about your project, goals, and any specific requirements..."/>
+                <x-form-textarea name="message" :label="__('form.field.message')" :required="true" rows="4" maxlength="2000"
+                                 :placeholder="__('form.field.message_placeholder')"/>
 
-                <x-form-textarea name="tech_notes" label="Tech Notes" :optional="true" rows="2" maxlength="1000"
-                                 placeholder="Existing tech stack, repo links, staging URLs, or constraints we should know about..."/>
+                <x-form-textarea name="tech_notes" :label="__('form.field.tech_notes')" :optional="true" rows="2" maxlength="1000"
+                                 :placeholder="__('form.field.tech_notes_placeholder')"/>
             </div>
         </div>
 
         <!-- Step 3: Review & Submit -->
         <div id="step-3" class="step-content hidden">
             <div class="mb-8">
-                <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">Review & Submit</h2>
-                <p class="text-gray-600 dark:text-gray-400 mt-2">One last look before we get started</p>
+                <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">{{ __('form.step3.heading') }}</h2>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">{{ __('form.step3.description') }}</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="space-y-6">
-                    <x-review-panel title="Services" :editStep="1">
+                    <x-review-panel :title="__('form.review.services')" :editStep="1">
                         <div id="review-services" class="flex flex-wrap gap-2"></div>
                     </x-review-panel>
 
-                    <x-review-panel title="Contact" :editStep="2">
+                    <x-review-panel :title="__('form.review.contact')" :editStep="2">
                         <dl id="review-contact" class="grid grid-cols-2 gap-3 text-sm"></dl>
                     </x-review-panel>
                 </div>
 
                 <div class="space-y-6">
-                    <x-review-panel title="Project" :editStep="2">
+                    <x-review-panel :title="__('form.review.project')" :editStep="2">
                         <div id="review-project"
                              class="text-sm text-gray-600 dark:text-gray-400 max-h-40 overflow-y-auto"></div>
                     </x-review-panel>
@@ -91,8 +91,7 @@
                     <div
                         class="rounded-xl p-5 border bg-gray-100 border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                         <label for="captcha" class="block text-sm font-medium text-gray-800 dark:text-white mb-2">
-                            Quick check: What is <span id="captcha-question"
-                                                       class="font-bold text-gray-900 dark:text-white"></span>?
+                            <span id="captcha-label"></span>
                         </label>
                         <input type="number" id="captcha" name="captcha" required class="form-control w-24"
                                placeholder="?">
@@ -106,18 +105,18 @@
         <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
             <button type="button" id="prev-btn"
                     class="hidden text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
-                &larr; Back
+                &larr; {{ __('form.nav.back') }}
             </button>
 
             <div class="ml-auto flex gap-3">
                 <button type="button" id="next-btn" class="btn btn-primary">
-                    Continue
+                    {{ __('form.nav.continue') }}
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
                 <button type="submit" id="submit-btn" class="btn btn-primary btn-shimmer" style="display: none;">
-                    <span id="submit-text">Send Request</span>
+                    <span id="submit-text">{{ __('form.nav.submit') }}</span>
                     <svg id="submit-spinner" class="hidden animate-spin h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                 stroke-width="4"></circle>
@@ -161,12 +160,24 @@
         const $ = id => document.getElementById(id);
         const submitUrl = '{{ $submitUrl }}';
         const labels = {services: @json($services), budget: @json($budgetOptions), timeline: @json($timelineOptions) };
-        const stepTitles = ['', 'Select Services', 'Your Details', 'Review & Submit'];
+        const stepTitles = ['', @json(__('form.step1.title')), @json(__('form.step2.title')), @json(__('form.step3.title'))];
+        const i18n = {
+            captcha: @json(__('form.captcha')),
+            captchaError: @json(__('form.captcha_error')),
+            successTitle: @json(__('form.success.title')),
+            successMessage: @json(__('form.success.message')),
+            backHome: @json(__('form.success.back_home')),
+            csrfError: @json(__('form.error.csrf')),
+            csrfTokenError: @json(__('form.error.csrf_token')),
+            networkError: @json(__('form.error.network')),
+            genericError: @json(__('form.error.generic') ?? 'An error occurred.'),
+            techNotes: @json(__('form.review.tech_notes'))
+        };
         let step = 1;
 
         // Captcha
         const num1 = Math.floor(Math.random() * 10) + 1, num2 = Math.floor(Math.random() * 10) + 1;
-        $('captcha-question').textContent = `${num1} + ${num2}`;
+        $('captcha-label').textContent = i18n.captcha.replace(':question', `${num1} + ${num2}`);
         $('captcha-answer').value = num1 + num2;
 
         function goTo(newStep) {
@@ -216,7 +227,7 @@
 
             const msg = $('message').value, tech = $('tech_notes').value;
             $('review-project').innerHTML = `<p class="whitespace-pre-wrap">${esc(msg || '-')}</p>` +
-                (tech ? `<p class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700"><span class="text-gray-500 dark:text-gray-400 text-xs block mb-1">Tech Notes</span>${esc(tech)}</p>` : '');
+                (tech ? `<p class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700"><span class="text-gray-500 dark:text-gray-400 text-xs block mb-1">${i18n.techNotes}</span>${esc(tech)}</p>` : '');
         }
 
         function showError(msg) {
@@ -233,7 +244,7 @@
         // Submit
         form.onsubmit = async e => {
             e.preventDefault();
-            if (!validate()) return showError('Please complete the captcha correctly.');
+            if (!validate()) return showError(i18n.captchaError);
 
             $('submit-btn').disabled = true;
             $('submit-text').classList.add('hidden');
@@ -250,7 +261,7 @@
 
             try {
                 const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
-                if (!csrf) throw new Error('CSRF token not found. Please refresh.');
+                if (!csrf) throw new Error(i18n.csrfTokenError);
 
                 const res = await fetch(submitUrl, {
                     method: 'POST',
@@ -267,15 +278,15 @@
                         <div class="w-16 h-16 bg-primary-light dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         </div>
-                        <h2 class="text-xl font-heading font-bold text-gray-900 dark:text-white mb-2">Request Received!</h2>
-                        <p class="text-gray-600 dark:text-gray-400 mb-4">We'll get back to you within 24 hours.</p>
-                        <a href="{{ route('home') }}" class="text-primary hover:text-primary-dark font-medium text-sm">&larr; Back to Home</a>
+                        <h2 class="text-xl font-heading font-bold text-gray-900 dark:text-white mb-2">${i18n.successTitle}</h2>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">${i18n.successMessage}</p>
+                        <a href="{{ route('home') }}" class="text-primary hover:text-primary-dark font-medium text-sm">&larr; ${i18n.backHome}</a>
                     </div>`);
                 } else {
-                    showError(res.status === 419 ? 'Session expired. Please refresh.' : json.errors ? Object.values(json.errors).flat().join(' ') : json.message || 'An error occurred.');
+                    showError(res.status === 419 ? i18n.csrfError : json.errors ? Object.values(json.errors).flat().join(' ') : json.message || i18n.genericError);
                 }
             } catch (err) {
-                showError(err.message || 'Network error. Please check your connection.');
+                showError(err.message || i18n.networkError);
             }
 
             $('submit-btn').disabled = false;
