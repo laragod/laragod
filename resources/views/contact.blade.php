@@ -82,7 +82,7 @@
     <!-- Onboarding Form Section -->
     <section class="bg-gray-50 dark:bg-gray-800 py-12 lg:py-16 transition-colors duration-200">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <x-onboarding-form submitUrl="{{ route('contact.store') }}" />
+            <x-onboarding-form submitUrl="{{ route('contact.store') }}" :services="$services" :budget-options="$budgetOptions" :timeline-options="$timelineOptions"/>
         </div>
     </section>
 

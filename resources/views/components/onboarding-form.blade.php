@@ -1,13 +1,4 @@
-@php use App\Http\Controllers\ContactController; @endphp
-@props(['submitUrl'])
-
-@php
-    $services = ContactController::SERVICE_LABELS;
-    
-    $budgetOptions = ContactController::BUDGET_LABELS;
-
-    $timelineOptions = ContactController::TIMELINE_LABELS;
-@endphp
+@props(['submitUrl', 'services', 'budgetOptions', 'timelineOptions'])
 
 <div id="onboarding-form"
      class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">

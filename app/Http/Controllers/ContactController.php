@@ -56,6 +56,15 @@ class ContactController extends Controller
         private readonly NotificationManager $notificationManager,
     ) {}
 
+    public function index()
+    {
+        return view('contact', [
+            'services' => self::SERVICE_LABELS,
+            'budgetOptions' => self::BUDGET_LABELS,
+            'timelineOptions' => self::TIMELINE_LABELS,
+        ]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
