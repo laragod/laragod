@@ -7,7 +7,9 @@
     <title>{{ $title ?? 'Laragod - Laravel Applications That Scale' }}</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|manrope:600,700,800" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800|manrope:600,700,800" rel="stylesheet">
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -22,35 +24,49 @@
 </head>
 <body class="font-sans antialiased bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200">
 <!-- Navigation -->
-<nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95 transition-colors duration-200">
+<nav class="bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50 backdrop-blur-lg transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
+        <div class="flex justify-between items-center h-18">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="{{ route('home') }}" class="flex items-center space-x-2">
-                        <span class="text-2xl font-heading font-bold text-gray-900 dark:text-white">
-                            Lara<span class="text-primary">god</span>
-                        </span>
+                <a href="{{ route('home') }}" class="group flex items-center space-x-2">
+                    <span class="text-2xl font-heading font-bold text-gray-900 dark:text-white tracking-tight">
+                        Lara<span class="text-gradient group-hover:opacity-80 transition-opacity">god</span>
+                    </span>
                 </a>
             </div>
 
             <!-- Desktop Navigation -->
-            <div class="hidden md:flex md:items-center md:space-x-8">
-                <a href="{{ route('home') }}" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 {{ request()->routeIs('home') ? 'text-primary border-b-2 border-primary pb-1' : '' }}">
+            <div class="hidden md:flex md:items-center md:space-x-1">
+                <a href="{{ route('home') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('home') ? 'text-primary' : '' }}">
                     Home
+                    @if(request()->routeIs('home'))
+                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
+                    @endif
                 </a>
-                <a href="{{ route('work') }}" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 {{ request()->routeIs('work') ? 'text-primary border-b-2 border-primary pb-1' : '' }}">
+                <a href="{{ route('work') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('work') ? 'text-primary' : '' }}">
                     Work
+                    @if(request()->routeIs('work'))
+                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
+                    @endif
                 </a>
-                <a href="{{ route('about') }}" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 {{ request()->routeIs('about') ? 'text-primary border-b-2 border-primary pb-1' : '' }}">
+                <a href="{{ route('about') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('about') ? 'text-primary' : '' }}">
                     About
+                    @if(request()->routeIs('about'))
+                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
+                    @endif
                 </a>
-                <a href="{{ route('contact.show') }}" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 {{ request()->routeIs('contact.*') ? 'text-primary border-b-2 border-primary pb-1' : '' }}">
+                <a href="{{ route('contact.show') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('contact.*') ? 'text-primary' : '' }}">
                     Contact
+                    @if(request()->routeIs('contact.*'))
+                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
+                    @endif
                 </a>
 
+                <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-2"></div>
+
                 <!-- Dark Theme Toggle -->
-                <button type="button" id="theme-toggle" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary transition-colors" aria-label="Toggle dark mode">
+                <button type="button" id="theme-toggle" class="inline-flex items-center justify-center p-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100/80 dark:hover:bg-gray-800/80 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all duration-200" aria-label="Toggle dark mode">
                     <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                     </svg>
@@ -59,7 +75,7 @@
                     </svg>
                 </button>
 
-                <a href="{{ route('contact.show') }}" class="btn btn-primary hover:-translate-y-0.5">
+                <a href="{{ route('contact.show') }}" class="ml-2 btn btn-primary btn-shimmer">
                     Work With Us
                 </a>
             </div>
@@ -113,63 +129,84 @@
 </main>
 
 <!-- Footer -->
-<footer class="bg-gray-900 dark:bg-gray-950 text-gray-300 dark:text-gray-400 transition-colors duration-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<footer class="relative bg-gray-900 dark:bg-gray-950 text-gray-300 dark:text-gray-400 transition-colors duration-200 overflow-hidden">
+    {{-- Background decoration --}}
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
             <!-- Brand -->
-            <div class="col-span-1">
-                <div class="flex items-center space-x-2 mb-4">
-                        <span class="text-2xl font-heading font-bold text-white">
-                            Lara<span class="text-primary">god</span>
-                        </span>
-                </div>
-                <p class="text-sm text-gray-400 dark:text-gray-500">
-                    Laravel applications that scale beyond MVP.
+            <div class="col-span-1 md:col-span-1">
+                <a href="{{ route('home') }}" class="inline-flex items-center space-x-2 mb-4 group">
+                    <span class="text-2xl font-heading font-bold text-white tracking-tight">
+                        Lara<span class="text-gradient group-hover:opacity-80 transition-opacity">god</span>
+                    </span>
+                </a>
+                <p class="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">
+                    Laravel applications that scale beyond MVP. Code that doesn't become your problem later.
                 </p>
+                <div class="mt-6 flex items-center gap-3">
+                    <a href="https://github.com/laragod" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-primary/20 flex items-center justify-center text-gray-400 hover:text-primary transition-all duration-300" aria-label="GitHub">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
             </div>
 
             <!-- Quick Links -->
             <div>
-                <h3 class="text-white font-semibold mb-4">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li><a href="{{ route('home') }}" class="text-sm hover:text-primary transition-colors">Home</a></li>
-                    <li><a href="{{ route('work') }}" class="text-sm hover:text-primary transition-colors">Work</a></li>
-                    <li><a href="{{ route('about') }}" class="text-sm hover:text-primary transition-colors">About</a></li>
-                    <li><a href="{{ route('contact.show') }}" class="text-sm hover:text-primary transition-colors">Contact</a></li>
+                <h3 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Quick Links</h3>
+                <ul class="space-y-3">
+                    <li><a href="{{ route('home') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>Home</a></li>
+                    <li><a href="{{ route('work') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>Work</a></li>
+                    <li><a href="{{ route('about') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>About</a></li>
+                    <li><a href="{{ route('contact.show') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>Contact</a></li>
                 </ul>
             </div>
 
             <!-- Services -->
             <div>
-                <h3 class="text-white font-semibold mb-4">Services</h3>
-                <ul class="space-y-2">
-                    <li><span class="text-sm">Custom Web Applications</span></li>
-                    <li><span class="text-sm">API Development</span></li>
-                    <li><span class="text-sm">Laravel + Filament</span></li>
-                    <li><span class="text-sm">Code Modernization</span></li>
+                <h3 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Services</h3>
+                <ul class="space-y-3">
+                    <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>Custom Web Applications</li>
+                    <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>API Development</li>
+                    <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>Laravel + Filament</li>
+                    <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>Code Modernization</li>
                 </ul>
             </div>
 
             <!-- Contact Info -->
             <div>
-                <h3 class="text-white font-semibold mb-4">Get In Touch</h3>
-                <ul class="space-y-2">
-                    <li class="text-sm">Based in the UK</li>
-                    <li>
-                        <a href="https://github.com/laragod" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 text-sm hover:text-primary transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                <h3 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Get In Touch</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <span>GitHub</span>
+                        </span>
+                        <span class="text-sm text-gray-400">Based in the UK</span>
+                    </li>
+                    <li>
+                        <a href="{{ route('contact.show') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium transition-colors duration-200">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            Start a conversation
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <div class="mt-8 pt-8 border-t border-gray-800 dark:border-gray-900 text-center">
-            <p class="text-sm text-gray-400 dark:text-gray-500">
-                &copy; {{ date('Y') }} Laragod. Code that doesn't become your problem later.
+        <div class="mt-12 pt-8 border-t border-gray-800/50 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="text-sm text-gray-500">
+                &copy; {{ date('Y') }} Laragod. All rights reserved.
+            </p>
+            <p class="text-xs text-gray-600 font-mono">
+                <span class="text-primary">&lt;</span>code with care<span class="text-primary">/&gt;</span>
             </p>
         </div>
     </div>
@@ -224,6 +261,37 @@
     // Add click handlers
     themeToggleBtn.addEventListener('click', toggleTheme);
     themeToggleMobileBtn.addEventListener('click', toggleTheme);
+
+    // Scroll Reveal Observer
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                // Add staggered delay based on element position in viewport
+                const delay = entry.target.dataset.revealDelay || 0;
+                setTimeout(() => {
+                    entry.target.classList.add('revealed');
+                }, delay);
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    // Observe all elements with data-reveal attribute
+    document.querySelectorAll('[data-reveal]').forEach((el, index) => {
+        // Add staggered delay for grid children
+        if (el.parentElement?.classList.contains('stagger-reveal')) {
+            el.dataset.revealDelay = index * 100;
+        }
+        revealObserver.observe(el);
+    });
+
+    // Page load animations
+    document.querySelectorAll('.animate-on-load').forEach((el, index) => {
+        el.style.animationDelay = `${index * 0.1}s`;
+    });
 </script>
 </body>
 </html>

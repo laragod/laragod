@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Services\NotificationManager;
@@ -9,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
-    private const SERVICE_LABELS = [
+    public const SERVICE_LABELS = [
         'web-app' => 'Web App',
         'mobile-app' => 'Mobile App',
         'internal-tool' => 'Internal Tool',
@@ -20,9 +22,11 @@ class ContactController extends Controller
         'mvp' => 'Build an MVP',
         'ongoing-support' => 'Ongoing Support',
         'audit-review' => 'Audit & Code Review',
+        'mentoring-training' => 'Mentoring & Training',
+        'other' => 'Other',
     ];
 
-    private const BUDGET_LABELS = [
+    public const BUDGET_LABELS = [
         'under-5k' => 'Under £5,000',
         '5k-10k' => '£5,000 - £10,000',
         '10k-25k' => '£10,000 - £25,000',
@@ -31,7 +35,7 @@ class ContactController extends Controller
         'not-sure' => 'Not sure yet',
     ];
 
-    private const TIMELINE_LABELS = [
+    public const TIMELINE_LABELS = [
         'asap' => 'ASAP',
         '1-3-months' => '1 - 3 months',
         '3-6-months' => '3 - 6 months',

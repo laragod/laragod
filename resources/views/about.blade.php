@@ -1,13 +1,29 @@
 <x-layouts.app title="About - Laragod">
     <!-- Hero Section -->
-    <section class="bg-white dark:bg-gray-900 py-16 lg:py-24 transition-colors duration-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="relative bg-white dark:bg-gray-900 py-24 lg:py-36 transition-colors duration-200 overflow-hidden">
+        {{-- Background decorations --}}
+        <div class="absolute inset-0 bg-mesh-gradient"></div>
+        <div class="absolute inset-0 bg-grid opacity-40"></div>
+
+        {{-- Floating elements --}}
+        <div class="absolute top-32 right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto">
-                <h1 class="text-5xl lg:text-6xl font-heading font-bold text-gray-900 dark:text-white leading-tight">
+                <div class="animate-fade-in-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-8">
+                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span class="text-sm font-medium text-primary">Based in the UK</span>
+                </div>
+
+                <h1 class="animate-fade-in-up text-5xl lg:text-7xl font-heading font-bold text-gray-900 dark:text-white leading-[1.1] tracking-tight text-hero" style="animation-delay: 0.1s">
                     We're NOT an Agency.<br>
-                    <span class="text-primary">We're Developers.</span>
+                    <span class="text-gradient">We're Developers.</span>
                 </h1>
-                <p class="mt-6 text-xl text-gray-600 dark:text-gray-400">
+                <p class="animate-fade-in-up mt-8 text-xl lg:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed" style="animation-delay: 0.2s">
                     Laragod is founder-led out of the UK, with trusted senior developers brought into the fold as project scope demands. We're not flashy salesmen—we're developers who take pride in doing a good job.
                 </p>
             </div>
