@@ -59,10 +59,13 @@ jobs:
     needs: build-production-image
     runs-on: self-hosted
     steps:
-      - name: Load secrets
+      - name: Load and mask secrets
         run: |
+          # Load secrets from host config
           source ~/.github_secrets/global.env
           source ~/.github_secrets/apps/${{ github.event.repository.name }}.env || echo "No app-specific secrets found"
+
+          # Export to GitHub Actions env for later steps
           echo "MYSQL_HOST=$MYSQL_DB_IP" >> $GITHUB_ENV
           echo "MYSQL_USER=$MYSQL_GITHUB_ACTIONS_USER" >> $GITHUB_ENV
           echo "MYSQL_PASS=$MYSQL_GITHUB_ACTIONS_PASSWORD" >> $GITHUB_ENV
@@ -70,14 +73,18 @@ jobs:
           echo "DB_USERNAME=$DB_USERNAME" >> $GITHUB_ENV
           echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
 
+          # Mask all sensitive values in the Actions log
+          echo "::add-mask::$MYSQL_DB_IP"
+          echo "::add-mask::$MYSQL_GITHUB_ACTIONS_USER"
+          echo "::add-mask::$MYSQL_GITHUB_ACTIONS_PASSWORD"
+          echo "::add-mask::$DB_DATABASE"
+          echo "::add-mask::$DB_USERNAME"
+          echo "::add-mask::$DB_PASSWORD"
+
       - name: Create MySQL resources
         run: |
           mysql --defaults-extra-file=<(printf "[client]\nuser=%s\npassword=%s\nhost=%s" "$MYSQL_USER" "$MYSQL_PASS" "$MYSQL_HOST") <<SQL
           CREATE DATABASE IF NOT EXISTS \`$DB_DATABASE\`;
-          CREATE USER IF NOT EXISTS '$DB_USERNAME'@'%' IDENTIFIED BY '$DB_PASSWORD';
-          GRANT ALL PRIVILEGES ON \`$DB_DATABASE\`.* TO '$DB_USERNAME'@'%';
-          FLUSH PRIVILEGES;
-          SQL
 
   deploy-application:
     needs: [build-production-image, prepare-database]
@@ -93,7 +100,13 @@ jobs:
           if [ -f ~/.github_secrets/apps/$APP_NAME.env ]; then
             source ~/.github_secrets/apps/$APP_NAME.env
           fi
-
+          echo "::add-mask::$MYSQL_DB_IP"
+          echo "::add-mask::$DB_DATABASE"
+          echo "::add-mask::$DB_USERNAME"
+          echo "::add-mask::$DB_PASSWORD"
+          echo "::add-mask::$APP_KEY"         # Laravel app key
+          echo "::add-mask::$APP_SECRET"      # any other secret
+          echo "::add-mask::$MAIL_PASSWORD"   # mail credentials
           echo "APP_DOMAIN=$APP_DOMAIN" >> $GITHUB_ENV
           echo "APP_PORT=$APP_PORT" >> $GITHUB_ENV
           echo "MYSQL_HOST=$MYSQL_DB_IP" >> $GITHUB_ENV
