@@ -1,0 +1,62 @@
+name: Build Custom PHP Base Image
+
+on:
+  # Run manually when needed
+  workflow_dispatch:
+
+  # Run when base Dockerfile changes
+  push:
+    paths:
+      - 'docker/base/Dockerfile.base'
+    branches:
+      - master
+
+  # Run monthly to pick up security updates
+  schedule:
+    - cron: '0 0 1 * *'  # 1st of each month at midnight
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Build and push CLI variant
+        run: |
+          echo "Building PHP 8.4 CLI base image..."
+          DOCKER_BUILDKIT=1 docker build \
+            --target cli-base \
+            -t localhost:5000/laragod-base:8.4-cli \
+            -t localhost:5000/laragod-base:8.4-cli-$(date +%Y%m%d) \
+            -f docker/base/Dockerfile.base .
+
+          docker push localhost:5000/laragod-base:8.4-cli
+          docker push localhost:5000/laragod-base:8.4-cli-$(date +%Y%m%d)
+          echo "CLI variant pushed successfully"
+
+      - name: Build and push FPM variant
+        run: |
+          echo "Building PHP 8.4 FPM base image..."
+          DOCKER_BUILDKIT=1 docker build \
+            --target fpm-base \
+            -t localhost:5000/laragod-base:8.4-fpm \
+            -t localhost:5000/laragod-base:8.4-fpm-$(date +%Y%m%d) \
+            -f docker/base/Dockerfile.base .
+
+          docker push localhost:5000/laragod-base:8.4-fpm
+          docker push localhost:5000/laragod-base:8.4-fpm-$(date +%Y%m%d)
+          echo "FPM variant pushed successfully"
+
+      - name: Verify images
+        run: |
+          echo "Verifying base images in registry..."
+          docker pull localhost:5000/laragod-base:8.4-cli
+          docker pull localhost:5000/laragod-base:8.4-fpm
+          echo "Base images verified successfully"

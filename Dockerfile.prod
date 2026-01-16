@@ -1,0 +1,91 @@
+# Stage 1: Builder
+# Use custom base image with all PHP extensions pre-installed
+ARG BASE_REGISTRY=localhost:5000
+FROM ${BASE_REGISTRY}/lunaris-base:8.4-cli AS builder
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+
+# Copy only composer files first for better layer caching
+COPY composer.json composer.lock ./
+
+# Install dependencies with cache mount (persists between builds, suppress PHP 8.4 deprecation warnings)
+RUN --mount=type=cache,target=/tmp/cache \
+    php -d error_reporting='E_ALL & ~E_DEPRECATED' /usr/bin/composer install \
+        --no-dev \
+        --optimize-autoloader \
+        --no-interaction \
+        --prefer-dist \
+        --no-scripts \
+        --no-autoloader
+
+# Copy application code
+COPY . .
+
+# Create complete storage structure before running any Laravel commands
+RUN mkdir -p \
+    bootstrap/cache \
+    storage/app/public \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/testing \
+    storage/framework/views \
+    storage/logs \
+    && chmod -R 775 storage bootstrap/cache
+
+# Generate optimized autoloader and run scripts (suppress PHP 8.4 deprecation warnings)
+RUN php -d error_reporting='E_ALL & ~E_DEPRECATED' /usr/bin/composer dump-autoload --optimize --no-dev --classmap-authoritative
+
+FROM node:20-alpine AS frontend
+
+WORKDIR /app
+
+# Copy package files first for better layer caching
+COPY package.json package-lock.json ./
+
+# Install dependencies with cache mount (persists between builds)
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --prefer-offline --no-audit
+
+# Copy vendor from builder (needed for Flux CSS imports)
+COPY --from=builder /app/vendor ./vendor
+
+# Copy application code
+COPY vite.config.js ./
+COPY resources/ ./resources/
+COPY public/ ./public/
+
+# Build assets for production
+RUN npm run build
+
+# Stage 2: Production
+# Use custom base image with all PHP extensions pre-installed
+FROM ${BASE_REGISTRY}/lunaris-base:8.4-fpm
+
+ENV APP_ENV=production
+ENV APP_DEBUG=false
+
+# Install only runtime dependencies (nginx, supervisor)
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk add --no-cache \
+    nginx \
+    supervisor
+
+# Configuration files
+COPY docker/production/php.ini /usr/local/etc/php/conf.d/
+COPY docker/production/supervisord.conf /etc/supervisor/conf.d/
+COPY docker/production/nginx.conf /etc/nginx/nginx.conf
+COPY docker/production/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+
+# Application setup
+WORKDIR /var/www
+COPY --from=builder /app .
+COPY --from=frontend /app/public/build ./public/build
+
+# Permissions
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -1,0 +1,37 @@
+# Custom PHP 8.4 Alpine base image with all required extensions pre-installed
+# This image is built once and pushed to GHCR, then reused for all deployments
+
+ARG PHP_VERSION=8.4
+
+# CLI variant for builder stage
+FROM php:${PHP_VERSION}-cli-alpine AS cli-base
+
+RUN apk add --no-cache \
+    libzip-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    icu-dev \
+    && docker-php-ext-configure gd --with-jpeg \
+    && docker-php-ext-install \
+    zip \
+    intl \
+    bcmath \
+    gd
+
+# FPM variant for production stage
+FROM php:${PHP_VERSION}-fpm-alpine AS fpm-base
+
+RUN apk add --no-cache \
+    libzip-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    icu-dev \
+    && docker-php-ext-configure gd --with-jpeg \
+    && docker-php-ext-install \
+    opcache \
+    pdo \
+    pdo_mysql \
+    zip \
+    intl \
+    gd \
+    bcmath

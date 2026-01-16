@@ -1,0 +1,61 @@
+name: Renew SSL Certificates
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'  # Run at 3 AM every Monday
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  renew:
+    runs-on: self-hosted
+    steps:
+      - name: Find domains with certificates
+        id: find-domains
+        run: |
+          DOMAINS=$(ls -1 ~/nginx-basic/certs/*.crt 2>/dev/null | sed 's/.*\/\(.*\)\.crt/\1/' || echo "")
+          echo "Found domains: $DOMAINS"
+          echo "domains=$DOMAINS" >> $GITHUB_OUTPUT
+
+      - name: Renew certificates
+        if: steps.find-domains.outputs.domains != ''
+        run: |
+          # Use a simple loop over the space-separated list instead of array
+          for DOMAIN in ${{ steps.find-domains.outputs.domains }}; do
+            echo "Checking certificate for $DOMAIN"
+
+            # Check certificate expiration
+            EXPIRES_SOON=$(openssl x509 -checkend 2592000 -noout -in ~/nginx-basic/certs/${DOMAIN}.crt || echo "yes")
+
+            if [ "$EXPIRES_SOON" = "yes" ]; then
+              echo "Certificate for $DOMAIN is nearing expiration, renewing..."
+
+              # Get NGINX container ID
+              NGINX_CONTAINER=$(docker ps -q -f name=nginx-proxy)
+              if [ -n "$NGINX_CONTAINER" ]; then
+                # Stop NGINX to free port 80
+                docker stop $NGINX_CONTAINER
+
+                # Try Let's Encrypt renewal
+                if docker run --rm \
+                  -p 80:80 \
+                  -v ~/nginx-basic/letsencrypt:/etc/letsencrypt \
+                  -v ~/nginx-basic/html:/var/www/html \
+                  certbot/certbot renew --standalone --non-interactive; then
+
+                  # Copy updated certificates
+                  cp ~/nginx-basic/letsencrypt/live/${DOMAIN}/fullchain.pem ~/nginx-basic/certs/${DOMAIN}.crt
+                  cp ~/nginx-basic/letsencrypt/live/${DOMAIN}/privkey.pem ~/nginx-basic/certs/${DOMAIN}.key
+                  echo "Certificate renewed successfully for $DOMAIN"
+                else
+                  echo "Certificate renewal failed for $DOMAIN"
+                fi
+
+                # Restart NGINX
+                docker start $NGINX_CONTAINER
+              else
+                echo "NGINX container not found, cannot renew $DOMAIN"
+              fi
+            else
+              echo "Certificate for $DOMAIN is still valid"
+            fi
+          done

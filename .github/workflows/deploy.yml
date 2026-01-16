@@ -1,0 +1,280 @@
+name: CI Deploy Pipeline
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  build-production-image:
+    runs-on: self-hosted
+    outputs:
+      image_tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: tag
+        run: |
+          echo "tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Build and push production image
+        run: |
+          # Pull previous image for layer caching (ignore errors if doesn't exist)
+          docker pull localhost:5000/${{ github.event.repository.name }}:latest || true
+
+          # Build with BuildKit cache mounts and layer caching
+          DOCKER_BUILDKIT=1 docker build \
+            -t localhost:5000/${{ github.event.repository.name }}:${{ steps.tag.outputs.tag }} \
+            -t localhost:5000/${{ github.event.repository.name }}:latest \
+            --build-arg WWWGROUP=1000 \
+            --build-arg BASE_REGISTRY=localhost:5000 \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --cache-from localhost:5000/${{ github.event.repository.name }}:latest \
+            -f Dockerfile.prod .
+
+          docker push localhost:5000/${{ github.event.repository.name }}:${{ steps.tag.outputs.tag }}
+          docker push localhost:5000/${{ github.event.repository.name }}:latest
+
+      - name: Run sanity checks
+        run: |
+          docker run --rm localhost:5000/${{ github.event.repository.name }}:${{ steps.tag.outputs.tag }} \
+            sh -c "php -v && php -m | grep -i opcache"
+
+  prepare-database:
+    needs: build-production-image
+    runs-on: self-hosted
+    steps:
+      - name: Load secrets
+        run: |
+          source ~/.github_secrets/global.env
+          source ~/.github_secrets/apps/${{ github.event.repository.name }}.env || echo "No app-specific secrets found"
+          echo "MYSQL_HOST=$MYSQL_DB_IP" >> $GITHUB_ENV
+          echo "MYSQL_USER=$MYSQL_GITHUB_ACTIONS_USER" >> $GITHUB_ENV
+          echo "MYSQL_PASS=$MYSQL_GITHUB_ACTIONS_PASSWORD" >> $GITHUB_ENV
+          echo "DB_DATABASE=$DB_DATABASE" >> $GITHUB_ENV
+          echo "DB_USERNAME=$DB_USERNAME" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+
+      - name: Create MySQL resources
+        run: |
+          mysql --defaults-extra-file=<(printf "[client]\nuser=%s\npassword=%s\nhost=%s" "$MYSQL_USER" "$MYSQL_PASS" "$MYSQL_HOST") <<SQL
+          CREATE DATABASE IF NOT EXISTS \`$DB_DATABASE\`;
+          CREATE USER IF NOT EXISTS '$DB_USERNAME'@'%' IDENTIFIED BY '$DB_PASSWORD';
+          GRANT ALL PRIVILEGES ON \`$DB_DATABASE\`.* TO '$DB_USERNAME'@'%';
+          FLUSH PRIVILEGES;
+          SQL
+
+  deploy-application:
+    needs: [build-production-image, prepare-database]
+    runs-on: self-hosted
+    env:
+      APP_NAME: ${{ github.event.repository.name }}
+      APP_TAG: ${{ github.sha }}
+      ENVIRONMENT: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Load environment variables
+        run: |
+          source ~/.github_secrets/global.env
+          if [ -f ~/.github_secrets/apps/$APP_NAME.env ]; then
+            source ~/.github_secrets/apps/$APP_NAME.env
+          fi
+
+          echo "APP_DOMAIN=$APP_DOMAIN" >> $GITHUB_ENV
+          echo "APP_PORT=$APP_PORT" >> $GITHUB_ENV
+          echo "MYSQL_HOST=$MYSQL_DB_IP" >> $GITHUB_ENV
+
+          # Setup persistent storage for uploaded files (images, documents, etc.)
+          # This directory is SHARED across all deployments to preserve uploads
+          PERSISTENT_STORAGE=~/data/$APP_NAME/storage_persistent
+          mkdir -p $PERSISTENT_STORAGE/app/public
+          mkdir -p $PERSISTENT_STORAGE/app/private/livewire-tmp
+
+          # Set permissions (skip if files already owned by another user to avoid deployment failure)
+          # The || true prevents the workflow from failing if chmod can't change permissions
+          chmod -R 777 $PERSISTENT_STORAGE 2>/dev/null || true
+
+          # Migrate existing images from old timestamped storage directories (one-time migration)
+          if [ ! -f "$PERSISTENT_STORAGE/.migrated" ]; then
+            echo "Migrating existing uploads to persistent storage..."
+            LATEST_OLD_STORAGE=$(ls -dt ~/data/$APP_NAME/storage_* 2>/dev/null | head -n 1)
+            if [ -n "$LATEST_OLD_STORAGE" ] && [ -d "$LATEST_OLD_STORAGE/app/public" ]; then
+              echo "Found old storage at: $LATEST_OLD_STORAGE"
+              rsync -av "$LATEST_OLD_STORAGE/app/public/" "$PERSISTENT_STORAGE/app/public/" || true
+              echo "Migration completed"
+            fi
+            touch "$PERSISTENT_STORAGE/.migrated"
+          fi
+
+          # Setup ephemeral storage for cache/sessions (fresh on each deployment)
+          TIMESTAMP=$(date +%s)
+          EPHEMERAL_STORAGE=~/data/$APP_NAME/storage_cache_$TIMESTAMP
+          mkdir -p $EPHEMERAL_STORAGE/framework/cache
+          mkdir -p $EPHEMERAL_STORAGE/framework/sessions
+          mkdir -p $EPHEMERAL_STORAGE/framework/views
+          mkdir -p $EPHEMERAL_STORAGE/logs
+          touch $EPHEMERAL_STORAGE/logs/laravel.log
+          chmod -R 777 $EPHEMERAL_STORAGE
+
+          echo "Persistent storage (uploads): $PERSISTENT_STORAGE"
+          echo "Ephemeral storage (cache): $EPHEMERAL_STORAGE"
+
+          # Keep only the last 5 cache directories to prevent disk space issues
+          ls -dt ~/data/$APP_NAME/storage_cache_* 2>/dev/null | tail -n +6 | xargs rm -rf 2>/dev/null || true
+
+          # Export for use in container deployment
+          echo "PERSISTENT_STORAGE=$PERSISTENT_STORAGE" >> $GITHUB_ENV
+          echo "EPHEMERAL_STORAGE=$EPHEMERAL_STORAGE" >> $GITHUB_ENV
+
+          # Generate a unique container name with environment
+          if [ "$ENVIRONMENT" = "production" ]; then
+            echo "CONTAINER_NAME=$APP_NAME" >> $GITHUB_ENV
+          else
+            echo "CONTAINER_NAME=$APP_NAME-$ENVIRONMENT" >> $GITHUB_ENV
+          fi
+
+      - name: Stop existing container
+        run: |
+          docker stop ${{ env.CONTAINER_NAME }} || true
+          docker rm ${{ env.CONTAINER_NAME }} || true
+
+      - name: Deploy container
+        run: |
+          # Basic environment variables
+          ENV_VARS="-e APP_ENV=${{ env.ENVIRONMENT }}"
+
+          # Add all environment variables from app-specific env file
+          if [ -f ~/.github_secrets/apps/$APP_NAME.env ]; then
+            while IFS= read -r line || [[ -n "$line" ]]; do
+              # Skip comments and empty lines
+              if [[ ! "$line" =~ ^#.* ]] && [[ -n "$line" ]]; then
+                # Extract variable name and value
+                var_name=$(echo "$line" | cut -d= -f1)
+                var_value=$(echo "$line" | cut -d= -f2-)
+
+                # Skip deployment config variables
+                if [[ "$var_name" != "APP_DOMAIN" && "$var_name" != "APP_PORT" ]]; then
+                  # Replace any ${VAR} references with their values
+                  var_value=$(eval echo "$var_value")
+                  # Quote the value to handle spaces and special characters
+                  ENV_VARS="$ENV_VARS -e \"$var_name=$var_value\""
+                fi
+              fi
+            done < ~/.github_secrets/apps/$APP_NAME.env
+          fi
+
+          # Determine domain based on environment
+          if [ "${{ env.ENVIRONMENT }}" = "production" ]; then
+            DOMAIN="${{ env.APP_DOMAIN }}"
+          else
+            DOMAIN="${{ env.ENVIRONMENT }}.${{ env.APP_DOMAIN }}"
+          fi
+
+          # Fix container name (replace spaces with hyphens)
+          FIXED_CONTAINER_NAME=$(echo "${{ env.CONTAINER_NAME }}" | tr ' ' '-')
+
+          # Run the container (using eval to properly handle quoted env vars)
+          eval docker run -d \
+            --name $FIXED_CONTAINER_NAME \
+            --network proxy-network \
+            -p $APP_PORT:80 \
+            -v $PERSISTENT_STORAGE/app/public:/var/www/storage/app/public \
+            -v $PERSISTENT_STORAGE/app/private:/var/www/storage/app/private \
+            -v $EPHEMERAL_STORAGE/framework:/var/www/storage/framework \
+            -v $EPHEMERAL_STORAGE/logs:/var/www/storage/logs \
+            $ENV_VARS \
+            -e DB_HOST=10.0.0.5 \
+            -e DB_SOCKET="" \
+            -e QUEUE_CONNECTION=database \
+            -e VIRTUAL_HOST="$DOMAIN" \
+            -e LETSENCRYPT_HOST="$DOMAIN" \
+            -e LETSENCRYPT_EMAIL="admin@dofus-temple.com" \
+            -e FORCE_HTTPS=true \
+            -e TRUSTED_PROXIES="*" \
+            -e TRUST_ALL_PROXIES=true \
+            -e APP_URL="https://$DOMAIN" \
+            localhost:5000/$APP_NAME:$APP_TAG
+      - name: Verify deployment
+        run: |
+          # Wait for container to start
+          sleep 5
+
+          # Check container status
+          if ! docker inspect ${{ env.CONTAINER_NAME }} --format '{{.State.Running}}' | grep -q "true"; then
+            echo "Container failed to start properly"
+            docker logs ${{ env.CONTAINER_NAME }}
+            exit 1
+          fi
+
+          echo "Container ${{ env.CONTAINER_NAME }} deployed successfully"
+
+      - name: Health check
+        run: |
+          MAX_RETRIES=12
+          RETRY_INTERVAL=5
+
+          for ((i=1; i<=$MAX_RETRIES; i++)); do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${{ env.APP_PORT }}/health)
+
+            if [[ "$HTTP_CODE" == "200" ]]; then
+              echo "Application is healthy! Health endpoint available."
+              break
+            fi
+
+            if [[ $i == $MAX_RETRIES ]]; then
+              echo "Application failed health check after $MAX_RETRIES attempts"
+              docker logs ${{ env.CONTAINER_NAME }}
+              exit 1
+            fi
+
+            echo "Waiting for application to start (attempt $i/$MAX_RETRIES)..."
+            sleep $RETRY_INTERVAL
+          done
+
+  optimize-application:
+    needs: [ deploy-application ]
+    runs-on: self-hosted
+    env:
+      APP_NAME: ${{ github.event.repository.name }}
+    steps:
+      - name: Run database migrations
+        run: |
+          if ! docker exec $APP_NAME php artisan migrate --force; then
+            echo "Migration failed - checking logs"
+            docker logs $APP_NAME
+            exit 1
+          fi
+
+      - name: Optimize application
+        run: |
+          echo "Running Laravel and Filament optimizations..."
+
+          # Clear old caches first
+          docker exec $APP_NAME php artisan config:clear
+          docker exec $APP_NAME php artisan route:clear
+          docker exec $APP_NAME php artisan view:clear
+
+          # Cache only what's safe to cache (NOT views - they compile on-demand)
+          docker exec $APP_NAME php artisan config:cache
+          docker exec $APP_NAME php artisan route:cache
+          docker exec $APP_NAME php artisan event:cache
+
+          # Filament optimizations
+          docker exec $APP_NAME php artisan filament:assets
+          docker exec $APP_NAME php artisan filament:cache-components
+
+          echo "Application optimization completed"

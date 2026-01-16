@@ -1,0 +1,203 @@
+name: CI Test Pipeline
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build-test-image:
+    runs-on: self-hosted
+    outputs:
+      image_tag: ${{ steps.tag.outputs.tag }}
+      image_url: ${{ steps.tag.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: tag
+        run: |
+          echo "tag=${{ github.event.repository.name }}-test:${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "url=localhost:5000/${{ github.event.repository.name }}-test:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Build and push test image
+        run: |
+          # Pull previous test image for layer caching (ignore errors if doesn't exist)
+          docker pull localhost:5000/${{ github.event.repository.name }}-test:latest || true
+
+          # Build with BuildKit cache mounts and layer caching
+          DOCKER_BUILDKIT=1 docker build \
+            -t localhost:5000/${{ github.event.repository.name }}-test:${{ github.sha }} \
+            -t localhost:5000/${{ github.event.repository.name }}-test:latest \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --cache-from localhost:5000/${{ github.event.repository.name }}-test:latest \
+            -f Dockerfile.dev .
+
+          # Push to registry for parallel jobs to pull
+          docker push localhost:5000/${{ github.event.repository.name }}-test:${{ github.sha }}
+          docker push localhost:5000/${{ github.event.repository.name }}-test:latest
+
+  phpunit:
+    needs: build-test-image
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Pull test image
+        run: docker pull ${{ needs.build-test-image.outputs.image_url }}
+
+      - name: Load database secrets
+        run: |
+          source ~/.github_secrets/global.env
+          echo "MYSQL_USER=$MYSQL_GITHUB_ACTIONS_USER" >> $GITHUB_ENV
+          echo "MYSQL_PASS=$MYSQL_GITHUB_ACTIONS_PASSWORD" >> $GITHUB_ENV
+          echo "MYSQL_HOST=$MYSQL_DB_IP" >> $GITHUB_ENV
+          echo "TEST_DB=test_laragod_dt_$(date +%s)" >> $GITHUB_ENV
+          echo "TEST_USER=test_user_$(date +%s)" >> $GITHUB_ENV
+          echo "TEST_PASS=secure_pass_$(date +%s)" >> $GITHUB_ENV
+
+      - name: Create test database
+        run: |
+          mysql --defaults-extra-file=<(printf "[client]\nuser=%s\npassword=%s\nhost=%s" "$MYSQL_USER" "$MYSQL_PASS" "$MYSQL_HOST") <<SQL
+          CREATE DATABASE IF NOT EXISTS \`$TEST_DB\`;
+          CREATE USER IF NOT EXISTS '$TEST_USER'@'%' IDENTIFIED BY '$TEST_PASS';
+          GRANT ALL PRIVILEGES ON \`$TEST_DB\`.* TO '$TEST_USER'@'%';
+          GRANT ALL PRIVILEGES ON \`$TEST_DB\_%\`.* TO '$TEST_USER'@'%';
+          FLUSH PRIVILEGES;
+          SQL
+
+      - name: Run PHPUnit tests
+        run: |
+          docker run --rm \
+            --network proxy-network \
+            -e APP_ENV=testing \
+            -e APP_KEY=base64:DDeaUI5y3xoMuNudMG26HpwFwRaEgT7yDSPdYp26ndQ= \
+            -e DB_CONNECTION=mysql \
+            -e DB_HOST=$MYSQL_HOST \
+            -e DB_PORT=3306 \
+            -e DB_DATABASE=$TEST_DB \
+            -e DB_USERNAME=$TEST_USER \
+            -e DB_PASSWORD=$TEST_PASS \
+            -e MAIL_MAILER=array \
+            -e SESSION_DRIVER=array \
+            -e CACHE_DRIVER=array \
+            ${{ needs.build-test-image.outputs.image_url }} \
+            sh -c "composer test"
+
+      - name: Cleanup test database
+        if: always()
+        run: |
+          mysql --defaults-extra-file=<(printf "[client]\nuser=%s\npassword=%s\nhost=%s" "$MYSQL_USER" "$MYSQL_PASS" "$MYSQL_HOST") <<SQL
+          DROP DATABASE IF EXISTS \`$TEST_DB\`;
+          DROP USER IF EXISTS '$TEST_USER'@'%';
+          SQL
+
+  mago-format:
+    needs: build-test-image
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Pull test image
+        run: docker pull ${{ needs.build-test-image.outputs.image_url }}
+
+      - name: Run Mago Format Check
+        run: |
+          docker run --rm \
+            ${{ needs.build-test-image.outputs.image_url }} \
+            composer mago:format:check
+
+  mago-lint:
+    needs: build-test-image
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Pull test image
+        run: docker pull ${{ needs.build-test-image.outputs.image_url }}
+
+      - name: Run Mago Lint (Pedantic)
+        run: |
+          docker run --rm \
+            ${{ needs.build-test-image.outputs.image_url }} \
+            composer mago:lint:check
+
+  phpstan-app:
+    needs: build-test-image
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Pull test image
+        run: docker pull ${{ needs.build-test-image.outputs.image_url }}
+
+      - name: Run PHPStan (App)
+        run: |
+          docker run --rm \
+            ${{ needs.build-test-image.outputs.image_url }} \
+            composer stan:app
+
+  phpstan-tests:
+    needs: build-test-image
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Pull test image
+        run: docker pull ${{ needs.build-test-image.outputs.image_url }}
+
+      - name: Run PHPStan (Tests)
+        run: |
+          docker run --rm \
+            ${{ needs.build-test-image.outputs.image_url }} \
+            composer stan:tests
+
+  rector:
+    needs: build-test-image
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Registry
+        run: |
+          source ~/.github_secrets/global.env
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin localhost:5000
+
+      - name: Pull test image
+        run: docker pull ${{ needs.build-test-image.outputs.image_url }}
+
+      - name: Run Rector (Check)
+        run: |
+          docker run --rm \
+            ${{ needs.build-test-image.outputs.image_url }} \
+            composer rector:check

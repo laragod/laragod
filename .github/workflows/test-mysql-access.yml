@@ -1,0 +1,63 @@
+name: Test MySQL Access (Local Runner)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-mysql:
+    runs-on: self-hosted
+
+    steps:
+      - name: Load secrets from global.env
+        run: |
+          source ~/.github_secrets/global.env
+          echo "MYSQL_USER=$MYSQL_GITHUB_ACTIONS_USER" >> $GITHUB_ENV
+          echo "MYSQL_PASS=$MYSQL_GITHUB_ACTIONS_PASSWORD" >> $GITHUB_ENV
+          echo "MYSQL_HOST=$MYSQL_DB_IP" >> $GITHUB_ENV  # Using from global.env
+          echo "DB_NAME=testdb_$(date +%s)" >> $GITHUB_ENV
+          echo "::add-mask::$MYSQL_GITHUB_ACTIONS_PASSWORD"
+#          echo "::add-mask::$MYSQL_DB_IP"
+
+      - name: Create secure MySQL config
+        run: |
+          cat <<EOF > mysql.cnf
+          [client]
+          user=$MYSQL_USER
+          password=$MYSQL_PASS
+          host=$MYSQL_HOST
+          connect_timeout=10
+          ssl-mode=REQUIRED  # Enforce SSL if server supports it
+          EOF
+          chmod 600 mysql.cnf
+
+      - name: Verify MySQL connection
+        run: |
+          if ! mysql --defaults-extra-file=mysql.cnf -e "SELECT 1" >/dev/null; then
+            echo "::error::Failed to connect to MySQL"
+            exit 1
+          fi
+
+      - name: Create test resources
+        run: |
+          mysql --defaults-extra-file=mysql.cnf <<SQL
+          CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE USER IF NOT EXISTS '$DB_NAME'@'%' IDENTIFIED BY '$(openssl rand -hex 16)';
+          GRANT ALL PRIVILEGES ON \`$DB_NAME\`.* TO '$DB_NAME'@'%';
+          FLUSH PRIVILEGES;
+          SQL
+
+      - name: Verify creation
+        run: |
+          mysql --defaults-extra-file=mysql.cnf -e "
+            SHOW DATABASES LIKE '$DB_NAME';
+            SELECT user, host FROM mysql.user WHERE user = '$DB_NAME';
+          "
+
+      - name: Cleanup resources
+        if: always()
+        run: |
+          mysql --defaults-extra-file=mysql.cnf <<SQL
+          DROP DATABASE IF EXISTS \`$DB_NAME\`;
+          DROP USER IF EXISTS '$DB_NAME'@'%';
+          SQL
+          rm -f mysql.cnf
