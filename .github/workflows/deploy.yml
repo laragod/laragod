@@ -261,7 +261,7 @@ jobs:
 
       - name: Optimize application
         run: |
-          echo "Running Laravel and Filament optimizations..."
+          echo "Running Laravel optimizations..."
 
           # Clear old caches first
           docker exec $APP_NAME php artisan config:clear
@@ -272,9 +272,5 @@ jobs:
           docker exec $APP_NAME php artisan config:cache
           docker exec $APP_NAME php artisan route:cache
           docker exec $APP_NAME php artisan event:cache
-
-          # Filament optimizations
-          docker exec $APP_NAME php artisan filament:assets
-          docker exec $APP_NAME php artisan filament:cache-components
 
           echo "Application optimization completed"
