@@ -50,7 +50,7 @@ return [
         'hands_on_title' => 'Wsparcie programistyczne',
         'hands_on_description' => 'W niektórych przypadkach zapewniamy bezpośrednie wsparcie implementacyjne w ramach szerszej współpracy.',
         'hands_on_rate' => 'Oferowane selektywnie w stawce',
-        'hands_on_amount' => '£500/dzień',
+        'hands_on_amount' => '2000zł/dzień',
         'start_conversation' => 'Rozpocznij rozmowę',
     ],
     'cta' => [
