@@ -12,56 +12,118 @@ use Illuminate\Support\Facades\Validator;
 class ContactController extends Controller
 {
     /**
-     * @var array<string, string>
+     * Service option keys for validation.
+     *
+     * @var array<int, string>
      */
-    public const SERVICE_LABELS = [
-        'web-app' => 'Web App',
-        'mobile-app' => 'Mobile App',
-        'internal-tool' => 'Internal Tool',
-        'automation-ai' => 'Automation / AI',
-        'api-integration' => 'API / Integration',
-        'legacy-rescue' => 'Rescue a Legacy Project',
-        'fixed-contract' => 'Fixed Contract Work',
-        'mvp' => 'Build an MVP',
-        'ongoing-support' => 'Ongoing Support',
-        'audit-review' => 'Audit & Code Review',
-        'mentoring-training' => 'Mentoring & Training',
-        'other' => 'Other',
+    private const SERVICE_KEYS = [
+        'web-app',
+        'mobile-app',
+        'internal-tool',
+        'automation-ai',
+        'api-integration',
+        'legacy-rescue',
+        'fixed-contract',
+        'mvp',
+        'ongoing-support',
+        'audit-review',
+        'mentoring-training',
+        'other',
     ];
 
     /**
-     * @var array<string, string>
+     * Budget option keys for validation.
+     *
+     * @var array<string>
      */
-    public const BUDGET_LABELS = [
-        'under-5k' => 'Under £5,000',
-        '5k-10k' => '£5,000 - £10,000',
-        '10k-25k' => '£10,000 - £25,000',
-        '25k-50k' => '£25,000 - £50,000',
-        '50k-plus' => '£50,000+',
-        'not-sure' => 'Not sure yet',
+    private const BUDGET_KEYS = [
+        'under-5k',
+        '5k-10k',
+        '10k-25k',
+        '25k-50k',
+        '50k-plus',
+        'not-sure',
     ];
 
     /**
-     * @var array<string, string>
+     * Timeline option keys for validation.
+     *
+     * @var array<string>
      */
-    public const TIMELINE_LABELS = [
-        'asap' => 'ASAP',
-        '1-3-months' => '1 - 3 months',
-        '3-6-months' => '3 - 6 months',
-        '6-plus-months' => '6+ months',
-        'flexible' => 'Flexible',
+    private const TIMELINE_KEYS = [
+        'asap',
+        '1-3-months',
+        '3-6-months',
+        '6-plus-months',
+        'flexible',
     ];
 
     public function __construct(
         private readonly NotificationManager $notificationManager,
     ) {}
 
+    /**
+     * Get localized service labels.
+     *
+     * @return array<string, string>
+     */
+    public static function getServiceLabels(): array
+    {
+        return [
+            'web-app' => __('contact.services.web_app'),
+            'mobile-app' => __('contact.services.mobile_app'),
+            'internal-tool' => __('contact.services.internal_tool'),
+            'automation-ai' => __('contact.services.automation_ai'),
+            'api-integration' => __('contact.services.api_integration'),
+            'legacy-rescue' => __('contact.services.legacy_rescue'),
+            'fixed-contract' => __('contact.services.fixed_contract'),
+            'mvp' => __('contact.services.mvp'),
+            'ongoing-support' => __('contact.services.ongoing_support'),
+            'audit-review' => __('contact.services.audit_review'),
+            'mentoring-training' => __('contact.services.mentoring_training'),
+            'other' => __('contact.services.other'),
+        ];
+    }
+
+    /**
+     * Get localized budget labels.
+     *
+     * @return array<string, string>
+     */
+    public static function getBudgetLabels(): array
+    {
+        return [
+            'under-5k' => __('contact.budget.under_5k'),
+            '5k-10k' => __('contact.budget.5k_10k'),
+            '10k-25k' => __('contact.budget.10k_25k'),
+            '25k-50k' => __('contact.budget.25k_50k'),
+            '50k-plus' => __('contact.budget.50k_plus'),
+            'not-sure' => __('contact.budget.not_sure'),
+        ];
+    }
+
+    /**
+     * Get localized timeline labels.
+     *
+     * @return array<string, string>
+     */
+    public static function getTimelineLabels(): array
+    {
+        return [
+            'asap' => __('contact.timeline.asap'),
+            '1-3-months' => __('contact.timeline.1_3_months'),
+            '3-6-months' => __('contact.timeline.3_6_months'),
+            '6-plus-months' => __('contact.timeline.6_plus_months'),
+            'flexible' => __('contact.timeline.flexible'),
+        ];
+    }
+
     public function index()
     {
         return view('contact', [
-            'services' => self::SERVICE_LABELS,
-            'budgetOptions' => self::BUDGET_LABELS,
-            'timelineOptions' => self::TIMELINE_LABELS,
+            'services' => self::getServiceLabels(),
+            'budgetOptions' => self::getBudgetLabels(),
+            'timelineOptions' => self::getTimelineLabels(),
         ]);
     }
 
@@ -69,13 +131,13 @@ class ContactController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'services' => ['required', 'array', 'min:1'],
-            'services.*' => ['string', 'in:' . implode(',', array_keys(self::SERVICE_LABELS))],
+            'services.*' => ['string', 'in:' . implode(',', self::SERVICE_KEYS)],
             'name' => ['required', 'string', 'max:100'],
             'company' => ['nullable', 'string', 'max:100'],
             'email' => ['required', 'email:rfc', 'max:200'],
             'phone' => ['nullable', 'string', 'max:50'],
-            'budget' => ['nullable', 'string', 'in:' . implode(',', array_keys(self::BUDGET_LABELS))],
-            'timeline' => ['nullable', 'string', 'in:' . implode(',', array_keys(self::TIMELINE_LABELS))],
+            'budget' => ['nullable', 'string', 'in:' . implode(',', self::BUDGET_KEYS)],
+            'timeline' => ['nullable', 'string', 'in:' . implode(',', self::TIMELINE_KEYS)],
             'message' => ['required', 'string', 'max:2000'],
             'tech_notes' => ['nullable', 'string', 'max:1000'],
         ]);
@@ -104,13 +166,13 @@ class ContactController extends Controller
         if (!$sent) {
             return response()->json([
                 'ok' => false,
-                'message' => 'Failed to send message. Please try again later.',
+                'message' => __('contact.response.error'),
             ], 500);
         }
 
         return response()->json([
             'ok' => true,
-            'message' => "Thank you! Your request has been received. We'll get back to you within 24 hours.",
+            'message' => __('contact.response.success'),
         ]);
     }
 
@@ -119,44 +181,48 @@ class ContactController extends Controller
      */
     private function formatMessage(array $data): string
     {
+        $serviceLabels = self::getServiceLabels();
+        $budgetLabels = self::getBudgetLabels();
+        $timelineLabels = self::getTimelineLabels();
+
         $services = array_map(
-            fn (string $service): string => self::SERVICE_LABELS[$service] ?? $service,
+            fn (string $service): string => $serviceLabels[$service] ?? $service,
             $data['services'],
         );
 
         $lines = [];
 
         // Services
-        $lines[] = 'Services Needed: ' . implode(', ', $services);
+        $lines[] = __('notification.services_needed') . ': ' . implode(', ', $services);
         $lines[] = '';
 
         // Contact details
         if (!empty($data['company'])) {
-            $lines[] = 'Company: ' . $data['company'];
+            $lines[] = __('notification.company') . ': ' . $data['company'];
         }
 
         if (!empty($data['phone'])) {
-            $lines[] = 'Phone: ' . $data['phone'];
+            $lines[] = __('notification.phone') . ': ' . $data['phone'];
         }
 
         // Budget & Timeline
         if (!empty($data['budget'])) {
-            $lines[] = 'Budget: ' . (self::BUDGET_LABELS[$data['budget']] ?? $data['budget']);
+            $lines[] = __('notification.budget') . ': ' . ($budgetLabels[$data['budget']] ?? $data['budget']);
         }
 
         if (!empty($data['timeline'])) {
-            $lines[] = 'Timeline: ' . (self::TIMELINE_LABELS[$data['timeline']] ?? $data['timeline']);
+            $lines[] = __('notification.timeline') . ': ' . ($timelineLabels[$data['timeline']] ?? $data['timeline']);
         }
 
         // Project description
         $lines[] = '';
-        $lines[] = 'Project Description:';
+        $lines[] = __('notification.project_description') . ':';
         $lines[] = $data['message'];
 
         // Tech notes
         if (!empty($data['tech_notes'])) {
             $lines[] = '';
-            $lines[] = 'Tech Notes:';
+            $lines[] = __('notification.tech_notes') . ':';
             $lines[] = $data['tech_notes'];
         }
 

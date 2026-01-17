@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('Laragod - Laravel Applications That Scale Beyond MVP')">
+<x-layouts.app :title="__('meta.title.home')">
     <!-- Hero Section -->
     <section class="relative bg-white dark:bg-gray-900 py-24 lg:py-40 transition-colors duration-200 overflow-hidden">
         {{-- Background decorations --}}
@@ -14,7 +14,7 @@
         <div class="hidden lg:block absolute bottom-32 right-[10%] text-primary/20 font-mono text-8xl font-bold select-none">}</div>
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-4xl mx-auto">
+            <div class="text-center max-w-5xl mx-auto">
                 {{-- Badge --}}
                 <div class="animate-fade-in-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-8">
                     <span class="relative flex h-2 w-2">
@@ -32,13 +32,13 @@
                     {{ __('home.hero.description') }}
                 </p>
                 <div class="animate-fade-in-up mt-12 flex flex-col sm:flex-row gap-4 justify-center" style="animation-delay: 0.3s">
-                    <a href="{{ route('contact.show') }}" class="btn btn-primary btn-shimmer px-10 py-4 text-lg">
+                    <a href="{{ locale_route('contact.show') }}" class="btn btn-primary btn-shimmer px-10 py-4 text-lg">
                         {{ __('nav.work_with_us') }}
                         <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                         </svg>
                     </a>
-                    <a href="{{ route('work') }}" class="btn btn-outline px-10 py-4 text-lg">
+                    <a href="{{ locale_route('work') }}" class="btn btn-outline px-10 py-4 text-lg">
                         {{ __('home.hero.view_our_work') }}
                     </a>
                 </div>
@@ -63,7 +63,7 @@
         <div class="absolute inset-0 bg-noise"></div>
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl mx-auto text-center">
+            <div class="max-w-4xl mx-auto text-center">
                 <div data-reveal>
                     <span class="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold tracking-wide uppercase mb-6">{{ __('home.philosophy.badge') }}</span>
                     <h2 class="text-3xl lg:text-5xl font-heading font-bold text-gray-900 dark:text-white leading-tight">
@@ -206,7 +206,7 @@
         </div>
     </section>
 
-    <!-- Pricing Section -->
+    <!-- How We Work Section -->
     <section class="relative bg-gray-50 dark:bg-gray-800 py-20 lg:py-32 transition-colors duration-200 overflow-hidden">
         {{-- Background texture --}}
         <div class="absolute inset-0 bg-noise"></div>
@@ -220,83 +220,65 @@
                 </p>
             </div>
 
-            <div class="max-w-3xl mx-auto" data-reveal="scale">
-                <div class="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl shadow-primary/5 border border-gray-100 dark:border-gray-700/50 p-8 lg:p-12 overflow-hidden">
+            <div class="max-w-5xl mx-auto">
+                {{-- Primary: Engagement Models --}}
+                <div class="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl shadow-primary/5 border border-gray-100 dark:border-gray-700/50 p-8 lg:p-12 overflow-hidden mb-8" data-reveal="scale">
                     {{-- Decorative gradient corner --}}
                     <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-primary/10 via-transparent to-transparent"></div>
 
-                    <div class="relative text-center mb-10">
-                        <div class="inline-flex items-baseline gap-1">
-                            <span class="text-6xl lg:text-7xl font-heading font-bold text-gradient">{{ __('home.pricing.amount') }}</span>
-                            <span class="text-2xl text-gray-500 dark:text-gray-400 font-medium">{{ __('home.pricing.per_day') }}</span>
-                        </div>
-                        <p class="mt-3 text-lg text-gray-600 dark:text-gray-400">{{ __('home.pricing.for_development') }}</p>
-                    </div>
-
-                    <div class="border-t border-gray-200 dark:border-gray-700/50 pt-10">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                            <span class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </span>
-                            {{ __('home.pricing.whats_included') }}
-                        </h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start group">
-                                <span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
-                                    <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </span>
-                                <span class="ml-4 text-gray-700 dark:text-gray-300">{{ __('home.pricing.item1') }}</span>
-                            </li>
-                            <li class="flex items-start group">
-                                <span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
-                                    <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </span>
-                                <span class="ml-4 text-gray-700 dark:text-gray-300">{{ __('home.pricing.item2') }}</span>
-                            </li>
-                            <li class="flex items-start group">
-                                <span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
-                                    <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </span>
-                                <span class="ml-4 text-gray-700 dark:text-gray-300">{{ __('home.pricing.item3') }}</span>
-                            </li>
-                            <li class="flex items-start group">
-                                <span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
-                                    <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </span>
-                                <span class="ml-4 text-gray-700 dark:text-gray-300">{{ __('home.pricing.item4') }}</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="mt-10 p-6 bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 rounded-2xl border border-primary/10">
-                        <h4 class="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                    <h3 class="relative text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
-                            {{ __('home.pricing.full_service_title') }}
-                        </h4>
-                        <p class="text-gray-700 dark:text-gray-300">
-                            {{ __('home.pricing.full_service_description') }}
-                        </p>
+                        </span>
+                        {{ __('home.pricing.engagements_title') }}
+                    </h3>
+
+                    <div class="space-y-6">
+                        @foreach(__('home.pricing.engagements') as $engagement)
+                            <div class="group p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 hover:border-primary/20 transition-colors">
+                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                    {{ $engagement['title'] }}
+                                </h4>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    {{ $engagement['description'] }}
+                                </p>
+                            </div>
+                        @endforeach
                     </div>
 
-                    <div class="mt-10 text-center">
-                        <a href="{{ route('contact.show') }}" class="btn btn-primary btn-shimmer px-10 py-4 text-lg">
-                            {{ __('home.pricing.start_conversation') }}
-                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </a>
+                    <div class="mt-10 pt-8 border-t border-gray-200 dark:border-gray-700/50">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm mb-1">{{ __('home.pricing.starting_from') }}</p>
+                                <p class="text-2xl font-heading font-bold text-gray-900 dark:text-white">{{ __('home.pricing.starting_amount') }}</p>
+                            </div>
+                            <a href="{{ locale_route('contact.show') }}" class="btn btn-primary btn-shimmer px-8 py-4 text-lg">
+                                {{ __('home.pricing.start_conversation') }}
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Secondary: Hands-on Engineering (subordinated) --}}
+                <div class="relative bg-white/50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-700/50 p-6 lg:p-8" data-reveal>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                                {{ __('home.pricing.hands_on_title') }}
+                            </h4>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">
+                                {{ __('home.pricing.hands_on_description') }}
+                            </p>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('home.pricing.hands_on_rate') }}</p>
+                            <p class="text-xl font-semibold text-gray-700 dark:text-gray-300">{{ __('home.pricing.hands_on_amount') }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -308,7 +290,7 @@
         :heading="__('home.cta.heading')"
         :description="__('home.cta.description')"
         :buttonText="__('nav.work_with_us')"
-        :buttonUrl="route('contact.show')"
+        :buttonUrl="locale_route('contact.show')"
         background="white">
     </x-cta-section>
 </x-layouts.app>

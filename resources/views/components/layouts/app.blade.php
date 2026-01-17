@@ -4,7 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? __('Laragod - Laravel Applications That Scale') }}</title>
+    <title>{{ $title ?? __('meta.title.default') }}</title>
+
+    {{-- hreflang tags for SEO --}}
+    @php
+        $currentRouteName = request()->route()?->getName();
+        $routeParameters = request()->route()?->parameters() ?? [];
+    @endphp
+    @if($currentRouteName)
+        @foreach(available_locales() as $code => $name)
+            <link rel="alternate" hreflang="{{ $code }}" href="{{ route_with_locale($currentRouteName, $code, collect($routeParameters)->except('locale')->toArray()) }}" />
+        @endforeach
+        <link rel="alternate" hreflang="x-default" href="{{ route_with_locale($currentRouteName, config('localization.default'), collect($routeParameters)->except('locale')->toArray()) }}" />
+    @endif
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800|manrope:600,700,800" rel="stylesheet">
@@ -38,7 +50,7 @@
         <div class="flex justify-between items-center h-18">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="{{ route('home') }}" class="group flex items-center space-x-2">
+                <a href="{{ locale_route('home') }}" class="group flex items-center space-x-2">
                     <span class="text-2xl font-heading font-bold text-gray-900 dark:text-white tracking-tight">
                         Lara<span class="text-gradient group-hover:opacity-80 transition-opacity">god</span>
                     </span>
@@ -47,25 +59,25 @@
 
             <!-- Desktop Navigation -->
             <div class="hidden md:flex md:items-center md:space-x-1">
-                <a href="{{ route('home') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('home') ? 'text-primary' : '' }}">
+                <a href="{{ locale_route('home') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('home') ? 'text-primary' : '' }}">
                     {{ __('nav.home') }}
                     @if(request()->routeIs('home'))
                     <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
                     @endif
                 </a>
-                <a href="{{ route('work') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('work') ? 'text-primary' : '' }}">
+                <a href="{{ locale_route('work') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('work') ? 'text-primary' : '' }}">
                     {{ __('nav.work') }}
                     @if(request()->routeIs('work'))
                     <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
                     @endif
                 </a>
-                <a href="{{ route('about') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('about') ? 'text-primary' : '' }}">
+                <a href="{{ locale_route('about') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('about') ? 'text-primary' : '' }}">
                     {{ __('nav.about') }}
                     @if(request()->routeIs('about'))
                     <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
                     @endif
                 </a>
-                <a href="{{ route('contact.show') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('contact.*') ? 'text-primary' : '' }}">
+                <a href="{{ locale_route('contact.show') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('contact.*') ? 'text-primary' : '' }}">
                     {{ __('nav.contact') }}
                     @if(request()->routeIs('contact.*'))
                     <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
@@ -73,6 +85,9 @@
                 </a>
 
                 <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-2"></div>
+
+                <!-- Language Switcher -->
+                <x-language-switcher />
 
                 <!-- Dark Theme Toggle -->
                 <button type="button" id="theme-toggle" class="inline-flex items-center justify-center p-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100/80 dark:hover:bg-gray-800/80 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all duration-200" aria-label="Toggle dark mode">
@@ -84,7 +99,7 @@
                     </svg>
                 </button>
 
-                <a href="{{ route('contact.show') }}" class="ml-2 btn btn-primary btn-shimmer">
+                <a href="{{ locale_route('contact.show') }}" class="ml-2 btn btn-primary btn-shimmer">
                     {{ __('nav.work_with_us') }}
                 </a>
             </div>
@@ -113,19 +128,22 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-700">
         <div class="px-2 pt-2 pb-3 space-y-1">
-            <a href="{{ route('home') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('home') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
+            <a href="{{ locale_route('home') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('home') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
                 {{ __('nav.home') }}
             </a>
-            <a href="{{ route('work') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('work') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
+            <a href="{{ locale_route('work') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('work') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
                 {{ __('nav.work') }}
             </a>
-            <a href="{{ route('about') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('about') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
+            <a href="{{ locale_route('about') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('about') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
                 {{ __('nav.about') }}
             </a>
-            <a href="{{ route('contact.show') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('contact.*') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
+            <a href="{{ locale_route('contact.show') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('contact.*') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
                 {{ __('nav.contact') }}
             </a>
-            <a href="{{ route('contact.show') }}" class="btn btn-primary block mx-3 mt-4 text-center">
+            <div class="px-3 pt-4">
+                <x-language-switcher class="w-full" />
+            </div>
+            <a href="{{ locale_route('contact.show') }}" class="btn btn-primary block mx-3 mt-4 text-center">
                 {{ __('nav.work_with_us') }}
             </a>
         </div>
@@ -146,7 +164,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
             <!-- Brand -->
             <div class="col-span-1 md:col-span-1">
-                <a href="{{ route('home') }}" class="inline-flex items-center space-x-2 mb-4 group">
+                <a href="{{ locale_route('home') }}" class="inline-flex items-center space-x-2 mb-4 group">
                     <span class="text-2xl font-heading font-bold text-white tracking-tight">
                         Lara<span class="text-gradient group-hover:opacity-80 transition-opacity">god</span>
                     </span>
@@ -167,16 +185,16 @@
             <div>
                 <h3 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">{{ __('footer.quick_links') }}</h3>
                 <ul class="space-y-3">
-                    <li><a href="{{ route('home') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.home') }}</a></li>
-                    <li><a href="{{ route('work') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.work') }}</a></li>
-                    <li><a href="{{ route('about') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.about') }}</a></li>
-                    <li><a href="{{ route('contact.show') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.contact') }}</a></li>
+                    <li><a href="{{ locale_route('home') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.home') }}</a></li>
+                    <li><a href="{{ locale_route('work') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.work') }}</a></li>
+                    <li><a href="{{ locale_route('about') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.about') }}</a></li>
+                    <li><a href="{{ locale_route('contact.show') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.contact') }}</a></li>
                 </ul>
             </div>
 
             <!-- Services -->
             <div>
-                <h3 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">{{ __('footer.services') }}</h3>
+                <h3 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">{{ __('footer.services.title') }}</h3>
                 <ul class="space-y-3">
                     <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>{{ __('footer.services.custom_web_apps') }}</li>
                     <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>{{ __('footer.services.api_development') }}</li>
@@ -199,7 +217,7 @@
                         <span class="text-sm text-gray-400">{{ __('footer.based_in_uk') }}</span>
                     </li>
                     <li>
-                        <a href="{{ route('contact.show') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium transition-colors duration-200">
+                        <a href="{{ locale_route('contact.show') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium transition-colors duration-200">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                             </svg>

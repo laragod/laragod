@@ -50,6 +50,10 @@
     background-color: var(--color-primary-light);
 }
 
+.text-primary-light {
+    color: var(--color-primary-light);
+}
+
 .border-primary {
     border-color: var(--color-primary);
 }

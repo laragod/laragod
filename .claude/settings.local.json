@@ -9,12 +9,23 @@
       "Bash(npm install)",
       "Bash(npm run build:*)",
       "Bash(php:*)",
-      "Bash(C:UsersfilipAppDataLocalProgramsHerdresourcesbinphp.exe artisan test)",
+      "Bash(C:/Users/filip/AppData/Local/Programs/Herd/resources/bin/php/php84/php.exe artisan test)",
       "Bash(herd php artisan test:*)",
       "Bash(C:/Users/filip/AppData/Local/Programs/Herd/resources/bin/php/php84/php.exe artisan test:*)",
-      "Bash(C:UsersfilipAppDataLocalProgramsHerdresourcesbinphpphp84php.exe artisan config:clear)",
+      "Bash(C:/Users/filip/AppData/Local/Programs/Herd/resources/bin/php/php84/php.exe artisan config:clear)",
       "Skill(frontend-design:frontend-design)",
-      "Skill(laravel-filament-php)"
+      "Skill(laravel-filament-php)",
+      "Bash(C:UsersfilipHerdbinphp.exe artisan test)",
+      "Bash(cmd /c:*)",
+      "Bash(/c/Users/filip/Herd/bin/php.exe artisan:*)",
+      "Bash(powershell -Command \"cd C:\\\\Users\\\\filip\\\\Herd\\\\laragod; php artisan test\")",
+      "Bash(powershell -Command \"php -l C:\\\\Users\\\\filip\\\\Herd\\\\laragod\\\\app\\\\Http\\\\Controllers\\\\ContactController.php\")",
+      "Bash(powershell -Command \"php -l C:\\\\Users\\\\filip\\\\Herd\\\\laragod\\\\app\\\\Http\\\\Controllers\\\\FrontController.php\")",
+      "Bash(composer dump-autoload:*)",
+      "Bash(for component in \"x-card\" \"x-cta-section\" \"x-faq-item\" \"x-value-item\" \"x-tech-list\" \"x-tech-item\" \"x-form-chip\" \"x-form-input\" \"x-form-select\" \"x-form-textarea\" \"x-form-label\" \"x-review-panel\" \"x-language-switcher\" \"x-onboarding-form\")",
+      "Bash(do echo \"=== $component ===\")",
+      "Bash(done)",
+      "Skill(frontend-design)"
     ]
   }
 }

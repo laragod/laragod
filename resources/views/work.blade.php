@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('Our Work - Laragod')">
+<x-layouts.app :title="__('meta.title.work')">
     <!-- Hero Section -->
     <section class="relative bg-white dark:bg-gray-900 py-24 lg:py-36 transition-colors duration-200 overflow-hidden">
         {{-- Background decorations --}}
@@ -147,7 +147,7 @@
                     </div>
                     <h3 class="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-3">{{ __('work.empty.title') }}</h3>
                     <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-8">{{ __('work.empty.description') }}</p>
-                    <a href="{{ route('contact.show') }}" class="btn btn-primary">
+                    <a href="{{ locale_route('contact.show') }}" class="btn btn-primary">
                         {{ __('work.empty.cta') }}
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -163,7 +163,7 @@
         :heading="__('work.cta.heading')"
         :description="__('work.cta.description')"
         :buttonText="__('work.cta.button')"
-        :buttonUrl="route('contact.show')"
+        :buttonUrl="locale_route('contact.show')"
         background="white">
     </x-cta-section>
 </x-layouts.app>

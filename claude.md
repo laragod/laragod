@@ -134,15 +134,20 @@ POST /contact → ContactController@store                    ->name('contact.sto
 
 Located in `resources/views/components/`:
 
-1. **service-card.blade.php** - Service cards with icon slot
-2. **philosophy-card.blade.php** - Philosophy principle cards
-3. **faq-item.blade.php** - FAQ question/answer items
-4. **info-card.blade.php** - Info cards with icon
-5. **value-item.blade.php** - Values section items
-6. **tech-list.blade.php** - Tech stack category containers
-7. **tech-item.blade.php** - Individual tech stack items
-8. **cta-section.blade.php** - Call-to-action sections
-9. **onboarding-form.blade.php** - Multi-step contact form
+1. **card.blade.php** - Unified card component with optional hover effect (used for services and philosophy)
+2. **faq-item.blade.php** - FAQ question/answer items
+3. **value-item.blade.php** - Values section items
+4. **tech-list.blade.php** - Tech stack category containers
+5. **tech-item.blade.php** - Individual tech stack items
+6. **cta-section.blade.php** - Call-to-action sections
+7. **onboarding-form.blade.php** - Multi-step contact form
+8. **form-input.blade.php** - Form text input field
+9. **form-select.blade.php** - Form select dropdown
+10. **form-textarea.blade.php** - Form textarea field
+11. **form-label.blade.php** - Form field label
+12. **form-chip.blade.php** - Selectable chip/tag for services
+13. **review-panel.blade.php** - Review panel for form step 3
+14. **language-switcher.blade.php** - Language toggle component
 
 ### Multi-Step Onboarding Form
 
@@ -455,23 +460,28 @@ NOTIFICATION_EMAIL_TO=
 13. `resources/views/contact.blade.php` - Contact page with onboarding form
 
 **Reusable Components:**
-14. `resources/views/components/service-card.blade.php` - Service cards
-15. `resources/views/components/philosophy-card.blade.php` - Philosophy cards
-16. `resources/views/components/faq-item.blade.php` - FAQ items
-17. `resources/views/components/info-card.blade.php` - Info cards
-18. `resources/views/components/value-item.blade.php` - Value items
-19. `resources/views/components/tech-list.blade.php` - Tech stack lists
-20. `resources/views/components/tech-item.blade.php` - Tech stack items
-21. `resources/views/components/cta-section.blade.php` - CTA sections
-22. `resources/views/components/onboarding-form.blade.php` - Multi-step contact form
+14. `resources/views/components/card.blade.php` - Unified card component
+15. `resources/views/components/faq-item.blade.php` - FAQ items
+16. `resources/views/components/value-item.blade.php` - Value items
+17. `resources/views/components/tech-list.blade.php` - Tech stack lists
+18. `resources/views/components/tech-item.blade.php` - Tech stack items
+19. `resources/views/components/cta-section.blade.php` - CTA sections
+20. `resources/views/components/onboarding-form.blade.php` - Multi-step contact form
+21. `resources/views/components/form-input.blade.php` - Form input field
+22. `resources/views/components/form-select.blade.php` - Form select dropdown
+23. `resources/views/components/form-textarea.blade.php` - Form textarea
+24. `resources/views/components/form-label.blade.php` - Form label
+25. `resources/views/components/form-chip.blade.php` - Selectable chip
+26. `resources/views/components/review-panel.blade.php` - Review panel
+27. `resources/views/components/language-switcher.blade.php` - Language switcher
 
 **Tests:**
-23. `tests/Feature/ContactControllerTest.php`
-24. `tests/Feature/LandingPageTest.php`
-25. `tests/Unit/TelegramNotifierTest.php`
-26. `tests/Unit/DiscordNotifierTest.php`
-27. `tests/Unit/WhatsappNotifierTest.php`
-28. `tests/Unit/NotificationManagerTest.php`
+28. `tests/Feature/ContactControllerTest.php`
+29. `tests/Feature/LandingPageTest.php`
+30. `tests/Unit/TelegramNotifierTest.php`
+31. `tests/Unit/DiscordNotifierTest.php`
+32. `tests/Unit/WhatsappNotifierTest.php`
+33. `tests/Unit/NotificationManagerTest.php`
 
 ## Success Criteria
 

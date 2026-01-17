@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('About - Laragod')">
+<x-layouts.app :title="__('meta.title.about')">
     <!-- Hero Section -->
     <section class="relative bg-white dark:bg-gray-900 py-24 lg:py-36 transition-colors duration-200 overflow-hidden">
         {{-- Background decorations --}}
@@ -204,7 +204,7 @@
         :heading="__('about.cta.heading')"
         :description="__('about.cta.description')"
         :buttonText="__('nav.work_with_us')"
-        :buttonUrl="route('contact.show')"
+        :buttonUrl="locale_route('contact.show')"
         background="gray">
     </x-cta-section>
 </x-layouts.app>

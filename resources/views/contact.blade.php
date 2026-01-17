@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('Contact - Laragod')">
+<x-layouts.app :title="__('meta.title.contact')">
     <!-- Hero Section -->
     <section class="relative bg-white dark:bg-gray-900 py-16 lg:py-24 transition-colors duration-200 overflow-hidden">
         {{-- Background decorations --}}
@@ -94,20 +94,20 @@
                 <div class="lg:col-span-2">
                     <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-6">{{ __('contact.faq.title') }}</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <x-faq-item :question="__('contact.faq.cost_question')">
-                            {{ __('contact.faq.cost_answer') }}
+                        <x-faq-item :question="__('contact.faq.cost.question')">
+                            {{ __('contact.faq.cost.answer') }}
                         </x-faq-item>
 
-                        <x-faq-item :question="__('contact.faq.time_question')">
-                            {{ __('contact.faq.time_answer') }}
+                        <x-faq-item :question="__('contact.faq.time.question')">
+                            {{ __('contact.faq.time.answer') }}
                         </x-faq-item>
 
-                        <x-faq-item :question="__('contact.faq.startups_question')">
-                            {{ __('contact.faq.startups_answer') }}
+                        <x-faq-item :question="__('contact.faq.startups.question')">
+                            {{ __('contact.faq.startups.answer') }}
                         </x-faq-item>
 
-                        <x-faq-item :question="__('contact.faq.existing_question')">
-                            {{ __('contact.faq.existing_answer') }}
+                        <x-faq-item :question="__('contact.faq.existing.question')">
+                            {{ __('contact.faq.existing.answer') }}
                         </x-faq-item>
                     </div>
                 </div>

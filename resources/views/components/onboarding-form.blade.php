@@ -5,7 +5,7 @@
     <!-- Progress Bar -->
     <div class="bg-gray-50 dark:bg-gray-800 px-6 lg:px-10 py-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('form.step_of', ['current' => '<span id="current-step">1</span>', 'total' => '3']) }}</span>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{!! __('form.step_of', ['current' => '<span id="current-step">1</span>', 'total' => '3']) !!}</span>
             <span id="step-title" class="text-sm font-medium text-primary">{{ __('form.step1.title') }}</span>
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
@@ -46,7 +46,7 @@
                     <x-form-input name="email" :label="__('form.field.email')" type="email" :required="true" maxlength="200"
                                   placeholder="john@example.com"/>
                     <x-form-input name="phone" :label="__('form.field.phone')" type="tel" maxlength="50"
-                                  placeholder="+44 7XXX XXXXXX"/>
+                                  :placeholder="__('form.field.phone_placeholder')"/>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -61,6 +61,8 @@
 
                 <x-form-textarea name="tech_notes" :label="__('form.field.tech_notes')" :optional="true" rows="2" maxlength="1000"
                                  :placeholder="__('form.field.tech_notes_placeholder')"/>
+
+                <p id="step2-error" class="mt-4 text-sm text-red-500 hidden">{{ __('form.step2.error') }}</p>
             </div>
         </div>
 
@@ -202,7 +204,9 @@
             }
             if (step === 2) {
                 const name = $('name').value.trim(), email = $('email').value.trim(), msg = $('message').value.trim();
-                return name && email && msg && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                const valid = name && email && msg && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                $('step2-error').classList.toggle('hidden', valid);
+                return valid;
             }
             if (step === 3) return $('captcha').value === $('captcha-answer').value;
             return true;
@@ -275,12 +279,12 @@
                     document.querySelector('#multi-step-form > .flex')?.classList.add('hidden');
                     form.insertAdjacentHTML('afterbegin', `
                     <div class="text-center py-8">
-                        <div class="w-16 h-16 bg-primary-light dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/30">
+                            <svg class="w-8 h-8 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         </div>
                         <h2 class="text-xl font-heading font-bold text-gray-900 dark:text-white mb-2">${i18n.successTitle}</h2>
                         <p class="text-gray-600 dark:text-gray-400 mb-4">${i18n.successMessage}</p>
-                        <a href="{{ route('home') }}" class="text-primary hover:text-primary-dark font-medium text-sm">&larr; ${i18n.backHome}</a>
+                        <a href="{{ locale_route('home') }}" class="text-primary hover:text-primary-dark font-medium text-sm">&larr; ${i18n.backHome}</a>
                     </div>`);
                 } else {
                     showError(res.status === 419 ? i18n.csrfError : json.errors ? Object.values(json.errors).flat().join(' ') : json.message || i18n.genericError);
