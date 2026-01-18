@@ -19,6 +19,7 @@ class StorageNotifierTest extends TestCase
         Storage::disk('local')->assertExists('contact_submissions.log');
 
         $content = Storage::disk('local')->get('contact_submissions.log');
+        $this->assertNotNull($content);
         $this->assertStringContainsString('John Doe', $content);
         $this->assertStringContainsString('john@example.com', $content);
         $this->assertStringContainsString('Test message', $content);
@@ -43,6 +44,7 @@ class StorageNotifierTest extends TestCase
         $notifier->send('Second User', 'second@example.com', 'Second message');
 
         $content = Storage::disk('local')->get('contact_submissions.log');
+        $this->assertNotNull($content);
 
         // Both messages should be in the file
         $this->assertStringContainsString('First User', $content);
@@ -57,6 +59,7 @@ class StorageNotifierTest extends TestCase
         $notifier->send("John\x00Doe", 'john@example.com', "Test\x1Fmessage");
 
         $content = Storage::disk('local')->get('contact_submissions.log');
+        $this->assertNotNull($content);
 
         // Control characters should be removed
         $this->assertStringContainsString('JohnDoe', $content);
@@ -77,6 +80,7 @@ class StorageNotifierTest extends TestCase
         $notifier->send('John', 'john@example.com', 'Test');
 
         $content = Storage::disk('local')->get('contact_submissions.log');
+        $this->assertNotNull($content);
 
         // Should contain ISO8601 timestamp format
         $this->assertMatchesRegularExpression('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $content);

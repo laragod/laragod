@@ -6,6 +6,8 @@ use App\Contracts\ContactNotifier;
 use App\Services\NotificationManager;
 use Illuminate\Support\Facades\Config;
 use Mockery;
+use Mockery\Expectation;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class NotificationManagerTest extends TestCase
@@ -16,6 +18,31 @@ class NotificationManagerTest extends TestCase
 
         // Reset notification channels config for each test
         Config::set('notifications.enabled_channels', []);
+    }
+
+    /**
+     * @return MockInterface&ContactNotifier
+     */
+    private function createNotifierMock(string $channel, bool $isConfigured = true, ?bool $sendResult = null): MockInterface
+    {
+        /** @var MockInterface&ContactNotifier $notifier */
+        $notifier = Mockery::mock(ContactNotifier::class);
+
+        /** @var Expectation $isConfiguredExp */
+        $isConfiguredExp = $notifier->shouldReceive('isConfigured');
+        $isConfiguredExp->andReturn($isConfigured);
+
+        /** @var Expectation $getChannelExp */
+        $getChannelExp = $notifier->shouldReceive('getChannel');
+        $getChannelExp->andReturn($channel);
+
+        if ($sendResult !== null) {
+            /** @var Expectation $sendExp */
+            $sendExp = $notifier->shouldReceive('send');
+            $sendExp->once()->andReturn($sendResult);
+        }
+
+        return $notifier;
     }
 
     public function test_returns_false_when_no_channels_configured(): void
@@ -31,20 +58,13 @@ class NotificationManagerTest extends TestCase
 
     public function test_returns_true_when_all_channels_succeed(): void
     {
-        $notifier1 = Mockery::mock(ContactNotifier::class);
-        $notifier1->shouldReceive('isConfigured')->andReturn(true);
-        $notifier1->shouldReceive('send')->once()->andReturn(true);
-        $notifier1->shouldReceive('getChannel')->andReturn('telegram');
-
-        $notifier2 = Mockery::mock(ContactNotifier::class);
-        $notifier2->shouldReceive('isConfigured')->andReturn(true);
-        $notifier2->shouldReceive('send')->once()->andReturn(true);
-        $notifier2->shouldReceive('getChannel')->andReturn('discord');
+        $notifier1 = $this->createNotifierMock('telegram', true, true);
+        $notifier2 = $this->createNotifierMock('discord', true, true);
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn() => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn() => $notifier2);
+        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -55,20 +75,13 @@ class NotificationManagerTest extends TestCase
 
     public function test_returns_true_when_at_least_one_channel_succeeds(): void
     {
-        $notifier1 = Mockery::mock(ContactNotifier::class);
-        $notifier1->shouldReceive('isConfigured')->andReturn(true);
-        $notifier1->shouldReceive('send')->once()->andReturn(true);
-        $notifier1->shouldReceive('getChannel')->andReturn('telegram');
-
-        $notifier2 = Mockery::mock(ContactNotifier::class);
-        $notifier2->shouldReceive('isConfigured')->andReturn(true);
-        $notifier2->shouldReceive('send')->once()->andReturn(false);
-        $notifier2->shouldReceive('getChannel')->andReturn('discord');
+        $notifier1 = $this->createNotifierMock('telegram', true, true);
+        $notifier2 = $this->createNotifierMock('discord', true, false);
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn() => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn() => $notifier2);
+        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -79,20 +92,13 @@ class NotificationManagerTest extends TestCase
 
     public function test_returns_false_when_all_channels_fail(): void
     {
-        $notifier1 = Mockery::mock(ContactNotifier::class);
-        $notifier1->shouldReceive('isConfigured')->andReturn(true);
-        $notifier1->shouldReceive('send')->once()->andReturn(false);
-        $notifier1->shouldReceive('getChannel')->andReturn('telegram');
-
-        $notifier2 = Mockery::mock(ContactNotifier::class);
-        $notifier2->shouldReceive('isConfigured')->andReturn(true);
-        $notifier2->shouldReceive('send')->once()->andReturn(false);
-        $notifier2->shouldReceive('getChannel')->andReturn('discord');
+        $notifier1 = $this->createNotifierMock('telegram', true, false);
+        $notifier2 = $this->createNotifierMock('discord', true, false);
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn() => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn() => $notifier2);
+        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -103,20 +109,27 @@ class NotificationManagerTest extends TestCase
 
     public function test_handles_exception_in_channel_gracefully(): void
     {
+        /** @var MockInterface&ContactNotifier $notifier1 */
         $notifier1 = Mockery::mock(ContactNotifier::class);
-        $notifier1->shouldReceive('isConfigured')->andReturn(true);
-        $notifier1->shouldReceive('send')->once()->andThrow(new \Exception('API Error'));
-        $notifier1->shouldReceive('getChannel')->andReturn('telegram');
 
-        $notifier2 = Mockery::mock(ContactNotifier::class);
-        $notifier2->shouldReceive('isConfigured')->andReturn(true);
-        $notifier2->shouldReceive('send')->once()->andReturn(true);
-        $notifier2->shouldReceive('getChannel')->andReturn('discord');
+        /** @var Expectation $isConfiguredExp1 */
+        $isConfiguredExp1 = $notifier1->shouldReceive('isConfigured');
+        $isConfiguredExp1->andReturn(true);
+
+        /** @var Expectation $sendExp1 */
+        $sendExp1 = $notifier1->shouldReceive('send');
+        $sendExp1->once()->andThrow(new \Exception('API Error'));
+
+        /** @var Expectation $getChannelExp1 */
+        $getChannelExp1 = $notifier1->shouldReceive('getChannel');
+        $getChannelExp1->andReturn('telegram');
+
+        $notifier2 = $this->createNotifierMock('discord', true, true);
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn() => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn() => $notifier2);
+        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -127,20 +140,25 @@ class NotificationManagerTest extends TestCase
 
     public function test_skips_unconfigured_channels(): void
     {
+        /** @var MockInterface&ContactNotifier $notifier1 */
         $notifier1 = Mockery::mock(ContactNotifier::class);
-        $notifier1->shouldReceive('isConfigured')->andReturn(false);
-        $notifier1->shouldNotReceive('send');
-        $notifier1->shouldReceive('getChannel')->andReturn('telegram');
 
-        $notifier2 = Mockery::mock(ContactNotifier::class);
-        $notifier2->shouldReceive('isConfigured')->andReturn(true);
-        $notifier2->shouldReceive('send')->once()->andReturn(true);
-        $notifier2->shouldReceive('getChannel')->andReturn('discord');
+        /** @var Expectation $isConfiguredExp1 */
+        $isConfiguredExp1 = $notifier1->shouldReceive('isConfigured');
+        $isConfiguredExp1->andReturn(false);
+
+        $notifier1->shouldNotReceive('send');
+
+        /** @var Expectation $getChannelExp1 */
+        $getChannelExp1 = $notifier1->shouldReceive('getChannel');
+        $getChannelExp1->andReturn('telegram');
+
+        $notifier2 = $this->createNotifierMock('discord', true, true);
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn() => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn() => $notifier2);
+        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -151,18 +169,13 @@ class NotificationManagerTest extends TestCase
 
     public function test_get_enabled_channels_returns_only_configured_channels(): void
     {
-        $notifier1 = Mockery::mock(ContactNotifier::class);
-        $notifier1->shouldReceive('isConfigured')->andReturn(true);
-        $notifier1->shouldReceive('getChannel')->andReturn('telegram');
-
-        $notifier2 = Mockery::mock(ContactNotifier::class);
-        $notifier2->shouldReceive('isConfigured')->andReturn(false);
-        $notifier2->shouldReceive('getChannel')->andReturn('discord');
+        $notifier1 = $this->createNotifierMock('telegram', true);
+        $notifier2 = $this->createNotifierMock('discord', false);
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn() => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn() => $notifier2);
+        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -173,13 +186,11 @@ class NotificationManagerTest extends TestCase
 
     public function test_get_notifiers_returns_collection(): void
     {
-        $notifier = Mockery::mock(ContactNotifier::class);
-        $notifier->shouldReceive('isConfigured')->andReturn(true);
-        $notifier->shouldReceive('getChannel')->andReturn('telegram');
+        $notifier = $this->createNotifierMock('telegram', true);
 
         Config::set('notifications.enabled_channels', ['telegram']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn() => $notifier);
+        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier);
 
         $manager = new NotificationManager();
 
@@ -191,50 +202,53 @@ class NotificationManagerTest extends TestCase
 
     public function test_resolves_whatsapp_channel(): void
     {
-        $notifier = Mockery::mock(ContactNotifier::class);
-        $notifier->shouldReceive('isConfigured')->andReturn(true);
-        $notifier->shouldReceive('getChannel')->andReturn('whatsapp');
+        $notifier = $this->createNotifierMock('whatsapp', true);
 
         Config::set('notifications.enabled_channels', ['whatsapp']);
 
-        $this->app->bind(\App\Services\WhatsappNotifier::class, fn() => $notifier);
+        $this->app->bind(\App\Services\WhatsappNotifier::class, fn () => $notifier);
 
         $manager = new NotificationManager();
 
-        $this->assertCount(1, $manager->getNotifiers());
-        $this->assertSame('whatsapp', $manager->getNotifiers()->first()->getChannel());
+        $notifiers = $manager->getNotifiers();
+        $this->assertCount(1, $notifiers);
+        $first = $notifiers->first();
+        $this->assertNotNull($first);
+        $this->assertSame('whatsapp', $first->getChannel());
     }
 
     public function test_resolves_email_channel(): void
     {
-        $notifier = Mockery::mock(ContactNotifier::class);
-        $notifier->shouldReceive('isConfigured')->andReturn(true);
-        $notifier->shouldReceive('getChannel')->andReturn('email');
+        $notifier = $this->createNotifierMock('email', true);
 
         Config::set('notifications.enabled_channels', ['email']);
 
-        $this->app->bind(\App\Services\EmailNotifier::class, fn() => $notifier);
+        $this->app->bind(\App\Services\EmailNotifier::class, fn () => $notifier);
 
         $manager = new NotificationManager();
 
-        $this->assertCount(1, $manager->getNotifiers());
-        $this->assertSame('email', $manager->getNotifiers()->first()->getChannel());
+        $notifiers = $manager->getNotifiers();
+        $this->assertCount(1, $notifiers);
+        $first = $notifiers->first();
+        $this->assertNotNull($first);
+        $this->assertSame('email', $first->getChannel());
     }
 
     public function test_resolves_storage_channel(): void
     {
-        $notifier = Mockery::mock(ContactNotifier::class);
-        $notifier->shouldReceive('isConfigured')->andReturn(true);
-        $notifier->shouldReceive('getChannel')->andReturn('storage');
+        $notifier = $this->createNotifierMock('storage', true);
 
         Config::set('notifications.enabled_channels', ['storage']);
 
-        $this->app->bind(\App\Services\StorageNotifier::class, fn() => $notifier);
+        $this->app->bind(\App\Services\StorageNotifier::class, fn () => $notifier);
 
         $manager = new NotificationManager();
 
-        $this->assertCount(1, $manager->getNotifiers());
-        $this->assertSame('storage', $manager->getNotifiers()->first()->getChannel());
+        $notifiers = $manager->getNotifiers();
+        $this->assertCount(1, $notifiers);
+        $first = $notifiers->first();
+        $this->assertNotNull($first);
+        $this->assertSame('storage', $first->getChannel());
     }
 
     public function test_ignores_unknown_channel(): void

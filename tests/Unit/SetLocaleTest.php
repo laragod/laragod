@@ -22,7 +22,7 @@ class SetLocaleTest extends TestCase
     {
         $request = Request::create('/pl/about');
         $request->setRouteResolver(fn () => new class {
-            public function parameter($key)
+            public function parameter(string $key): ?string
             {
                 return $key === 'locale' ? 'pl' : null;
             }
@@ -39,7 +39,7 @@ class SetLocaleTest extends TestCase
         $request = Request::create('/contact', 'POST');
         $request->cookies->set('locale', 'pl');
         $request->setRouteResolver(fn () => new class {
-            public function parameter($key)
+            public function parameter(string $key): null
             {
                 return null;
             }
@@ -55,7 +55,7 @@ class SetLocaleTest extends TestCase
     {
         $request = Request::create('/contact', 'POST');
         $request->setRouteResolver(fn () => new class {
-            public function parameter($key)
+            public function parameter(string $key): null
             {
                 return null;
             }
@@ -72,7 +72,7 @@ class SetLocaleTest extends TestCase
         $request = Request::create('/contact', 'POST');
         $request->cookies->set('locale', 'fr');
         $request->setRouteResolver(fn () => new class {
-            public function parameter($key)
+            public function parameter(string $key): null
             {
                 return null;
             }
@@ -88,7 +88,7 @@ class SetLocaleTest extends TestCase
     {
         $request = Request::create('/de/about');
         $request->setRouteResolver(fn () => new class {
-            public function parameter($key)
+            public function parameter(string $key): ?string
             {
                 return $key === 'locale' ? 'de' : null;
             }

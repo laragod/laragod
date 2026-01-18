@@ -16,10 +16,12 @@ class RedirectToLocaleTest extends TestCase
         $request = Request::create('/');
         $middleware = new RedirectToLocale();
 
-        $response = $middleware->handle($request, fn () => response('next'));
+        $response = $middleware->handle($request);
 
         $this->assertTrue($response->isRedirect());
-        $this->assertStringContainsString('/en', $response->headers->get('Location'));
+        $location = $response->headers->get('Location');
+        $this->assertNotNull($location);
+        $this->assertStringContainsString('/en', $location);
     }
 
     public function test_redirects_to_cookie_locale_when_valid(): void
@@ -32,10 +34,12 @@ class RedirectToLocaleTest extends TestCase
         $request->cookies->set('locale', 'pl');
         $middleware = new RedirectToLocale();
 
-        $response = $middleware->handle($request, fn () => response('next'));
+        $response = $middleware->handle($request);
 
         $this->assertTrue($response->isRedirect());
-        $this->assertStringContainsString('/pl', $response->headers->get('Location'));
+        $location = $response->headers->get('Location');
+        $this->assertNotNull($location);
+        $this->assertStringContainsString('/pl', $location);
     }
 
     public function test_ignores_invalid_cookie_locale(): void
@@ -48,9 +52,11 @@ class RedirectToLocaleTest extends TestCase
         $request->cookies->set('locale', 'fr');
         $middleware = new RedirectToLocale();
 
-        $response = $middleware->handle($request, fn () => response('next'));
+        $response = $middleware->handle($request);
 
         $this->assertTrue($response->isRedirect());
-        $this->assertStringContainsString('/en', $response->headers->get('Location'));
+        $location = $response->headers->get('Location');
+        $this->assertNotNull($location);
+        $this->assertStringContainsString('/en', $location);
     }
 }

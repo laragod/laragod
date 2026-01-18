@@ -36,7 +36,8 @@
       "Bash(vendor\\\\bin\\\\pest:*)",
       "Bash(./vendor/bin/pest:*)",
       "Bash(C:UsersfilipHerdlaragodvendorbinphpunit tests/Unit/ContactFormSubmissionTest.php)",
-      "Bash(vendor/bin/phpstan:*)"
+      "Bash(vendor/bin/phpstan:*)",
+      "Bash(powershell.exe -Command:*)"
     ]
   }
 }

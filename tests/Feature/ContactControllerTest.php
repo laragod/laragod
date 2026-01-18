@@ -4,10 +4,16 @@ namespace Tests\Feature;
 
 use App\Services\NotificationManager;
 use Mockery;
+use Mockery\Expectation;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class ContactControllerTest extends TestCase
 {
+    /**
+     * @param array<string, mixed> $overrides
+     * @return array<string, mixed>
+     */
     private function validFormData(array $overrides = []): array
     {
         return array_merge([
@@ -20,9 +26,12 @@ class ContactControllerTest extends TestCase
 
     public function test_contact_form_submits_successfully(): void
     {
+        /** @var MockInterface&NotificationManager $manager */
         $manager = Mockery::mock(NotificationManager::class);
-        $manager->shouldReceive('sendContactNotification')
-            ->once()
+
+        /** @var Expectation $exp */
+        $exp = $manager->shouldReceive('sendContactNotification');
+        $exp->once()
             ->withArgs(function ($name, $email, $message) {
                 return $name === 'John Doe'
                     && $email === 'john@example.com'
@@ -41,9 +50,12 @@ class ContactControllerTest extends TestCase
 
     public function test_contact_form_with_all_fields(): void
     {
+        /** @var MockInterface&NotificationManager $manager */
         $manager = Mockery::mock(NotificationManager::class);
-        $manager->shouldReceive('sendContactNotification')
-            ->once()
+
+        /** @var Expectation $exp */
+        $exp = $manager->shouldReceive('sendContactNotification');
+        $exp->once()
             ->withArgs(function ($name, $email, $message) {
                 return $name === 'John Doe'
                     && $email === 'john@example.com'
@@ -192,10 +204,12 @@ class ContactControllerTest extends TestCase
 
     public function test_notification_failure(): void
     {
+        /** @var MockInterface&NotificationManager $manager */
         $manager = Mockery::mock(NotificationManager::class);
-        $manager->shouldReceive('sendContactNotification')
-            ->once()
-            ->andReturn(false);
+
+        /** @var Expectation $exp */
+        $exp = $manager->shouldReceive('sendContactNotification');
+        $exp->once()->andReturn(false);
 
         $this->app->instance(NotificationManager::class, $manager);
 
@@ -207,10 +221,12 @@ class ContactControllerTest extends TestCase
 
     public function test_rate_limiting_works(): void
     {
+        /** @var MockInterface&NotificationManager $manager */
         $manager = Mockery::mock(NotificationManager::class);
-        $manager->shouldReceive('sendContactNotification')
-            ->times(5)
-            ->andReturn(true);
+
+        /** @var Expectation $exp */
+        $exp = $manager->shouldReceive('sendContactNotification');
+        $exp->times(5)->andReturn(true);
 
         $this->app->instance(NotificationManager::class, $manager);
 
