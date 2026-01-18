@@ -41,21 +41,36 @@ class NotificationServiceProvider extends ServiceProvider
     /**
      * Resolve all notifiers that are enabled in configuration.
      * Returns only notifiers for channels listed in NOTIFICATION_CHANNELS.
+     *
+     * @return Collection<int, ContactNotifier>
      */
     private function resolveConfiguredNotifiers(): Collection
     {
-        $enabledChannels = config('notifications.enabled_channels', []);
-        $notifiers = collect();
+        $notifiers = [];
 
-        foreach ($enabledChannels as $channel) {
+        foreach ($this->getEnabledChannels() as $channel) {
             $notifier = $this->resolveNotifier($channel);
 
             if ($notifier instanceof ContactNotifier) {
-                $notifiers->push($notifier);
+                $notifiers[] = $notifier;
             }
         }
 
-        return $notifiers;
+        return new Collection($notifiers);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getEnabledChannels(): array
+    {
+        $channels = config('notifications.enabled_channels');
+
+        if (!is_array($channels)) {
+            return [];
+        }
+
+        return array_values(array_filter($channels, is_string(...)));
     }
 
     /**

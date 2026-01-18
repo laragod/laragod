@@ -43,7 +43,7 @@ parameters:
 			path: tests/Unit/NotificationManagerTest.php
 
 		-
-			message: '#^Cannot call method getChannel\(\) on mixed\.$#'
+			message: '#^Cannot call method getChannel\(\) on App\\Contracts\\ContactNotifier\|null\.$#'
 			identifier: method.nonObject
 			count: 3
 			path: tests/Unit/NotificationManagerTest.php

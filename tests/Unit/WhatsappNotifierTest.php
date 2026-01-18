@@ -133,4 +133,50 @@ class WhatsappNotifierTest extends TestCase
 
         $this->assertFalse($result);
     }
+
+    public function test_uses_config_from_and_to_when_not_provided(): void
+    {
+        Http::fake([
+            'api.whatsapp.com/*' => Http::response(['success' => true], 200),
+        ]);
+
+        config(['notifications.channels.whatsapp.api_url' => 'https://api.whatsapp.com/send']);
+        config(['notifications.channels.whatsapp.api_token' => 'config-token']);
+        config(['notifications.channels.whatsapp.from' => '+1111111111']);
+        config(['notifications.channels.whatsapp.to' => '+2222222222']);
+
+        $notifier = new WhatsappNotifier();
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertTrue($result);
+
+        Http::assertSent(function ($request) {
+            return $request['from'] === '+1111111111'
+                && $request['to'] === '+2222222222';
+        });
+    }
+
+    public function test_returns_null_from_when_config_not_string(): void
+    {
+        config(['notifications.channels.whatsapp.api_url' => 'https://api.whatsapp.com/send']);
+        config(['notifications.channels.whatsapp.api_token' => 'config-token']);
+        config(['notifications.channels.whatsapp.from' => 123]);
+        config(['notifications.channels.whatsapp.to' => '+2222222222']);
+
+        $notifier = new WhatsappNotifier();
+
+        $this->assertFalse($notifier->isConfigured());
+    }
+
+    public function test_returns_null_to_when_config_not_string(): void
+    {
+        config(['notifications.channels.whatsapp.api_url' => 'https://api.whatsapp.com/send']);
+        config(['notifications.channels.whatsapp.api_token' => 'config-token']);
+        config(['notifications.channels.whatsapp.from' => '+1111111111']);
+        config(['notifications.channels.whatsapp.to' => 456]);
+
+        $notifier = new WhatsappNotifier();
+
+        $this->assertFalse($notifier->isConfigured());
+    }
 }

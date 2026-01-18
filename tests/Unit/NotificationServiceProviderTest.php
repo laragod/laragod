@@ -86,4 +86,17 @@ class NotificationServiceProviderTest extends TestCase
 
         $this->assertCount(0, $notifiers);
     }
+
+    public function test_handles_non_array_config(): void
+    {
+        config(['notifications.enabled_channels' => null]);
+
+        // Force re-registration
+        $provider = new NotificationServiceProvider($this->app);
+        $provider->register();
+
+        $notifiers = $this->app->make('notification.notifiers');
+
+        $this->assertCount(0, $notifiers);
+    }
 }

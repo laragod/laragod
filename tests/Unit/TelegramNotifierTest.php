@@ -79,4 +79,33 @@ class TelegramNotifierTest extends TestCase
 
         $this->assertFalse($result);
     }
+
+    public function test_uses_config_chat_id_when_not_provided(): void
+    {
+        Http::fake([
+            'api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
+
+        config(['notifications.channels.telegram.token' => 'config-token']);
+        config(['notifications.channels.telegram.chat_id' => 'config-chat-id']);
+
+        $notifier = new TelegramNotifier();
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertTrue($result);
+
+        Http::assertSent(function ($request) {
+            return $request['chat_id'] === 'config-chat-id';
+        });
+    }
+
+    public function test_returns_null_chat_id_when_config_not_string(): void
+    {
+        config(['notifications.channels.telegram.token' => 'test-token']);
+        config(['notifications.channels.telegram.chat_id' => 123]);
+
+        $notifier = new TelegramNotifier();
+
+        $this->assertFalse($notifier->isConfigured());
+    }
 }

@@ -31,8 +31,8 @@ class WhatsappNotifier implements ContactNotifier
 
         try {
             $response = Http::timeout(10)
-                ->withToken($this->getApiToken())
-                ->post($this->getApiUrl(), [
+                ->withToken($this->getApiToken() ?? '')
+                ->post($this->getApiUrl() ?? '', [
                     'from' => $this->getFrom(),
                     'to' => $this->getTo(),
                     'body' => $body,
@@ -79,22 +79,46 @@ class WhatsappNotifier implements ContactNotifier
 
     private function getApiUrl(): ?string
     {
-        return $this->apiUrl ?? config('notifications.channels.whatsapp.api_url');
+        if ($this->apiUrl !== null) {
+            return $this->apiUrl;
+        }
+
+        $url = config('notifications.channels.whatsapp.api_url');
+
+        return is_string($url) ? $url : null;
     }
 
     private function getApiToken(): ?string
     {
-        return $this->apiToken ?? config('notifications.channels.whatsapp.api_token');
+        if ($this->apiToken !== null) {
+            return $this->apiToken;
+        }
+
+        $token = config('notifications.channels.whatsapp.api_token');
+
+        return is_string($token) ? $token : null;
     }
 
     private function getFrom(): ?string
     {
-        return $this->from ?? config('notifications.channels.whatsapp.from');
+        if ($this->from !== null) {
+            return $this->from;
+        }
+
+        $from = config('notifications.channels.whatsapp.from');
+
+        return is_string($from) ? $from : null;
     }
 
     private function getTo(): ?string
     {
-        return $this->to ?? config('notifications.channels.whatsapp.to');
+        if ($this->to !== null) {
+            return $this->to;
+        }
+
+        $to = config('notifications.channels.whatsapp.to');
+
+        return is_string($to) ? $to : null;
     }
 
     private function formatMessage(string $name, string $email, string $message): string

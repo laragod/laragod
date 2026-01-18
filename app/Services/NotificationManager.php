@@ -10,14 +10,16 @@ use Illuminate\Support\Facades\Log;
 
 class NotificationManager
 {
+    /** @var Collection<int, ContactNotifier> */
     private readonly Collection $notifiers;
 
+    /**
+     * @param Collection<int, ContactNotifier> $injectedNotifiers
+     */
     public function __construct(
-        private readonly Collection $injectedNotifiers = new Collection,
+        Collection $injectedNotifiers = new Collection,
     ) {
-        $this->notifiers = $this->injectedNotifiers->isNotEmpty()
-            ? $this->injectedNotifiers
-            : $this->resolveNotifiers();
+        $this->notifiers = $injectedNotifiers->isNotEmpty() ? $injectedNotifiers : $this->resolveNotifiers();
     }
 
     /**
@@ -27,7 +29,7 @@ class NotificationManager
     public function sendContactNotification(string $name, string $email, string $message): bool
     {
         $configuredNotifiers = $this->notifiers->filter(
-            fn (ContactNotifier $notifier): bool => $notifier->isConfigured(),
+            static fn (ContactNotifier $notifier): bool => $notifier->isConfigured(),
         );
 
         if ($configuredNotifiers->isEmpty()) {
@@ -35,17 +37,13 @@ class NotificationManager
             return false;
         }
 
-        $results = collect();
-
-        // Process each notifier independently with try/catch
-        foreach ($configuredNotifiers as $notifier) {
-            $result = $this->sendToChannel($notifier, $name, $email, $message);
-            $results->push($result);
-        }
+        $results = $configuredNotifiers->map(
+            fn (ContactNotifier $notifier): array => $this->sendToChannel($notifier, $name, $email, $message),
+        );
 
         $successCount = $results->where('success', true)->count();
         $totalCount = $results->count();
-        $failedChannels = $results->where('success', false)->pluck('channel')->toArray();
+        $failedChannels = $results->where('success', false)->pluck('channel')->all();
 
         // Log summary based on results
         if ($successCount === 0) {
@@ -69,6 +67,8 @@ class NotificationManager
     /**
      * Send notification to a single channel with error handling.
      * Only logs failures for configured channels.
+     *
+     * @return array{channel: string, success: bool}
      */
     private function sendToChannel(ContactNotifier $notifier, string $name, string $email, string $message): array
     {
@@ -104,6 +104,8 @@ class NotificationManager
 
     /**
      * Get all registered notifiers.
+     *
+     * @return Collection<int, ContactNotifier>
      */
     public function getNotifiers(): Collection
     {
@@ -112,33 +114,51 @@ class NotificationManager
 
     /**
      * Get names of configured (ready to use) channels.
+     *
+     * @return list<string>
      */
     public function getEnabledChannels(): array
     {
-        return $this->notifiers
-            ->filter(fn (ContactNotifier $notifier): bool => $notifier->isConfigured())
-            ->map(fn (ContactNotifier $notifier): string => $notifier->getChannel())
-            ->values()
-            ->all();
+        return array_values(
+            $this->notifiers
+                ->filter(static fn (ContactNotifier $notifier): bool => $notifier->isConfigured())
+                ->map(static fn (ContactNotifier $notifier): string => $notifier->getChannel())
+                ->all(),
+        );
     }
 
     /**
      * Resolve all notifiers based on enabled_channels config.
+     *
+     * @return Collection<int, ContactNotifier>
      */
     private function resolveNotifiers(): Collection
     {
-        $enabledChannels = config('notifications.enabled_channels', []);
-        $notifiers = collect();
+        $notifiers = [];
 
-        foreach ($enabledChannels as $channel) {
+        foreach ($this->getEnabledChannelNames() as $channel) {
             $notifier = $this->resolveNotifier($channel);
 
             if ($notifier instanceof ContactNotifier) {
-                $notifiers->push($notifier);
+                $notifiers[] = $notifier;
             }
         }
 
-        return $notifiers;
+        return new Collection($notifiers);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getEnabledChannelNames(): array
+    {
+        $channels = config('notifications.enabled_channels');
+
+        if (!is_array($channels)) {
+            return [];
+        }
+
+        return array_values(array_filter($channels, is_string(...)));
     }
 
     /**

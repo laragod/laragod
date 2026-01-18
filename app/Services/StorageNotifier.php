@@ -59,12 +59,24 @@ class StorageNotifier implements ContactNotifier
 
     private function getDisk(): string
     {
-        return $this->disk ?? config('notifications.channels.storage.disk', 'local');
+        if ($this->disk !== null) {
+            return $this->disk;
+        }
+
+        $disk = config('notifications.channels.storage.disk');
+
+        return is_string($disk) ? $disk : 'local';
     }
 
     private function getPath(): string
     {
-        return $this->path ?? config('notifications.channels.storage.path', 'contact_submissions.log');
+        if ($this->path !== null) {
+            return $this->path;
+        }
+
+        $path = config('notifications.channels.storage.path');
+
+        return is_string($path) ? $path : 'contact_submissions.log';
     }
 
     private function formatEntry(string $name, string $email, string $message): string
@@ -94,6 +106,6 @@ class StorageNotifier implements ContactNotifier
     private function sanitize(string $value): string
     {
         // Remove any control characters except newlines
-        return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $value);
+        return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $value) ?? $value;
     }
 }

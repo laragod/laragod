@@ -75,12 +75,24 @@ class TelegramNotifier implements ContactNotifier
 
     private function getToken(): ?string
     {
-        return $this->token ?? config('notifications.channels.telegram.token');
+        if ($this->token !== null) {
+            return $this->token;
+        }
+
+        $token = config('notifications.channels.telegram.token');
+
+        return is_string($token) ? $token : null;
     }
 
     private function getChatId(): ?string
     {
-        return $this->chatId ?? config('notifications.channels.telegram.chat_id');
+        if ($this->chatId !== null) {
+            return $this->chatId;
+        }
+
+        $chatId = config('notifications.channels.telegram.chat_id');
+
+        return is_string($chatId) ? $chatId : null;
     }
 
     private function formatMessage(string $name, string $email, string $message): string

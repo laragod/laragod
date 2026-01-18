@@ -22,35 +22,66 @@ final class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locales = array_keys(config('localization.locales', ['en' => 'English']));
-        $defaultLocale = config('localization.default', 'en');
+        $locales = $this->getAvailableLocales();
+        $defaultLocale = $this->getDefaultLocale();
 
         // Get locale from route parameter
         $locale = $request->route('locale');
 
         // If locale is in URL and valid, use it
-        if ($locale !== null && in_array($locale, $locales, true)) {
+        if (is_string($locale) && in_array($locale, $locales, true)) {
             App::setLocale($locale);
 
             // Queue cookie to remember preference
             Cookie::queue(
-                config('localization.cookie_name', 'locale'),
+                $this->getCookieName(),
                 $locale,
-                config('localization.cookie_lifetime', 43200),
+                $this->getCookieLifetime(),
             );
 
             return $next($request);
         }
 
         // For non-localized routes (like POST /contact), check cookie
-        $cookieLocale = $request->cookie(config('localization.cookie_name', 'locale'));
+        $cookieLocale = $request->cookie($this->getCookieName());
 
-        if ($cookieLocale !== null && in_array($cookieLocale, $locales, true)) {
+        if (is_string($cookieLocale) && in_array($cookieLocale, $locales, true)) {
             App::setLocale($cookieLocale);
         } else {
             App::setLocale($defaultLocale);
         }
 
         return $next($request);
+    }
+
+    private function getDefaultLocale(): string
+    {
+        $locale = config('localization.default');
+
+        return is_string($locale) ? $locale : 'en';
+    }
+
+    private function getCookieName(): string
+    {
+        $name = config('localization.cookie_name');
+
+        return is_string($name) ? $name : 'locale';
+    }
+
+    private function getCookieLifetime(): int
+    {
+        $lifetime = config('localization.cookie_lifetime');
+
+        return is_int($lifetime) ? $lifetime : 43200;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getAvailableLocales(): array
+    {
+        $locales = config('localization.locales');
+
+        return is_array($locales) ? array_keys($locales) : ['en'];
     }
 }

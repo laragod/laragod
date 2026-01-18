@@ -93,4 +93,30 @@ class StorageNotifierTest extends TestCase
 
         $this->assertFalse($result);
     }
+
+    public function test_uses_config_disk_when_not_provided(): void
+    {
+        Storage::fake('custom-disk');
+        config(['notifications.channels.storage.disk' => 'custom-disk']);
+        config(['notifications.channels.storage.path' => 'custom.log']);
+
+        $notifier = new StorageNotifier();
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertTrue($result);
+        Storage::disk('custom-disk')->assertExists('custom.log');
+    }
+
+    public function test_uses_default_disk_when_config_not_string(): void
+    {
+        Storage::fake('local');
+        config(['notifications.channels.storage.disk' => null]);
+        config(['notifications.channels.storage.path' => null]);
+
+        $notifier = new StorageNotifier();
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertTrue($result);
+        Storage::disk('local')->assertExists('contact_submissions.log');
+    }
 }

@@ -245,4 +245,13 @@ class NotificationManagerTest extends TestCase
 
         $this->assertCount(0, $manager->getNotifiers());
     }
+
+    public function test_handles_non_array_config(): void
+    {
+        Config::set('notifications.enabled_channels', null);
+
+        $manager = new NotificationManager();
+
+        $this->assertCount(0, $manager->getNotifiers());
+    }
 }

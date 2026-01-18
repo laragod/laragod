@@ -35,7 +35,8 @@
       "Bash(powershell.exe -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan test --filter=ConsentBannerTest\")",
       "Bash(vendor\\\\bin\\\\pest:*)",
       "Bash(./vendor/bin/pest:*)",
-      "Bash(C:UsersfilipHerdlaragodvendorbinphpunit tests/Unit/ContactFormSubmissionTest.php)"
+      "Bash(C:UsersfilipHerdlaragodvendorbinphpunit tests/Unit/ContactFormSubmissionTest.php)",
+      "Bash(vendor/bin/phpstan:*)"
     ]
   }
 }

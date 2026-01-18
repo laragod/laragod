@@ -54,6 +54,12 @@ class EmailNotifier implements ContactNotifier
 
     private function getTo(): ?string
     {
-        return $this->to ?? config('notifications.channels.email.to');
+        if ($this->to !== null) {
+            return $this->to;
+        }
+
+        $to = config('notifications.channels.email.to');
+
+        return is_string($to) ? $to : null;
     }
 }

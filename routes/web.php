@@ -18,7 +18,7 @@ Route::get('/')->middleware(RedirectToLocale::class);
 
 // Localized routes
 Route::prefix('{locale}')
-    ->where(['locale' => implode('|', array_keys(config('localization.locales', ['en' => 'English'])))])
+    ->where(['locale' => implode('|', array_keys(available_locales()))])
     ->group(function (): void {
         Route::controller(FrontController::class)->group(function (): void {
             Route::get('/', 'home')->name('home');

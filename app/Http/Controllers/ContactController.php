@@ -150,7 +150,7 @@ class ContactController extends Controller
         }
 
         /**
-         * @var array{services: array<string,string>, budget: string, company: string, timeline: string, phone: string, message: string, tech_notes: string} $validated
+         * @var array{services: array<int, string>, name: string, company: string, email: string, phone: string, budget: string, timeline: string, message: string, tech_notes: string} $validated
          */
         $validated = $validator->validated();
 
@@ -177,7 +177,7 @@ class ContactController extends Controller
     }
 
     /**
-     * @param array{services: array<string,string>, budget: string, company: string, timeline: string, phone: string, message: string, tech_notes: string} $data
+     * @param array{services: array<int, string>, name: string, company: string, email: string, phone: string, budget: string, timeline: string, message: string, tech_notes: string} $data
      */
     private function formatMessage(array $data): string
     {

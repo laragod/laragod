@@ -24,7 +24,7 @@ class DiscordNotifier implements ContactNotifier
         }
 
         $payload = $this->buildPayload($name, $email, $message);
-        $webhookUrl = $this->getWebhookUrl();
+        $webhookUrl = $this->getWebhookUrl() ?? '';
 
         try {
             $response = Http::timeout(10)->post($webhookUrl, $payload);
@@ -65,9 +65,18 @@ class DiscordNotifier implements ContactNotifier
 
     private function getWebhookUrl(): ?string
     {
-        return $this->webhookUrl ?? config('notifications.channels.discord.webhook_url');
+        if ($this->webhookUrl !== null) {
+            return $this->webhookUrl;
+        }
+
+        $url = config('notifications.channels.discord.webhook_url');
+
+        return is_string($url) ? $url : null;
     }
 
+    /**
+     * @return array{embeds: list<array{title: string, color: int, fields: list<array{name: string, value: string, inline: bool}>, timestamp: string}>}
+     */
     private function buildPayload(string $name, string $email, string $message): array
     {
         $safeName = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');

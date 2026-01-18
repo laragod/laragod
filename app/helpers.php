@@ -5,6 +5,8 @@ declare(strict_types=1);
 if (!function_exists('locale_route')) {
     /**
      * Generate a URL for a named route with the current locale.
+     *
+     * @param array<string, mixed> $parameters
      */
     function locale_route(string $name, array $parameters = [], bool $absolute = true): string
     {
@@ -17,6 +19,8 @@ if (!function_exists('locale_route')) {
 if (!function_exists('route_with_locale')) {
     /**
      * Generate a URL for a named route with a specific locale.
+     *
+     * @param array<string, mixed> $parameters
      */
     function route_with_locale(string $name, string $locale, array $parameters = [], bool $absolute = true): string
     {
@@ -32,7 +36,22 @@ if (!function_exists('available_locales')) {
      */
     function available_locales(): array
     {
-        return config('localization.locales', ['en' => 'English']);
+        $locales = config('localization.locales');
+
+        if (!is_array($locales)) {
+            return ['en' => 'English'];
+        }
+
+        $result = [];
+        foreach ($locales as $key => $value) {
+            if (!(is_string($key) && is_string($value))) {
+                continue;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result !== [] ? $result : ['en' => 'English'];
     }
 }
 
