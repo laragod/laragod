@@ -81,4 +81,16 @@ class StorageNotifierTest extends TestCase
         // Should contain ISO8601 timestamp format
         $this->assertMatchesRegularExpression('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $content);
     }
+
+    public function test_handles_storage_exception(): void
+    {
+        Storage::shouldReceive('disk')
+            ->once()
+            ->andThrow(new \Exception('Storage unavailable'));
+
+        $notifier = new StorageNotifier('local', 'contact_submissions.log');
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertFalse($result);
+    }
 }

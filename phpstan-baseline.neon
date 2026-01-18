@@ -13,10 +13,34 @@ parameters:
 			path: app/Http/Controllers/ContactController.php
 
 		-
-			message: '#^Class App\\Models\\User uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
-			identifier: missingType.generics
+			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
+			identifier: argument.type
 			count: 1
-			path: app/Models/User.php
+			path: app/Http/Middleware/RedirectToLocale.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Illuminate\\Http\\Request\:\:cookie\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Middleware/RedirectToLocale.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Middleware/SetLocale.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Illuminate\\Http\\Request\:\:cookie\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Middleware/SetLocale.php
+
+		-
+			message: '#^Parameter \#1 \$locale of static method Illuminate\\Support\\Facades\\App\:\:setLocale\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Middleware/SetLocale.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -191,3 +215,27 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Services/WhatsappNotifier.php
+
+		-
+			message: '#^Function available_locales\(\) should return array\<string, string\> but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/helpers.php
+
+		-
+			message: '#^Function locale_route\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/helpers.php
+
+		-
+			message: '#^Function route_with_locale\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/helpers.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: routes/web.php

@@ -16,7 +16,7 @@ class ContactController extends Controller
      *
      * @var array<int, string>
      */
-    private const SERVICE_KEYS = [
+    private const array SERVICE_KEYS = [
         'web-app',
         'mobile-app',
         'internal-tool',
@@ -36,7 +36,7 @@ class ContactController extends Controller
      *
      * @var array<string>
      */
-    private const BUDGET_KEYS = [
+    private const array BUDGET_KEYS = [
         'under-5k',
         '5k-10k',
         '10k-25k',
@@ -50,7 +50,7 @@ class ContactController extends Controller
      *
      * @var array<string>
      */
-    private const TIMELINE_KEYS = [
+    private const array TIMELINE_KEYS = [
         'asap',
         '1-3-months',
         '3-6-months',
@@ -118,7 +118,7 @@ class ContactController extends Controller
         ];
     }
 
-    public function index()
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('contact', [
             'services' => self::getServiceLabels(),

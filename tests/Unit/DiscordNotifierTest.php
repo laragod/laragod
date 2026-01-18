@@ -94,4 +94,16 @@ class DiscordNotifierTest extends TestCase
 
         $this->assertEquals('discord', $notifier->getChannel());
     }
+
+    public function test_handles_http_exception(): void
+    {
+        Http::fake([
+            'discord.com/*' => fn () => throw new \Exception('Connection failed'),
+        ]);
+
+        $notifier = new DiscordNotifier('https://discord.com/api/webhooks/test');
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertFalse($result);
+    }
 }

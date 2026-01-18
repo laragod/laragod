@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 final class FrontController extends Controller
 {
@@ -75,7 +75,7 @@ final class FrontController extends Controller
             ],
         ];
 
-        return view('work', compact('projects'));
+        return view('work', ['projects' => $projects]);
     }
 
     public function about(): View|Factory

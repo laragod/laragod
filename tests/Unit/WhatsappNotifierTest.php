@@ -115,4 +115,22 @@ class WhatsappNotifierTest extends TestCase
 
         $this->assertEquals('whatsapp', $notifier->getChannel());
     }
+
+    public function test_handles_http_exception(): void
+    {
+        Http::fake([
+            'api.whatsapp.com/*' => fn () => throw new \Exception('Connection failed'),
+        ]);
+
+        $notifier = new WhatsappNotifier(
+            'https://api.whatsapp.com/send',
+            'test-token',
+            '+1234567890',
+            '+0987654321'
+        );
+
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertFalse($result);
+    }
 }

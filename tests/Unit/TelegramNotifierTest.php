@@ -30,6 +30,10 @@ class TelegramNotifierTest extends TestCase
 
     public function test_fails_when_credentials_missing(): void
     {
+        // Clear config fallback values
+        config(['notifications.channels.telegram.token' => null]);
+        config(['notifications.channels.telegram.chat_id' => null]);
+
         $notifier = new TelegramNotifier(null, null);
         $result = $notifier->send('John', 'john@example.com', 'Test');
 
@@ -62,5 +66,17 @@ class TelegramNotifierTest extends TestCase
             return !str_contains($request['text'], '<script>')
                 && str_contains($request['text'], '&lt;script&gt;');
         });
+    }
+
+    public function test_handles_http_exception(): void
+    {
+        Http::fake([
+            'api.telegram.org/*' => fn () => throw new \Exception('Connection failed'),
+        ]);
+
+        $notifier = new TelegramNotifier('test-token', '123456');
+        $result = $notifier->send('John', 'john@example.com', 'Test');
+
+        $this->assertFalse($result);
     }
 }

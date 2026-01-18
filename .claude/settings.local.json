@@ -25,7 +25,17 @@
       "Bash(for component in \"x-card\" \"x-cta-section\" \"x-faq-item\" \"x-value-item\" \"x-tech-list\" \"x-tech-item\" \"x-form-chip\" \"x-form-input\" \"x-form-select\" \"x-form-textarea\" \"x-form-label\" \"x-review-panel\" \"x-language-switcher\" \"x-onboarding-form\")",
       "Bash(do echo \"=== $component ===\")",
       "Bash(done)",
-      "Skill(frontend-design)"
+      "Skill(frontend-design)",
+      "Bash(C:UsersfilipHerdbinphp.bat artisan test)",
+      "Bash(cmd.exe /c \"php artisan test\")",
+      "Bash(/c/Users/filip/Herd/bin/php artisan test)",
+      "Bash(cmd.exe /c \"php artisan test 2>&1\")",
+      "Bash(powershell.exe -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan test\")",
+      "Bash(powershell.exe -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan test --filter=LandingPageTest\")",
+      "Bash(powershell.exe -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan test --filter=ConsentBannerTest\")",
+      "Bash(vendor\\\\bin\\\\pest:*)",
+      "Bash(./vendor/bin/pest:*)",
+      "Bash(C:UsersfilipHerdlaragodvendorbinphpunit tests/Unit/ContactFormSubmissionTest.php)"
     ]
   }
 }

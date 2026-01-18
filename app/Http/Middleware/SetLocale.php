@@ -36,7 +36,7 @@ final class SetLocale
             Cookie::queue(
                 config('localization.cookie_name', 'locale'),
                 $locale,
-                config('localization.cookie_lifetime', 43200)
+                config('localization.cookie_lifetime', 43200),
             );
 
             return $next($request);

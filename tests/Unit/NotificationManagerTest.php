@@ -170,4 +170,79 @@ class NotificationManagerTest extends TestCase
 
         $this->assertEquals(['telegram'], $enabledChannels);
     }
+
+    public function test_get_notifiers_returns_collection(): void
+    {
+        $notifier = Mockery::mock(ContactNotifier::class);
+        $notifier->shouldReceive('isConfigured')->andReturn(true);
+        $notifier->shouldReceive('getChannel')->andReturn('telegram');
+
+        Config::set('notifications.enabled_channels', ['telegram']);
+
+        $this->app->bind(\App\Services\TelegramNotifier::class, fn() => $notifier);
+
+        $manager = new NotificationManager();
+
+        $notifiers = $manager->getNotifiers();
+
+        $this->assertCount(1, $notifiers);
+        $this->assertSame($notifier, $notifiers->first());
+    }
+
+    public function test_resolves_whatsapp_channel(): void
+    {
+        $notifier = Mockery::mock(ContactNotifier::class);
+        $notifier->shouldReceive('isConfigured')->andReturn(true);
+        $notifier->shouldReceive('getChannel')->andReturn('whatsapp');
+
+        Config::set('notifications.enabled_channels', ['whatsapp']);
+
+        $this->app->bind(\App\Services\WhatsappNotifier::class, fn() => $notifier);
+
+        $manager = new NotificationManager();
+
+        $this->assertCount(1, $manager->getNotifiers());
+        $this->assertSame('whatsapp', $manager->getNotifiers()->first()->getChannel());
+    }
+
+    public function test_resolves_email_channel(): void
+    {
+        $notifier = Mockery::mock(ContactNotifier::class);
+        $notifier->shouldReceive('isConfigured')->andReturn(true);
+        $notifier->shouldReceive('getChannel')->andReturn('email');
+
+        Config::set('notifications.enabled_channels', ['email']);
+
+        $this->app->bind(\App\Services\EmailNotifier::class, fn() => $notifier);
+
+        $manager = new NotificationManager();
+
+        $this->assertCount(1, $manager->getNotifiers());
+        $this->assertSame('email', $manager->getNotifiers()->first()->getChannel());
+    }
+
+    public function test_resolves_storage_channel(): void
+    {
+        $notifier = Mockery::mock(ContactNotifier::class);
+        $notifier->shouldReceive('isConfigured')->andReturn(true);
+        $notifier->shouldReceive('getChannel')->andReturn('storage');
+
+        Config::set('notifications.enabled_channels', ['storage']);
+
+        $this->app->bind(\App\Services\StorageNotifier::class, fn() => $notifier);
+
+        $manager = new NotificationManager();
+
+        $this->assertCount(1, $manager->getNotifiers());
+        $this->assertSame('storage', $manager->getNotifiers()->first()->getChannel());
+    }
+
+    public function test_ignores_unknown_channel(): void
+    {
+        Config::set('notifications.enabled_channels', ['unknown_channel']);
+
+        $manager = new NotificationManager();
+
+        $this->assertCount(0, $manager->getNotifiers());
+    }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-if (! function_exists('locale_route')) {
+if (!function_exists('locale_route')) {
     /**
      * Generate a URL for a named route with the current locale.
      */
@@ -14,7 +14,7 @@ if (! function_exists('locale_route')) {
     }
 }
 
-if (! function_exists('route_with_locale')) {
+if (!function_exists('route_with_locale')) {
     /**
      * Generate a URL for a named route with a specific locale.
      */
@@ -24,7 +24,7 @@ if (! function_exists('route_with_locale')) {
     }
 }
 
-if (! function_exists('available_locales')) {
+if (!function_exists('available_locales')) {
     /**
      * Get all available locales.
      *
@@ -36,7 +36,7 @@ if (! function_exists('available_locales')) {
     }
 }
 
-if (! function_exists('current_locale')) {
+if (!function_exists('current_locale')) {
     /**
      * Get the current locale.
      */

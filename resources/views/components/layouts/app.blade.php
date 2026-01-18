@@ -35,13 +35,39 @@
     </script>
 </head>
 <body class="font-sans antialiased bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id={{ config('analytics.google_tag_id') }}"></script>
+<!-- Google Consent Mode v2 - Must be set BEFORE gtag loads -->
 <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
+    // Set default consent state (denied until user accepts)
+    gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'wait_for_update': 500
+    });
+
+    // Check for stored consent and apply immediately
+    (function() {
+        try {
+            const stored = localStorage.getItem('laragod_analytics_consent');
+            if (stored) {
+                const data = JSON.parse(stored);
+                if (data.version === '1' && data.consent === true) {
+                    gtag('consent', 'update', {
+                        'analytics_storage': 'granted'
+                    });
+                }
+            }
+        } catch (e) {}
+    })();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ config('analytics.google_tag_id') }}"></script>
+<script>
+    gtag('js', new Date());
     gtag('config', '{{ config('analytics.google_tag_id') }}');
 </script>
 <!-- Navigation -->
@@ -320,5 +346,8 @@
         el.style.animationDelay = `${index * 0.1}s`;
     });
 </script>
+
+{{-- GDPR Consent Banner --}}
+<x-consent-banner />
 </body>
 </html>
