@@ -37,8 +37,8 @@
         <link rel="alternate" hreflang="x-default" href="{{ route_with_locale($currentRouteName, config('localization.default'), collect($routeParameters)->except('locale')->toArray()) }}" />
     @endif
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800|manrope:600,700,800" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+    <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800|manrope:600,700,800&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://api.fontshare.com">
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" rel="stylesheet">
 
@@ -58,7 +58,7 @@
     {
         "@@context": "https://schema.org",
         "@@type": "Organization",
-        "name": "LaraGod Laravel Development",
+        "name": "Laragod Laravel Development",
         "alternateName": ["LaraGod", "Laragod", "LaraGod Laravel Development Agency"],
         "url": "https://laragod.com",
         "description": "{{ __('meta.description.default') }}",
@@ -69,7 +69,7 @@
         },
         "sameAs": [
             "https://github.com/laragod",
-            "https://linkedin.com/company/laragod-laravel-development"
+            "https://www.linkedin.com/company/laragod"
         ]
     }
     </script>
