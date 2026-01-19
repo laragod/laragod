@@ -6,6 +6,25 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? __('meta.title.default') }}</title>
 
+    {{-- Meta description --}}
+    <meta name="description" content="{{ $description ?? __('meta.description.default') }}">
+
+    {{-- Canonical URL --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph --}}
+    <meta property="og:title" content="{{ $title ?? __('meta.title.default') }}">
+    <meta property="og:description" content="{{ $description ?? __('meta.description.default') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="LaraGod Laravel Development">
+    <meta property="og:locale" content="{{ app()->getLocale() }}">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title ?? __('meta.title.default') }}">
+    <meta name="twitter:description" content="{{ $description ?? __('meta.description.default') }}">
+
     {{-- hreflang tags for SEO --}}
     @php
         $currentRouteName = request()->route()?->getName();
@@ -32,6 +51,27 @@
         } else {
             document.documentElement.classList.remove('dark');
         }
+    </script>
+
+    {{-- Organization Schema for entity establishment --}}
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Organization",
+        "name": "LaraGod Laravel Development",
+        "alternateName": ["LaraGod", "Laragod", "LaraGod Laravel Development Agency"],
+        "url": "https://laragod.com",
+        "description": "{{ __('meta.description.default') }}",
+        "foundingDate": "2024",
+        "address": {
+            "@@type": "PostalAddress",
+            "addressCountry": "GB"
+        },
+        "sameAs": [
+            "https://github.com/laragod",
+            "https://linkedin.com/company/laragod-laravel-development"
+        ]
+    }
     </script>
 </head>
 <body class="font-sans antialiased bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200">

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 return [
     'hero' => [
+        'brand_tagline' => 'LaraGod Laravel Development Agency',
         'badge' => 'Dostępni dla nowych projektów',
         'title_part1' => 'Twoje MVP zadziałało.',
         'title_part2' => 'Czas na kolejny krok.',

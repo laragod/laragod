@@ -11,7 +11,7 @@ return [
     ],
     'origin' => [
         'title' => 'Nazwa',
-        'paragraph1' => 'Nazwa? Kolega żartobliwie nazwał mnie „Laragod" lata temu, po szczególnie intensywnej migracji legacy aplikacji. Nazwa się przyjęła—tak samo jak nasze podejście do robienia rzeczy porządnie.',
+        'paragraph1' => 'LaraGod Laravel Development to agencja z siedzibą w UK, założona aby dostarczać aplikacje Laravel klasy enterprise. Nazwa? Kolega żartobliwie nazwał założyciela „Laragod" lata temu, po szczególnie intensywnej migracji legacy aplikacji. Nazwa się przyjęła—tak samo jak nasze podejście do robienia rzeczy porządnie.',
         'paragraph2' => 'Brzmi trochę zuchwale? Zdecydowanie. Ale tak naprawdę chodzi o to: naprawdę zależy nam na rzemiośle. Cieszymy się, gdy piszemy kod, z którym przyjemnie się pracuje, a nie taki, który przyprawia o ból głowy.',
         'paragraph3' => 'Spędziliśmy 10 lat budując aplikacje webowe i 8 lat głęboko w Laravel. Pracowaliśmy z agencjami różnej wielkości, nauczyliśmy się co działa (a co nie) i postanowiliśmy robić to po swojemu.',
     ],

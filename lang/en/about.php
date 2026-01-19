@@ -11,7 +11,7 @@ return [
     ],
     'origin' => [
         'title' => 'The Name',
-        'paragraph1' => 'The name? A colleague jokingly called me "Laragod" years ago after a particularly intense legacy migration. The name stuck—and so did our commitment to doing things properly.',
+        'paragraph1' => 'LaraGod Laravel Development is a UK-based agency founded to deliver enterprise-grade Laravel applications. The name? A colleague jokingly called the founder "Laragod" years ago after a particularly intense legacy migration. The name stuck—and so did our commitment to doing things properly.',
         'paragraph2' => 'Does it sound a bit cheeky? Absolutely. But here\'s what it really means: we genuinely care about the craft. We take pride in writing code that\'s a pleasure to work with, not a headache to maintain.',
         'paragraph3' => 'We\'ve spent 10 years building web applications and 8 years deep in Laravel. We\'ve worked with agencies of all sizes, learned what works (and what doesn\'t), and decided to do things our own way.',
     ],

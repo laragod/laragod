@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('meta.title.home')">
+<x-layouts.app :title="__('meta.title.home')" :description="__('meta.description.home')">
     <!-- Hero Section -->
     <section class="relative bg-white dark:bg-gray-900 py-24 lg:py-40 transition-colors duration-200 overflow-hidden">
         {{-- Background decorations --}}
@@ -15,6 +15,11 @@
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-5xl mx-auto">
+                {{-- Brand tagline for entity establishment --}}
+                <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 tracking-widest uppercase mb-4">
+                    {{ __('home.hero.brand_tagline') }}
+                </p>
+
                 {{-- Badge --}}
                 <div class="animate-fade-in-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-8">
                     <span class="relative flex h-2 w-2">

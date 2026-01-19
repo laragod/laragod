@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('meta.title.work')">
+<x-layouts.app :title="__('meta.title.work')" :description="__('meta.description.work')">
     <!-- Hero Section -->
     <section class="relative bg-white dark:bg-gray-900 py-24 lg:py-36 transition-colors duration-200 overflow-hidden">
         {{-- Background decorations --}}
