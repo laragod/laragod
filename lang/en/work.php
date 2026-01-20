@@ -14,6 +14,8 @@ return [
     'solution' => 'Solution',
     'code' => 'Code',
     'view_live' => 'View Live',
+    'other_projects' => 'Other Projects',
+    'view_all_projects' => 'View All Projects',
     'empty' => [
         'title' => 'Portfolio Coming Soon',
         'description' => 'We\'re currently adding our latest projects. In the meantime, let\'s talk about yours.',

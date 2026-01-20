@@ -14,6 +14,8 @@ return [
     'solution' => 'Rozwiązanie',
     'code' => 'Kod',
     'view_live' => 'Zobacz na żywo',
+    'other_projects' => 'Inne projekty',
+    'view_all_projects' => 'Zobacz wszystkie projekty',
     'empty' => [
         'title' => 'Portfolio wkrótce',
         'description' => 'Obecnie dodajemy nasze najnowsze projekty. W międzyczasie porozmawiajmy o Twoim.',

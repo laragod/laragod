@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Middleware\RedirectToLocale;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('ping', [HealthController::class, 'ping']);
 Route::get('health', [HealthController::class, 'healthCheck']);
 Route::get('status', [HealthController::class, 'status']);
+
+// Sitemap (no locale prefix)
+Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Root redirect to default locale
 Route::get('/')->middleware(RedirectToLocale::class);
@@ -22,7 +26,10 @@ Route::prefix('{locale}')
     ->group(function (): void {
         Route::controller(FrontController::class)->group(function (): void {
             Route::get('/', 'home')->name('home');
+            Route::get('/services', 'services')->name('services');
+            Route::get('/services/{slug}', 'service')->name('services.show');
             Route::get('/work', 'work')->name('work');
+            Route::get('/work/{slug}', 'project')->name('work.show');
             Route::get('/about', 'about')->name('about');
         });
 

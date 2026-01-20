@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Attributes\Sitemap;
 use App\Services\NotificationManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -118,6 +119,7 @@ class ContactController extends Controller
         ];
     }
 
+    #[Sitemap(priority: 0.9, changefreq: 'monthly')]
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('contact', [

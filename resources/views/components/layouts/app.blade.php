@@ -131,9 +131,15 @@
                     <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
                     @endif
                 </a>
-                <a href="{{ locale_route('work') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('work') ? 'text-primary' : '' }}">
+                <a href="{{ locale_route('services') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('services') || request()->routeIs('services.show') ? 'text-primary' : '' }}">
+                    {{ __('nav.services') }}
+                    @if(request()->routeIs('services') || request()->routeIs('services.show'))
+                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
+                    @endif
+                </a>
+                <a href="{{ locale_route('work') }}" class="relative px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 {{ request()->routeIs('work') || request()->routeIs('work.show') ? 'text-primary' : '' }}">
                     {{ __('nav.work') }}
-                    @if(request()->routeIs('work'))
+                    @if(request()->routeIs('work') || request()->routeIs('work.show'))
                     <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full"></span>
                     @endif
                 </a>
@@ -197,7 +203,10 @@
             <a href="{{ locale_route('home') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('home') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
                 {{ __('nav.home') }}
             </a>
-            <a href="{{ locale_route('work') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('work') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
+            <a href="{{ locale_route('services') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('services') || request()->routeIs('services.show') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
+                {{ __('nav.services') }}
+            </a>
+            <a href="{{ locale_route('work') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('work') || request()->routeIs('work.show') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
                 {{ __('nav.work') }}
             </a>
             <a href="{{ locale_route('about') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ request()->routeIs('about') ? 'text-primary bg-primary-light dark:bg-gray-700' : '' }}">
@@ -252,6 +261,7 @@
                 <h3 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">{{ __('footer.quick_links') }}</h3>
                 <ul class="space-y-3">
                     <li><a href="{{ locale_route('home') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.home') }}</a></li>
+                    <li><a href="{{ locale_route('services') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.services') }}</a></li>
                     <li><a href="{{ locale_route('work') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.work') }}</a></li>
                     <li><a href="{{ locale_route('about') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.about') }}</a></li>
                     <li><a href="{{ locale_route('contact.show') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('nav.contact') }}</a></li>
