@@ -1,7 +1,205 @@
 # Laragod SEO & Positioning Todo
 
 ## Goal
-Position LaraGod as the go-to Laravel agency for SMBs looking to scale and organize their processes. Differentiate from WordPress/basic web dev work.
+Position Laragod as the go-to Laravel agency for SMBs looking to scale and organize their processes. Differentiate from WordPress/basic web dev work.
+
+---
+
+## 0. Site Architecture Improvements (PRIORITY - Do First)
+
+The current site has a flat structure where all services are cards on the homepage and projects have no detail pages. This limits SEO potential significantly. Fix this before creating content.
+
+### Current Structure (Problem)
+```
+/{locale}/            → Home (everything crammed here)
+/{locale}/work        → Portfolio grid (no detail pages)
+/{locale}/about       → About
+/{locale}/contact     → Contact
+```
+
+### Target Structure
+```
+/{locale}/                          → Home (hero, value prop, featured services, CTA)
+/{locale}/services                  → Services index page
+/{locale}/services/{slug}           → Individual service pages (9 pages)
+/{locale}/work                      → Portfolio/case studies index
+/{locale}/work/{slug}               → Individual project/case study pages
+/{locale}/about                     → About (keep as is)
+/{locale}/contact                   → Contact (keep as is)
+```
+
+### Implementation Steps
+
+#### Step 1: Add Services Routes
+**File:** `routes/web.php`
+```php
+Route::controller(FrontController::class)->group(function (): void {
+    Route::get('/', 'home')->name('home');
+    Route::get('/services', 'services')->name('services');
+    Route::get('/services/{slug}', 'service')->name('services.show');
+    Route::get('/work', 'work')->name('work');
+    Route::get('/work/{slug}', 'project')->name('work.show');
+    Route::get('/about', 'about')->name('about');
+});
+```
+
+#### Step 2: Update FrontController
+**File:** `app/Http/Controllers/FrontController.php`
+
+Add services data array (similar to projects):
+```php
+private function getServices(): array
+{
+    return [
+        'custom-web-applications' => [
+            'key' => 'custom_web_apps',
+            'icon' => 'code',
+            'keywords' => ['custom laravel development', 'bespoke web application'],
+        ],
+        'api-development' => [
+            'key' => 'api_development',
+            'icon' => 'terminal',
+            'keywords' => ['laravel api development', 'api integration services'],
+        ],
+        // ... etc for all 9 services
+    ];
+}
+
+public function services(): View
+{
+    return view('services.index', ['services' => $this->getServices()]);
+}
+
+public function service(string $locale, string $slug): View
+{
+    $services = $this->getServices();
+    abort_unless(isset($services[$slug]), 404);
+    return view('services.show', ['service' => $services[$slug], 'slug' => $slug]);
+}
+```
+
+#### Step 3: Create Service Views
+**Files to create:**
+- `resources/views/services/index.blade.php` - Grid of all services with links
+- `resources/views/services/show.blade.php` - Individual service page template
+
+**Service page structure:**
+```blade
+<x-layouts.app :title="..." :description="...">
+    {{-- Breadcrumbs --}}
+    {{-- Hero with service name --}}
+    {{-- Problem/pain points this service solves --}}
+    {{-- How we approach it --}}
+    {{-- Technologies used --}}
+    {{-- Related case studies (if any) --}}
+    {{-- FAQ section --}}
+    {{-- CTA --}}
+</x-layouts.app>
+```
+
+#### Step 4: Create Service Translations
+**File:** `lang/en/services.php` - Expand each service:
+```php
+'custom_web_apps' => [
+    'title' => 'Custom Web Applications',
+    'description' => 'Bespoke Laravel applications...',
+    'meta_description' => 'Custom Laravel web application development...',
+    'hero_heading' => 'Custom Web Applications Built for Your Business',
+    'hero_description' => '...',
+    'problems' => [
+        'Off-the-shelf software doesn\'t fit your workflow',
+        'You\'re duct-taping multiple tools together',
+        // ...
+    ],
+    'approach' => [
+        'title' => 'How We Build Custom Applications',
+        'steps' => [...]
+    ],
+    'faq' => [
+        ['question' => '...', 'answer' => '...'],
+    ],
+],
+```
+
+#### Step 5: Add Project Detail Pages
+**File:** `resources/views/work/show.blade.php`
+
+Similar structure to services but focused on:
+- Project overview
+- The challenge
+- Our solution
+- Technologies used
+- Results/metrics
+- Testimonial (if available)
+
+#### Step 6: Update Navigation
+**File:** `lang/en/nav.php`
+```php
+'services' => 'Services',
+```
+
+**File:** `resources/views/components/layouts/app.blade.php`
+Add "Services" link to navigation between Home and Work.
+
+#### Step 7: Add Breadcrumbs Component
+**File:** `resources/views/components/breadcrumbs.blade.php`
+```blade
+@props(['items'])
+<nav aria-label="Breadcrumb" class="...">
+    <ol class="flex items-center space-x-2" itemscope itemtype="https://schema.org/BreadcrumbList">
+        @foreach($items as $i => $item)
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                @if($item['url'])
+                    <a href="{{ $item['url'] }}" itemprop="item">
+                        <span itemprop="name">{{ $item['label'] }}</span>
+                    </a>
+                @else
+                    <span itemprop="name">{{ $item['label'] }}</span>
+                @endif
+                <meta itemprop="position" content="{{ $i + 1 }}" />
+            </li>
+            @if(!$loop->last)
+                <span>/</span>
+            @endif
+        @endforeach
+    </ol>
+</nav>
+```
+
+#### Step 8: Update Sitemap
+**File:** `public/sitemap.xml`
+Add all new service and project URLs with hreflang tags.
+
+### Service Slugs Mapping
+| Current Key | URL Slug | Target Keywords |
+|-------------|----------|-----------------|
+| custom_web_apps | custom-web-applications | custom laravel development |
+| api_development | api-development | laravel api development |
+| laravel_filament | filament-admin-panels | filament admin panel development |
+| mvp_development | mvp-development | laravel mvp development |
+| legacy_modernization | legacy-modernization | legacy php migration |
+| code_quality | code-quality-audit | laravel code review |
+| consulting | technical-consulting | fractional cto laravel |
+| devops | devops-deployment | laravel devops |
+| team_augmentation | team-augmentation | hire laravel developer |
+
+### Checklist
+- [ ] Add routes for `/services` and `/services/{slug}`
+- [ ] Add routes for `/work/{slug}`
+- [ ] Create `FrontController::services()` method
+- [ ] Create `FrontController::service()` method
+- [ ] Create `FrontController::project()` method
+- [ ] Create `resources/views/services/index.blade.php`
+- [ ] Create `resources/views/services/show.blade.php`
+- [ ] Create `resources/views/work/show.blade.php`
+- [ ] Expand `lang/en/services.php` with full content for each service
+- [ ] Create `lang/pl/services.php` Polish translations
+- [ ] Add "Services" to navigation
+- [ ] Create breadcrumbs component
+- [ ] Add breadcrumbs to all pages
+- [ ] Update sitemap.xml with new URLs
+- [ ] Add Service schema to individual service pages
+- [ ] Test all new routes work in both locales
 
 ---
 
@@ -105,7 +303,7 @@ Create dedicated landing pages for each service niche:
 ## 6. External Authority Building
 
 ### LinkedIn
-- [ ] Optimize company page as "LaraGod Laravel Development"
+- [ ] Optimize company page as "Laragod Laravel Development"
 - [ ] Post weekly technical insights
 - [ ] Write LinkedIn articles on Laravel/business process topics
 - [ ] Engage in relevant Laravel/PHP groups
@@ -145,20 +343,29 @@ Create dedicated landing pages for each service niche:
 
 ## Priority Order
 
-1. **Immediate** (This Week)
-   - Service pages (at least 2-3)
-   - Schema markup for services
-   - On-site copy adjustments
+### Phase 0: Foundation (Do First)
+Site architecture changes - without this, content work is wasted:
+- [ ] Services section with individual pages
+- [ ] Project detail pages
+- [ ] Breadcrumbs
+- [ ] Navigation update
+- [ ] Sitemap update
 
-2. **Short-term** (This Month)
-   - First case study
-   - 2-3 blog posts
-   - LinkedIn company page optimization
+### Phase 1: Immediate (After Architecture)
+- [ ] Write content for 3 most important service pages
+- [ ] Schema markup for services
+- [ ] On-site copy adjustments (remove "websites" language)
 
-3. **Ongoing**
-   - Weekly blog posts
-   - Community engagement
-   - Case studies as projects complete
+### Phase 2: Short-term (This Month)
+- [ ] Complete all 9 service pages
+- [ ] First case study with full detail
+- [ ] LinkedIn company page optimization
+
+### Phase 3: Ongoing
+- [ ] Blog posts (start with 1/week)
+- [ ] Community engagement
+- [ ] Case studies as projects complete
+- [ ] Refine service pages based on Search Console data
 
 ---
 
