@@ -17,7 +17,7 @@
     <meta property="og:description" content="{{ $description ?? __('meta.description.default') }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:site_name" content="LaraGod Laravel Development">
+    <meta property="og:site_name" content="Laragod Laravel Development">
     <meta property="og:locale" content="{{ app()->getLocale() }}">
 
     {{-- Twitter Card --}}
@@ -59,7 +59,7 @@
         "@@context": "https://schema.org",
         "@@type": "Organization",
         "name": "Laragod Laravel Development",
-        "alternateName": ["LaraGod", "Laragod", "LaraGod Laravel Development Agency"],
+        "alternateName": ["Laragod", "Laragod", "Laragod Laravel Development Agency"],
         "url": "https://laragod.com",
         "description": "{{ __('meta.description.default') }}",
         "foundingDate": "2024",
