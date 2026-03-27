@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1a0a"/>
+      <stop offset="100%" style="stop-color:#111827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4cbb17"/>
+      <stop offset="100%" style="stop-color:#3da614"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)"/>
+  <!-- Code grid -->
+  <g opacity="0.04" stroke="#4cbb17" fill="none">
+    <line x1="0" y1="50" x2="800" y2="50" stroke-width="1"/>
+    <line x1="0" y1="100" x2="800" y2="100" stroke-width="1"/>
+    <line x1="0" y1="150" x2="800" y2="150" stroke-width="1"/>
+    <line x1="0" y1="200" x2="800" y2="200" stroke-width="1"/>
+    <line x1="0" y1="250" x2="800" y2="250" stroke-width="1"/>
+    <line x1="0" y1="300" x2="800" y2="300" stroke-width="1"/>
+    <line x1="0" y1="350" x2="800" y2="350" stroke-width="1"/>
+  </g>
+  <!-- Glow -->
+  <circle cx="400" cy="150" r="100" fill="#4cbb17" opacity="0.06"/>
+  <!-- Code brackets icon -->
+  <g transform="translate(355, 105)" fill="none" stroke="#4cbb17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+    <!-- Left bracket -->
+    <path d="M25 0 L10 22 L25 44 L10 66"/>
+    <!-- Right bracket -->
+    <path d="M65 0 L80 22 L65 44 L80 66"/>
+    <!-- Slash -->
+    <line x1="56" y1="5" x2="34" y2="61" stroke-width="2" opacity="0.6"/>
+    <!-- Dot accents -->
+    <circle cx="45" cy="22" r="2.5" fill="#4cbb17" opacity="0.4"/>
+    <circle cx="45" cy="44" r="2.5" fill="#4cbb17" opacity="0.4"/>
+  </g>
+  <!-- Fake code lines decoration -->
+  <g opacity="0.08">
+    <rect x="240" y="210" width="120" height="4" rx="2" fill="#4cbb17"/>
+    <rect x="260" y="222" width="180" height="4" rx="2" fill="#4cbb17"/>
+    <rect x="260" y="234" width="140" height="4" rx="2" fill="#4cbb17"/>
+    <rect x="280" y="246" width="200" height="4" rx="2" fill="#4cbb17"/>
+    <rect x="260" y="258" width="100" height="4" rx="2" fill="#4cbb17"/>
+    <rect x="240" y="270" width="60" height="4" rx="2" fill="#4cbb17"/>
+  </g>
+  <!-- Title -->
+  <text x="400" y="340" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="32" fill="#4cbb17" letter-spacing="3">LARAGOD</text>
+  <text x="400" y="370" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="14" fill="#6b7280" letter-spacing="4">LARAVEL DEVELOPMENT</text>
+</svg>

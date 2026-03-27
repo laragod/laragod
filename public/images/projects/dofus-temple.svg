@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f1a0f"/>
+      <stop offset="100%" style="stop-color:#1a2e1a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#22c55e"/>
+      <stop offset="100%" style="stop-color:#10b981"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)"/>
+  <!-- Subtle grid -->
+  <g opacity="0.04">
+    <line x1="100" y1="0" x2="100" y2="400" stroke="#22c55e" stroke-width="1"/>
+    <line x1="200" y1="0" x2="200" y2="400" stroke="#22c55e" stroke-width="1"/>
+    <line x1="300" y1="0" x2="300" y2="400" stroke="#22c55e" stroke-width="1"/>
+    <line x1="400" y1="0" x2="400" y2="400" stroke="#22c55e" stroke-width="1"/>
+    <line x1="500" y1="0" x2="500" y2="400" stroke="#22c55e" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="400" stroke="#22c55e" stroke-width="1"/>
+    <line x1="700" y1="0" x2="700" y2="400" stroke="#22c55e" stroke-width="1"/>
+  </g>
+  <!-- Glow -->
+  <circle cx="400" cy="155" r="90" fill="#22c55e" opacity="0.06"/>
+  <!-- Temple/book icon -->
+  <g transform="translate(370, 110)" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
+    <path d="M2 4c0 0 8-4 28-4s28 4 28 4v50c0 0-8-3-28-3s-28 3-28 3V4z"/>
+    <line x1="30" y1="0" x2="30" y2="54"/>
+    <path d="M8 12h16" opacity="0.5"/>
+    <path d="M8 20h16" opacity="0.5"/>
+    <path d="M8 28h16" opacity="0.5"/>
+    <path d="M36 12h16" opacity="0.5"/>
+    <path d="M36 20h16" opacity="0.5"/>
+    <path d="M36 28h16" opacity="0.5"/>
+  </g>
+  <!-- SEO graph decoration -->
+  <g transform="translate(240, 210)" opacity="0.12">
+    <polyline points="0,80 40,70 80,50 120,60 160,30 200,40 240,15 280,20 320,5" fill="none" stroke="#22c55e" stroke-width="3"/>
+    <circle cx="320" cy="5" r="5" fill="#22c55e"/>
+  </g>
+  <!-- Title -->
+  <text x="400" y="340" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="32" fill="#22c55e" letter-spacing="2">DOFUS TEMPLE</text>
+  <text x="400" y="370" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="14" fill="#6b7280" letter-spacing="4">SEO BLOG</text>
+</svg>

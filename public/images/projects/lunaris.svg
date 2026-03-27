@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c0a1a"/>
+      <stop offset="100%" style="stop-color:#1a1033"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="40%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)"/>
+  <rect width="800" height="400" fill="url(#glow)"/>
+  <!-- Stars -->
+  <g fill="#a78bfa" opacity="0.3">
+    <circle cx="120" cy="60" r="1.5"/><circle cx="680" cy="80" r="1"/><circle cx="200" cy="120" r="1"/>
+    <circle cx="600" cy="50" r="1.5"/><circle cx="350" cy="40" r="1"/><circle cx="500" cy="100" r="1.2"/>
+    <circle cx="150" cy="300" r="1"/><circle cx="700" cy="280" r="1.5"/><circle cx="80" cy="200" r="1"/>
+    <circle cx="720" cy="180" r="1"/><circle cx="450" cy="60" r="1.3"/><circle cx="250" cy="320" r="1"/>
+  </g>
+  <!-- Moon crescent -->
+  <g transform="translate(400, 150)">
+    <circle cx="0" cy="0" r="50" fill="#a78bfa" opacity="0.12"/>
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0.4"/>
+    <circle cx="15" cy="-10" r="40" fill="url(#bg)"/>
+    <circle cx="-5" cy="5" r="35" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.2"/>
+  </g>
+  <!-- Shopping bag icon -->
+  <g transform="translate(372, 125)" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
+    <path d="M12 0v12M44 0v12"/>
+    <rect x="4" y="12" width="48" height="40" rx="4"/>
+    <path d="M12 12c0-8 6-12 16-12s16 4 16 12"/>
+  </g>
+  <!-- Title -->
+  <text x="400" y="340" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="32" fill="#a78bfa" letter-spacing="3">LUNARIS</text>
+  <text x="400" y="370" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="14" fill="#6b7280" letter-spacing="4">E-COMMERCE PLATFORM</text>
+</svg>

@@ -97,7 +97,7 @@ final class FrontController extends Controller
             'skill-peak' => [
                 'key' => 'skill_peak',
                 'technologies' => ['Laravel', 'Filament', 'PHP 8.4', 'Tailwind CSS', 'MySQL', 'REST API'],
-                'image' => '/images/projects/skill-peak.png',
+                'image' => '/images/projects/skill-peak.svg',
                 'github_url' => null,
                 'live_url' => 'https://skill-peak.com',
                 'featured' => true,
@@ -106,7 +106,7 @@ final class FrontController extends Controller
             'lunaris' => [
                 'key' => 'lunaris',
                 'technologies' => ['Laravel', 'Filament', 'PHP 8.4', 'MySQL', 'Stripe', 'Tailwind CSS'],
-                'image' => '/images/projects/lunaris.png',
+                'image' => '/images/projects/lunaris.svg',
                 'github_url' => null,
                 'live_url' => 'https://lunaris.pl',
                 'featured' => true,
@@ -115,7 +115,7 @@ final class FrontController extends Controller
             'dofus-temple' => [
                 'key' => 'dofus_temple',
                 'technologies' => ['Laravel', 'Filament', 'PHP 8.4', 'SEO', 'Tailwind CSS', 'MySQL'],
-                'image' => '/images/projects/dofus-temple.png',
+                'image' => '/images/projects/dofus-temple.svg',
                 'github_url' => null,
                 'live_url' => 'https://dofus-temple.com',
                 'featured' => false,
@@ -124,7 +124,7 @@ final class FrontController extends Controller
             'adriateatr' => [
                 'key' => 'adriateatr',
                 'technologies' => ['Laravel', 'PHP 8.1', 'Tailwind CSS', 'MySQL'],
-                'image' => '/images/projects/adriateatr.png',
+                'image' => '/images/projects/adriateatr.svg',
                 'github_url' => null,
                 'live_url' => 'https://adriateatr.pl',
                 'featured' => false,
@@ -133,7 +133,7 @@ final class FrontController extends Controller
             'persiu-studio' => [
                 'key' => 'persiu_studio',
                 'technologies' => ['Laravel', 'PHP 8.4', 'Tailwind CSS', 'Three.js'],
-                'image' => '/images/projects/persiu-studio.png',
+                'image' => '/images/projects/persiu-studio.svg',
                 'github_url' => null,
                 'live_url' => 'https://persiustudio.pl',
                 'featured' => false,
@@ -142,7 +142,7 @@ final class FrontController extends Controller
             'laragod' => [
                 'key' => 'laragod',
                 'technologies' => ['Laravel 12', 'PHP 8.4', 'Tailwind CSS 4', 'Blade'],
-                'image' => '/images/projects/laragod.png',
+                'image' => '/images/projects/laragod.svg',
                 'github_url' => 'https://github.com/laragod/laragod',
                 'live_url' => 'https://laragod.com',
                 'featured' => false,
