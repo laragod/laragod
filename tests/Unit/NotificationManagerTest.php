@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Contracts\ContactNotifier;
-use App\Services\NotificationManager;
+use Laragod\Toolkit\Contracts\ContactNotifier;
+use Laragod\Toolkit\Services\NotificationManager;
 use Illuminate\Support\Facades\Config;
 use Mockery;
 use Mockery\Expectation;
@@ -63,8 +63,8 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
+        $this->app->bind(\Laragod\Toolkit\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\Laragod\Toolkit\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -80,8 +80,8 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
+        $this->app->bind(\Laragod\Toolkit\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\Laragod\Toolkit\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -97,8 +97,8 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
+        $this->app->bind(\Laragod\Toolkit\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\Laragod\Toolkit\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -128,8 +128,8 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
+        $this->app->bind(\Laragod\Toolkit\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\Laragod\Toolkit\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -157,8 +157,8 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
+        $this->app->bind(\Laragod\Toolkit\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\Laragod\Toolkit\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -174,8 +174,8 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['telegram', 'discord']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier1);
-        $this->app->bind(\App\Services\DiscordNotifier::class, fn () => $notifier2);
+        $this->app->bind(\Laragod\Toolkit\Services\TelegramNotifier::class, fn () => $notifier1);
+        $this->app->bind(\Laragod\Toolkit\Services\DiscordNotifier::class, fn () => $notifier2);
 
         $manager = new NotificationManager();
 
@@ -190,7 +190,7 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['telegram']);
 
-        $this->app->bind(\App\Services\TelegramNotifier::class, fn () => $notifier);
+        $this->app->bind(\Laragod\Toolkit\Services\TelegramNotifier::class, fn () => $notifier);
 
         $manager = new NotificationManager();
 
@@ -206,7 +206,7 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['whatsapp']);
 
-        $this->app->bind(\App\Services\WhatsappNotifier::class, fn () => $notifier);
+        $this->app->bind(\Laragod\Toolkit\Services\WhatsappNotifier::class, fn () => $notifier);
 
         $manager = new NotificationManager();
 
@@ -223,7 +223,7 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['email']);
 
-        $this->app->bind(\App\Services\EmailNotifier::class, fn () => $notifier);
+        $this->app->bind(\Laragod\Toolkit\Services\EmailNotifier::class, fn () => $notifier);
 
         $manager = new NotificationManager();
 
@@ -240,7 +240,7 @@ class NotificationManagerTest extends TestCase
 
         Config::set('notifications.enabled_channels', ['storage']);
 
-        $this->app->bind(\App\Services\StorageNotifier::class, fn () => $notifier);
+        $this->app->bind(\Laragod\Toolkit\Services\StorageNotifier::class, fn () => $notifier);
 
         $manager = new NotificationManager();
 

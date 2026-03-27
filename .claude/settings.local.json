@@ -37,7 +37,28 @@
       "Bash(./vendor/bin/pest:*)",
       "Bash(C:UsersfilipHerdlaragodvendorbinphpunit tests/Unit/ContactFormSubmissionTest.php)",
       "Bash(vendor/bin/phpstan:*)",
-      "Bash(powershell.exe -Command:*)"
+      "Bash(powershell.exe -Command:*)",
+      "Bash(/c/Users/filip/AppData/Local/Herd/bin/php.bat artisan route:list:*)",
+      "Bash(vendorbinpest:*)",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan route:list --path=sitemap\")",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan test --filter=LandingPage\")",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan test\")",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan test --filter=SitemapControllerTest\")",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan tinker --execute=\"\"echo app\\(\\)->make\\(''App\\\\Http\\\\Controllers\\\\SitemapController''\\)->index\\(\\)->getContent\\(\\);\"\"\")",
+      "Bash(Select-Object -First 80)",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\filip\\\\Herd\\\\laragod''; php artisan tinker --execute=\"\"echo app\\(\\)->make\\(''App\\\\Http\\\\Controllers\\\\SitemapController''\\)->index\\(\\)->getContent\\(\\);\"\" | Select-String -Pattern ''laragod.com/\\(en|pl\\)'' -Context 0,3 | Select-Object -First 30\")",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nimplement site architecture improvements and dynamic sitemap generation\n\n- Add services section with individual pages \\(/services, /services/{slug}\\)\n- Add project detail pages \\(/work/{slug}\\)\n- Create breadcrumbs component with Schema.org markup\n- Add Services link to navigation \\(desktop, mobile, footer\\)\n- Expand service translations with full content \\(EN/PL\\)\n- Replace static sitemap.xml with dynamic generation using PHP attributes\n- Add #[Sitemap] attribute for controller methods with priority/changefreq\n- Generate sitemap entries for all locales with proper hreflang tags\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(composer install:*)",
+      "Bash(export:*)",
+      "Bash(grep:*)",
+      "Bash(git:*)",
+      "Bash(composer update:*)",
+      "Bash(composer.bat update:*)",
+      "Bash(composer.bat test:*)",
+      "Bash(php8.4 artisan:*)",
+      "Bash(php.bat:*)",
+      "Bash(php84.bat artisan:*)"
     ]
   }
 }

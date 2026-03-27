@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Http\Middleware\SetLocale;
+use Laragod\Toolkit\Http\Middleware\SetLocale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Tests\TestCase;

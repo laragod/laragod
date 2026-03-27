@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Services\StorageNotifier;
+use Laragod\Toolkit\Services\StorageNotifier;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 

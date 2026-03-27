@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Services\DiscordNotifier;
+use Laragod\Toolkit\Services\DiscordNotifier;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 

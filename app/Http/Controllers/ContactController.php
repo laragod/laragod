@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Attributes\Sitemap;
-use App\Services\NotificationManager;
+use Laragod\Toolkit\Attributes\Sitemap;
+use Laragod\Toolkit\Services\NotificationManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

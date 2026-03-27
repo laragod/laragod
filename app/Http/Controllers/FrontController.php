@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Attributes\Sitemap;
+use Laragod\Toolkit\Attributes\Sitemap;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 
@@ -94,41 +94,59 @@ final class FrontController extends Controller
     private static function getProjectsData(): array
     {
         return [
-            'financial-platform-modernization' => [
-                'key' => 'financial',
-                'technologies' => ['Laravel 11', 'PHP 8.4', 'PostgreSQL', 'GitHub Actions', 'PHPStan', 'Pest'],
+            'skill-peak' => [
+                'key' => 'skill_peak',
+                'technologies' => ['Laravel', 'PHP 8.4', 'Tailwind CSS', 'MySQL', 'REST API'],
                 'image' => null,
                 'github_url' => null,
-                'live_url' => null,
+                'live_url' => 'https://skill-peak.com',
                 'featured' => true,
                 'completed_at' => '2025',
             ],
-            'ecommerce-admin-panel' => [
-                'key' => 'ecommerce',
-                'technologies' => ['Laravel 12', 'Filament v4', 'MySQL', 'Vue.js', 'Stripe'],
+            'lunaris' => [
+                'key' => 'lunaris',
+                'technologies' => ['Laravel', 'PHP 8.4', 'MySQL', 'Stripe', 'Tailwind CSS'],
                 'image' => null,
                 'github_url' => null,
-                'live_url' => null,
+                'live_url' => 'https://lunaris.pl',
                 'featured' => true,
                 'completed_at' => '2025',
             ],
-            'api-integration-platform' => [
-                'key' => 'api',
-                'technologies' => ['Laravel 11', 'Redis', 'PostgreSQL', 'Stripe API', 'Xero API'],
+            'dofus-temple' => [
+                'key' => 'dofus_temple',
+                'technologies' => ['Laravel', 'PHP 8.4', 'SEO', 'Tailwind CSS', 'MySQL'],
                 'image' => null,
                 'github_url' => null,
-                'live_url' => null,
+                'live_url' => 'https://dofus-temple.com',
                 'featured' => false,
-                'completed_at' => '2024',
+                'completed_at' => '2025',
             ],
-            'saas-mvp-development' => [
-                'key' => 'saas',
-                'technologies' => ['Laravel 12', 'Nuxt.js', 'TypeScript', 'Stripe', 'Tailwind CSS', 'PostgreSQL'],
+            'adriateatr' => [
+                'key' => 'adriateatr',
+                'technologies' => ['Laravel', 'PHP 8.4', 'Tailwind CSS', 'MySQL'],
                 'image' => null,
                 'github_url' => null,
-                'live_url' => null,
+                'live_url' => 'https://adriateatr.pl',
                 'featured' => false,
-                'completed_at' => '2024',
+                'completed_at' => '2025',
+            ],
+            'persius-studio' => [
+                'key' => 'persius_studio',
+                'technologies' => ['Laravel', 'PHP 8.4', 'Tailwind CSS', 'Three.js'],
+                'image' => null,
+                'github_url' => null,
+                'live_url' => 'https://persiustudio.pl',
+                'featured' => false,
+                'completed_at' => '2025',
+            ],
+            'laragod' => [
+                'key' => 'laragod',
+                'technologies' => ['Laravel 12', 'PHP 8.4', 'Tailwind CSS 4', 'Blade'],
+                'image' => null,
+                'github_url' => null,
+                'live_url' => 'https://laragod.com',
+                'featured' => false,
+                'completed_at' => '2026',
             ],
         ];
     }

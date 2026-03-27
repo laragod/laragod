@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Mail\ContactFormSubmission;
+use Laragod\Toolkit\Mail\ContactFormSubmission;
 use Tests\TestCase;
 
 class ContactFormSubmissionTest extends TestCase

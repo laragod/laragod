@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use App\Providers\NotificationServiceProvider;
-use App\Services\DiscordNotifier;
-use App\Services\EmailNotifier;
-use App\Services\NotificationManager;
-use App\Services\StorageNotifier;
-use App\Services\TelegramNotifier;
-use App\Services\WhatsappNotifier;
+use Laragod\Toolkit\ToolkitServiceProvider;
+use Laragod\Toolkit\Services\DiscordNotifier;
+use Laragod\Toolkit\Services\EmailNotifier;
+use Laragod\Toolkit\Services\NotificationManager;
+use Laragod\Toolkit\Services\StorageNotifier;
+use Laragod\Toolkit\Services\TelegramNotifier;
+use Laragod\Toolkit\Services\WhatsappNotifier;
 use Tests\TestCase;
 
 class NotificationServiceProviderTest extends TestCase
@@ -66,7 +66,7 @@ class NotificationServiceProviderTest extends TestCase
         config(['notifications.enabled_channels' => ['telegram', 'discord', 'whatsapp', 'email', 'storage']]);
 
         // Force re-registration
-        $provider = new NotificationServiceProvider($this->app);
+        $provider = new ToolkitServiceProvider($this->app);
         $provider->register();
 
         $notifiers = $this->app->make('notification.notifiers');
@@ -79,7 +79,7 @@ class NotificationServiceProviderTest extends TestCase
         config(['notifications.enabled_channels' => ['unknown']]);
 
         // Force re-registration
-        $provider = new NotificationServiceProvider($this->app);
+        $provider = new ToolkitServiceProvider($this->app);
         $provider->register();
 
         $notifiers = $this->app->make('notification.notifiers');
@@ -92,7 +92,7 @@ class NotificationServiceProviderTest extends TestCase
         config(['notifications.enabled_channels' => null]);
 
         // Force re-registration
-        $provider = new NotificationServiceProvider($this->app);
+        $provider = new ToolkitServiceProvider($this->app);
         $provider->register();
 
         $notifiers = $this->app->make('notification.notifiers');

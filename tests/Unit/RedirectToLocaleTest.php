@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Http\Middleware\RedirectToLocale;
+use Laragod\Toolkit\Http\Middleware\RedirectToLocale;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Services\TelegramNotifier;
+use Laragod\Toolkit\Services\TelegramNotifier;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 

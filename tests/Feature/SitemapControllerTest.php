@@ -66,7 +66,7 @@ final class SitemapControllerTest extends TestCase
         $content = $response->getContent();
 
         $this->assertStringContains('/en/work</loc>', $content);
-        $this->assertStringContains('/en/work/financial-platform-modernization</loc>', $content);
+        $this->assertStringContains('/en/work/skill-peak</loc>', $content);
     }
 
     public function test_sitemap_contains_contact_page(): void

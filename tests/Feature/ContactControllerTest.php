@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Services\NotificationManager;
+use Laragod\Toolkit\Services\NotificationManager;
 use Mockery;
 use Mockery\Expectation;
 use Mockery\MockInterface;

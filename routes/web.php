@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FrontController;
-use App\Http\Controllers\HealthController;
-use App\Http\Controllers\SitemapController;
-use App\Http\Middleware\RedirectToLocale;
+use Laragod\Toolkit\Http\Controllers\HealthController;
+use Laragod\Toolkit\Http\Controllers\SitemapController;
+use Laragod\Toolkit\Http\Middleware\RedirectToLocale;
 use Illuminate\Support\Facades\Route;
 
 // Health check routes (no locale prefix)

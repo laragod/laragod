@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Mail\ContactFormSubmission;
-use App\Services\EmailNotifier;
+use Laragod\Toolkit\Mail\ContactFormSubmission;
+use Laragod\Toolkit\Services\EmailNotifier;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Services\WhatsappNotifier;
+use Laragod\Toolkit\Services\WhatsappNotifier;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
