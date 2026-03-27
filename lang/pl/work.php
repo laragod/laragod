@@ -55,8 +55,8 @@ return [
             'challenge' => 'Teatr potrzebował obecności online dorównującej jakości ich przedstawień — eleganckiej, informacyjnej i łatwej do aktualizacji.',
             'solution' => 'Czysta strona Laravel z harmonogramem spektakli, stronami zespołu i strukturą treści, którą zespół może samodzielnie utrzymywać.',
         ],
-        'persius_studio' => [
-            'title' => 'Persius Studio',
+        'persiu_studio' => [
+            'title' => 'Persiu Studio',
             'excerpt' => 'Osobista strona dla projektanta 3D — prezentacja portfolio renderów, animacji i prac kreatywnych.',
             'description' => 'Wizualnie efektowna strona portfolio dla artysty 3D, zaprojektowana tak, by prace mówiły same za siebie.',
             'challenge' => 'Projektant potrzebował szybkiej, wizualnie wciągającej strony, która mogłaby wyświetlać ciężkie rendery 3D bez poświęcania wydajności.',

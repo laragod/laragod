@@ -55,8 +55,8 @@ return [
             'challenge' => 'The theatre needed an online presence that matched the quality of their performances — elegant, informative, and easy to update.',
             'solution' => 'A clean Laravel site with a show schedule, company pages, and a content structure that the team can maintain independently.',
         ],
-        'persius_studio' => [
-            'title' => 'Persius Studio',
+        'persiu_studio' => [
+            'title' => 'Persiu Studio',
             'excerpt' => 'Personal landing page for a 3D designer — showcasing a portfolio of renders, animations, and creative work.',
             'description' => 'A visually striking portfolio site for a 3D artist, designed to let the work speak for itself.',
             'challenge' => 'The designer needed a fast, visually immersive site that could display heavy 3D renders without sacrificing load performance.',

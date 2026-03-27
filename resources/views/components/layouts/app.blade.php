@@ -25,6 +25,10 @@
     <meta name="twitter:title" content="{{ $title ?? __('meta.title.default') }}">
     <meta name="twitter:description" content="{{ $description ?? __('meta.description.default') }}">
 
+    {{-- Geo tags for local SEO --}}
+    <meta name="geo.region" content="GB">
+    <meta name="geo.placename" content="United Kingdom">
+
     {{-- hreflang tags for SEO --}}
     @php
         $currentRouteName = request()->route()?->getName();
@@ -272,10 +276,10 @@
             <div>
                 <h3 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">{{ __('footer.services.title') }}</h3>
                 <ul class="space-y-3">
-                    <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>{{ __('footer.services.custom_web_apps') }}</li>
-                    <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>{{ __('footer.services.api_development') }}</li>
-                    <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>{{ __('footer.services.laravel_filament') }}</li>
-                    <li class="text-sm text-gray-400 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-gray-600"></span>{{ __('footer.services.code_modernization') }}</li>
+                    <li><a href="{{ locale_route('contact.show') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('footer.services.custom_web_apps') }}</a></li>
+                    <li><a href="{{ locale_route('contact.show') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('footer.services.api_development') }}</a></li>
+                    <li><a href="{{ locale_route('contact.show') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('footer.services.laravel_filament') }}</a></li>
+                    <li><a href="{{ locale_route('contact.show') }}" class="text-sm text-gray-400 hover:text-primary hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary/50"></span>{{ __('footer.services.code_modernization') }}</a></li>
                 </ul>
             </div>
 
