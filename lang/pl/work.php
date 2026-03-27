@@ -66,7 +66,7 @@ return [
             'title' => 'Laragod',
             'excerpt' => 'Ta strona — portfolio agencji Laravel z wielokanałowymi powiadomieniami kontaktowymi i ciemnym motywem.',
             'description' => 'Strona agencji Laragod, zbudowana jako przykład najlepszych praktyk Laravel i czystej architektury.',
-            'challenge' => 'Potrzebna była strona portfolio, która praktykuje to, co głosi — czysty kod, brak zbędnych zależności, pełna cachowalność.',
+            'challenge' => 'Potrzebna była strona portfolio, która praktykuje to, co głosi — czysty kod, brak zbędnych zależności, w pełni cachowalna.',
             'solution' => 'Laravel 12 z Blade + Tailwind CSS 4, wielokanałowe powiadomienia (Telegram, Discord), sesje cookie i zero obciążenia bazy danych.',
         ],
     ],

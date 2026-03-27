@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'home' => 'Start',
-    'services' => 'Uslugi',
+    'services' => 'Usługi',
     'work' => 'Portfolio',
     'about' => 'O nas',
     'contact' => 'Kontakt',
