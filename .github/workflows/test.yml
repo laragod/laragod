@@ -12,7 +12,7 @@ jobs:
       image_tag: ${{ steps.tag.outputs.tag }}
       image_url: ${{ steps.tag.outputs.url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set image tag
         id: tag
@@ -46,7 +46,7 @@ jobs:
     needs: build-test-image
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Login to Docker Registry
         run: |
@@ -106,7 +106,7 @@ jobs:
     needs: build-test-image
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Login to Docker Registry
         run: |
@@ -126,7 +126,7 @@ jobs:
     needs: build-test-image
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Login to Docker Registry
         run: |
@@ -146,7 +146,7 @@ jobs:
     needs: build-test-image
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Login to Docker Registry
         run: |
@@ -166,7 +166,7 @@ jobs:
     needs: build-test-image
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Login to Docker Registry
         run: |
@@ -186,7 +186,7 @@ jobs:
     needs: build-test-image
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Login to Docker Registry
         run: |
