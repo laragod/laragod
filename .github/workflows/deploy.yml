@@ -127,14 +127,22 @@ jobs:
             exit 1
           fi
 
-          PERSISTENT_STORAGE=~/data/$DEPLOYMENT_ID/storage_persistent
+          # Data directory — production uses base path, other envs get a suffix
+          if [ "$ENVIRONMENT" = "production" ]; then
+            DATA_DIR=~/data/$DEPLOYMENT_ID
+          else
+            DATA_DIR=~/data/$DEPLOYMENT_ID-$ENVIRONMENT
+          fi
+
+          # Persistent storage (uploads, private files — survives deploys)
+          PERSISTENT_STORAGE=$DATA_DIR/storage_persistent
           mkdir -p "$PERSISTENT_STORAGE/app/public"
           mkdir -p "$PERSISTENT_STORAGE/app/private/livewire-tmp"
           chmod -R 777 "$PERSISTENT_STORAGE" 2>/dev/null || true
 
           if [ ! -f "$PERSISTENT_STORAGE/.migrated" ]; then
             echo "Migrating existing uploads to persistent storage..."
-            LATEST_OLD_STORAGE=$(ls -dt ~/data/$DEPLOYMENT_ID/storage_* 2>/dev/null | grep -v storage_persistent | grep -v storage_cache_ | head -n 1 || true)
+            LATEST_OLD_STORAGE=$(ls -dt $DATA_DIR/storage_* 2>/dev/null | grep -v storage_persistent | grep -v storage_cache_ | head -n 1 || true)
             if [ -n "${LATEST_OLD_STORAGE:-}" ] && [ -d "$LATEST_OLD_STORAGE/app/public" ]; then
               echo "Found old storage at: $LATEST_OLD_STORAGE"
               rsync -av "$LATEST_OLD_STORAGE/app/public/" "$PERSISTENT_STORAGE/app/public/" || true
@@ -144,7 +152,7 @@ jobs:
           fi
 
           TIMESTAMP=$(date +%s)
-          EPHEMERAL_STORAGE=~/data/$DEPLOYMENT_ID/storage_cache_$TIMESTAMP
+          EPHEMERAL_STORAGE=$DATA_DIR/storage_cache_$TIMESTAMP
           mkdir -p "$EPHEMERAL_STORAGE/framework/cache"
           mkdir -p "$EPHEMERAL_STORAGE/framework/sessions"
           mkdir -p "$EPHEMERAL_STORAGE/framework/views"
@@ -154,6 +162,7 @@ jobs:
 
           echo "PERSISTENT_STORAGE=$PERSISTENT_STORAGE" >> $GITHUB_ENV
           echo "EPHEMERAL_STORAGE=$EPHEMERAL_STORAGE" >> $GITHUB_ENV
+          echo "DATA_DIR=$DATA_DIR" >> $GITHUB_ENV
 
           if [ "$ENVIRONMENT" = "production" ]; then
             echo "CONTAINER_NAME=$DEPLOYMENT_ID" >> $GITHUB_ENV
@@ -284,7 +293,7 @@ jobs:
       - name: Cleanup old ephemeral cache dirs
         run: |
           set -euo pipefail
-          APP_DIR="$HOME/data/${{ env.DEPLOYMENT_ID }}"
+          APP_DIR="${{ env.DATA_DIR }}"
           CURRENT="${{ env.EPHEMERAL_STORAGE }}"
           mapfile -t TO_DELETE < <(
             ls -dt "$APP_DIR"/storage_cache_* 2>/dev/null \
