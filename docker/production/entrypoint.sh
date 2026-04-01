@@ -21,6 +21,6 @@ chown -h www-data:www-data /var/www/public/storage || true
 # no clear commands in live prod startup
 su-exec www-data php artisan config:cache
 su-exec www-data php artisan route:cache || true
-su-exec www-data php artisan view:cache
+su-exec www-data php artisan view:clear
 
 exec supervisord -c /etc/supervisor/conf.d/supervisord.conf
