@@ -27,6 +27,13 @@ return [
         'button' => 'Start Your Project',
     ],
     'projects' => [
+        'siege_forge' => [
+            'title' => 'SiegeForge',
+            'excerpt' => 'AI-powered siege battle analytics for Summoners War — offense recommendations, performance tracking, and guild coordination.',
+            'description' => 'A SaaS analytics platform for competitive Summoners War guilds, using machine learning trained on thousands of real battles to recommend optimal team compositions.',
+            'challenge' => 'Competitive guilds had no data-driven way to optimise siege offense — players relied on intuition, and guild officers couldn\'t track performance across seasons.',
+            'solution' => 'Built an ML-powered recommendation engine with battle analytics, a credit economy that incentivises data sharing, and multi-guild management with role-based permissions.',
+        ],
         'skill_peak' => [
             'title' => 'Skill Peak',
             'excerpt' => 'Ranking system solution for sport centres and gamers — track performance, compete on leaderboards, and level up.',

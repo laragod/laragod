@@ -94,6 +94,15 @@ final class FrontController extends Controller
     private static function getProjectsData(): array
     {
         return [
+            'siege-forge' => [
+                'key' => 'siege_forge',
+                'technologies' => ['Laravel', 'PHP 8.4', 'Machine Learning', 'Tailwind CSS', 'MySQL', 'REST API'],
+                'image' => '/images/projects/siege-forge.svg',
+                'github_url' => null,
+                'live_url' => 'https://siege.laragod.com',
+                'featured' => true,
+                'completed_at' => '2026',
+            ],
             'skill-peak' => [
                 'key' => 'skill_peak',
                 'technologies' => ['Laravel', 'Filament', 'PHP 8.4', 'Tailwind CSS', 'MySQL', 'REST API'],

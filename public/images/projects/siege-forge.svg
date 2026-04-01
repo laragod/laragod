@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ef4444"/>
+      <stop offset="100%" style="stop-color:#f97316"/>
+    </linearGradient>
+    <linearGradient id="accent2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444"/>
+      <stop offset="100%" style="stop-color:#dc2626"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)"/>
+  <!-- Grid pattern -->
+  <g opacity="0.06">
+    <line x1="0" y1="50" x2="800" y2="50" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="100" x2="800" y2="100" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="150" x2="800" y2="150" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="200" x2="800" y2="200" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="250" x2="800" y2="250" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="300" x2="800" y2="300" stroke="#fff" stroke-width="1"/>
+    <line x1="0" y1="350" x2="800" y2="350" stroke="#fff" stroke-width="1"/>
+    <line x1="100" y1="0" x2="100" y2="400" stroke="#fff" stroke-width="1"/>
+    <line x1="200" y1="0" x2="200" y2="400" stroke="#fff" stroke-width="1"/>
+    <line x1="300" y1="0" x2="300" y2="400" stroke="#fff" stroke-width="1"/>
+    <line x1="400" y1="0" x2="400" y2="400" stroke="#fff" stroke-width="1"/>
+    <line x1="500" y1="0" x2="500" y2="400" stroke="#fff" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="400" stroke="#fff" stroke-width="1"/>
+    <line x1="700" y1="0" x2="700" y2="400" stroke="#fff" stroke-width="1"/>
+  </g>
+  <!-- Glow -->
+  <circle cx="400" cy="160" r="140" fill="#ef4444" opacity="0.07"/>
+  <circle cx="400" cy="160" r="70" fill="#f97316" opacity="0.05"/>
+  <!-- Shield icon (siege/fortress theme) -->
+  <g transform="translate(365, 95)" fill="none" stroke="url(#accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Shield outline -->
+    <path d="M35 5L5 18v22c0 20 13 38 30 45 17-7 30-25 30-45V18L35 5z" opacity="0.9"/>
+    <!-- Inner sword -->
+    <line x1="35" y1="22" x2="35" y2="52" opacity="0.8"/>
+    <line x1="25" y1="32" x2="45" y2="32" opacity="0.8"/>
+    <!-- AI brain dots -->
+    <circle cx="22" cy="45" r="2" fill="url(#accent)" opacity="0.6"/>
+    <circle cx="48" cy="45" r="2" fill="url(#accent)" opacity="0.6"/>
+    <circle cx="35" cy="60" r="2" fill="url(#accent)" opacity="0.6"/>
+  </g>
+  <!-- Decorative analytics bars -->
+  <g transform="translate(280, 185)" opacity="0.3">
+    <rect x="0" y="20" width="8" height="30" rx="2" fill="url(#accent2)"/>
+    <rect x="14" y="10" width="8" height="40" rx="2" fill="url(#accent2)"/>
+    <rect x="28" y="25" width="8" height="25" rx="2" fill="url(#accent2)"/>
+    <rect x="42" y="5" width="8" height="45" rx="2" fill="url(#accent2)"/>
+    <rect x="56" y="15" width="8" height="35" rx="2" fill="url(#accent2)"/>
+  </g>
+  <g transform="translate(455, 185)" opacity="0.3">
+    <rect x="0" y="15" width="8" height="35" rx="2" fill="url(#accent2)"/>
+    <rect x="14" y="0" width="8" height="50" rx="2" fill="url(#accent2)"/>
+    <rect x="28" y="20" width="8" height="30" rx="2" fill="url(#accent2)"/>
+    <rect x="42" y="8" width="8" height="42" rx="2" fill="url(#accent2)"/>
+    <rect x="56" y="25" width="8" height="25" rx="2" fill="url(#accent2)"/>
+  </g>
+  <!-- Title -->
+  <text x="400" y="290" text-anchor="middle" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="700" letter-spacing="2">SiegeForge</text>
+  <!-- Subtitle -->
+  <text x="400" y="320" text-anchor="middle" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="400" letter-spacing="3">AI-POWERED SIEGE ANALYTICS</text>
+  <!-- Accent line -->
+  <rect x="340" y="340" width="120" height="3" rx="1.5" fill="url(#accent)" opacity="0.6"/>
+</svg>

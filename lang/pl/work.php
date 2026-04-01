@@ -27,6 +27,13 @@ return [
         'button' => 'Rozpocznij swój projekt',
     ],
     'projects' => [
+        'siege_forge' => [
+            'title' => 'SiegeForge',
+            'excerpt' => 'Analityka oblężeń w Summoners War napędzana AI — rekomendacje ofensywne, śledzenie wyników i koordynacja gildii.',
+            'description' => 'Platforma analityczna SaaS dla kompetytywnych gildii Summoners War, wykorzystująca uczenie maszynowe wytrenowane na tysiącach prawdziwych walk.',
+            'challenge' => 'Kompetytywne gildie nie miały narzędzi opartych na danych do optymalizacji ofensywy oblężeń — gracze polegali na intuicji, a oficerowie nie mogli śledzić wyników między sezonami.',
+            'solution' => 'Silnik rekomendacji ML z analityką walk, ekonomią kredytową zachęcającą do dzielenia się danymi oraz zarządzaniem wieloma gildiami z uprawnieniami opartymi na rolach.',
+        ],
         'skill_peak' => [
             'title' => 'Skill Peak',
             'excerpt' => 'System rankingowy dla centrów sportowych i graczy — śledź wyniki, rywalizuj na tabelach i rozwijaj się.',
