@@ -288,8 +288,11 @@ jobs:
       - name: Optimize application
         run: |
           set -euo pipefail
-          docker exec ${{ env.CONTAINER_NAME }} php artisan route:clear
-          docker exec ${{ env.CONTAINER_NAME }} php artisan optimize
+          # Run as www-data so cached files have correct ownership for PHP-FPM.
+          # Skip view:cache (causes filemtime errors with bind-mounted storage).
+          docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan config:cache
+          docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan route:cache
+          docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan event:cache
           echo "Optimization completed"
 
       - name: Cleanup old ephemeral cache dirs
