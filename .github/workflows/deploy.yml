@@ -280,8 +280,11 @@ jobs:
       - name: Optimize application
         run: |
           set -euo pipefail
-          # Run as www-data so cached files have correct ownership for PHP-FPM.
-          # Skip view:cache (causes filemtime errors with bind-mounted storage).
+          # Clear stale caches from entrypoint before re-caching post-migration
+          docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan config:clear
+          docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan route:clear
+          docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan event:clear
+          # Re-cache with correct ownership for PHP-FPM
           docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan config:cache
           docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan route:cache
           docker exec -u www-data ${{ env.CONTAINER_NAME }} php artisan event:cache

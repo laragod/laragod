@@ -1,0 +1,79 @@
+# VCS
+.git
+.gitignore
+.gitattributes
+
+# GitHub / CI metadata
+.github
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+.idea
+.vscode
+
+# Logs / debug / profiling
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+storage/logs/*
+storage/*.key
+
+# Local env/config secrets (never send to Docker build context)
+.env
+.env.*
+!.env.example
+
+# Node artifacts
+node_modules
+.npm
+.pnpm-store
+yarn.lock
+.parcel-cache
+.next
+.nuxt
+.svelte-kit
+coverage
+dist
+build
+
+# PHP / Composer local artifacts not needed in context
+vendor
+composer.phar
+
+# Laravel runtime/cache/generated files (image creates what it needs)
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/testing/*
+!storage/framework/testing/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+storage/app/*
+!storage/app/.gitignore
+storage/public/*
+!storage/public/.gitignore
+
+# Public runtime/generated artifacts
+public/storage
+public/hot
+public/build
+
+# Tests/docs/dev-only payload to reduce context size
+docs
+README.md
+CHANGELOG.md
+
+# Docker / local orchestration extras not needed by Dockerfile build context
+docker-compose*.yml
+compose*.yml
