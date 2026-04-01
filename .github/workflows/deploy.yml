@@ -223,6 +223,8 @@ jobs:
             "TRUST_ALL_PROXIES=true" \
             "APP_URL=https://$DOMAIN" \
             "SESSION_DOMAIN=$DOMAIN" \
+            "LOG_CHANNEL=stack" \
+            "LOG_STACK=single,stderr" \
             >> "$ENV_FILE_RUN"
 
           docker run -d \
