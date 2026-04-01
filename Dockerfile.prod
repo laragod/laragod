@@ -1,3 +1,5 @@
+# Dockerfile.prod
+
 # Stage 1: Builder
 ARG BASE_REGISTRY=localhost:5000
 FROM ${BASE_REGISTRY}/php-base:8.4-cli AS builder
@@ -19,21 +21,18 @@ RUN --mount=type=cache,target=/tmp/cache \
 
 COPY . .
 
-RUN mkdir -p \
-    bootstrap/cache \
-    storage/app/public \
-    storage/framework/cache/data \
-    storage/framework/sessions \
-    storage/framework/testing \
-    storage/framework/views \
-    storage/logs \
-    && chmod -R 775 storage bootstrap/cache
+RUN mkdir -p bootstrap/cache storage/app/public \
+    storage/framework/cache/data storage/framework/sessions \
+    storage/framework/testing storage/framework/views storage/logs \
+ && chmod -R 775 storage bootstrap/cache \
+ && php -d error_reporting='E_ALL & ~E_DEPRECATED' /usr/bin/composer dump-autoload \
+      --optimize --no-dev --classmap-authoritative --no-scripts
 
-RUN php -d error_reporting='E_ALL & ~E_DEPRECATED' /usr/bin/composer dump-autoload \
-      --optimize \
-      --no-dev \
-      --classmap-authoritative \
-      --no-scripts
+# Bundle runtime files (excluding vendor) into /output for a single COPY layer
+RUN mkdir -p /output \
+ && cp -a app bootstrap config database public resources routes /output/ \
+ && cp artisan composer.json composer.lock /output/ \
+ && [ -d lang ] && cp -a lang /output/ || true
 
 # Stage 2: Frontend
 FROM node:20-alpine AS frontend
@@ -43,7 +42,6 @@ COPY package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci --prefer-offline --no-audit
 
 COPY --from=builder /app/vendor ./vendor
-
 COPY vite.config.js ./
 COPY resources/ ./resources/
 COPY public/ ./public/
@@ -53,8 +51,8 @@ RUN npm run build
 # Stage 3: Production
 FROM ${BASE_REGISTRY}/php-base:8.4-fpm AS production
 
-ENV APP_ENV=production
-ENV APP_DEBUG=false
+ENV APP_ENV=production \
+    APP_DEBUG=false
 
 RUN --mount=type=cache,target=/var/cache/apk \
     apk add --no-cache nginx supervisor su-exec
@@ -66,39 +64,27 @@ COPY docker/production/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /var/www
 
-COPY --from=builder /app/app ./app
-COPY --from=builder /app/bootstrap ./bootstrap
-COPY --from=builder /app/config ./config
-COPY --from=builder /app/database ./database
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/resources ./resources
-COPY --from=builder /app/routes ./routes
+# vendor layer separated — changes less often than app code
 COPY --from=builder /app/vendor ./vendor
-COPY --from=builder /app/artisan ./artisan
-COPY --from=builder /app/composer.json ./composer.json
-COPY --from=builder /app/composer.lock ./composer.lock
-COPY --from=builder /app/lang ./lang
 
+# All other runtime files in one layer
+COPY --from=builder /output/ ./
+
+# Built frontend assets
 COPY --from=frontend /app/public/build ./public/build
 
+# Create runtime dirs, symlink, permissions — all in one layer
 RUN mkdir -p \
-    /var/www/storage/app/public \
-    /var/www/storage/app/private \
-    /var/www/storage/framework/cache/data \
-    /var/www/storage/framework/sessions \
-    /var/www/storage/framework/testing \
-    /var/www/storage/framework/views \
-    /var/www/storage/logs \
-    /var/www/bootstrap/cache
+    storage/app/public storage/app/private \
+    storage/framework/cache/data storage/framework/sessions \
+    storage/framework/testing storage/framework/views \
+    storage/logs bootstrap/cache \
+ && rm -rf public/storage \
+ && ln -s /var/www/storage/app/public public/storage \
+ && chown -h www-data:www-data public/storage \
+ && chown -R www-data:www-data storage bootstrap/cache public \
+ && chmod -R 775 storage bootstrap/cache public
 
-RUN rm -rf /var/www/public/storage \
- && ln -s /var/www/storage/app/public /var/www/public/storage \
- && chown -h www-data:www-data /var/www/public/storage
-
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/public \
- && chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/public
-
-COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+COPY --chmod=755 docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 CMD ["/usr/local/bin/entrypoint.sh"]
