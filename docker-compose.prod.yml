@@ -1,25 +1,21 @@
-version: '3.8'
-
 services:
   app:
+    container_name: laragod
     build:
       context: .
       dockerfile: Dockerfile.prod
     env_file:
       - .env.prod
-    volumes:
-      - laragod_storage:/var/www/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 30s
     networks:
       - proxy-network
-      - database-network
-    depends_on:
-      - mysql
-
-volumes:
-  laragod_storage:
+    restart: unless-stopped
 
 networks:
   proxy-network:
     external: true
-  database-network:
-    driver: bridge
