@@ -138,7 +138,8 @@ jobs:
           PERSISTENT_STORAGE=$DATA_DIR/storage_persistent
           mkdir -p "$PERSISTENT_STORAGE/app/public"
           mkdir -p "$PERSISTENT_STORAGE/app/private/livewire-tmp"
-          chmod -R 777 "$PERSISTENT_STORAGE" 2>/dev/null || true
+          chown -R 82:82 "$PERSISTENT_STORAGE" 2>/dev/null || true
+          chmod -R 775 "$PERSISTENT_STORAGE" 2>/dev/null || true
 
           if [ ! -f "$PERSISTENT_STORAGE/.migrated" ]; then
             echo "Migrating existing uploads to persistent storage..."
@@ -158,7 +159,8 @@ jobs:
           mkdir -p "$EPHEMERAL_STORAGE/framework/views"
           mkdir -p "$EPHEMERAL_STORAGE/logs"
           touch "$EPHEMERAL_STORAGE/logs/laravel.log"
-          chmod -R 777 "$EPHEMERAL_STORAGE"
+          chown -R 82:82 "$EPHEMERAL_STORAGE" 2>/dev/null || true
+          chmod -R 775 "$EPHEMERAL_STORAGE"
 
           echo "PERSISTENT_STORAGE=$PERSISTENT_STORAGE" >> $GITHUB_ENV
           echo "EPHEMERAL_STORAGE=$EPHEMERAL_STORAGE" >> $GITHUB_ENV

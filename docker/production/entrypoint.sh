@@ -10,10 +10,11 @@ mkdir -p \
   /var/www/storage/logs \
   /var/www/storage/app/public
 
-chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/public || true
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache || true
 find /var/www/storage -type d -exec chmod 775 {} \; || true
 find /var/www/storage -type f -exec chmod 664 {} \; || true
 chmod -R 775 /var/www/bootstrap/cache || true
+# public stays read-only for www-data (owned by root:www-data, 755)
 
 [ -L /var/www/public/storage ] || ln -s /var/www/storage/app/public /var/www/public/storage
 chown -h www-data:www-data /var/www/public/storage || true

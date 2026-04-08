@@ -82,8 +82,10 @@ RUN mkdir -p \
  && rm -rf public/storage \
  && ln -s /var/www/storage/app/public public/storage \
  && chown -h www-data:www-data public/storage \
- && chown -R www-data:www-data storage bootstrap/cache public \
- && chmod -R 775 storage bootstrap/cache public
+ && chown -R www-data:www-data storage bootstrap/cache \
+ && chmod -R 775 storage bootstrap/cache \
+ && chown -R root:www-data public \
+ && chmod -R 755 public
 
 COPY --chmod=755 docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh
 
