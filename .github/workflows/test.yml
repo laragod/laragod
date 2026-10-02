@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-test-image:
-    runs-on: self-hosted
+    runs-on: eu2
     outputs:
       image_tag: ${{ steps.tag.outputs.tag }}
       image_url: ${{ steps.tag.outputs.url }}
@@ -44,7 +44,7 @@ jobs:
 
   phpunit:
     needs: build-test-image
-    runs-on: self-hosted
+    runs-on: eu2
     steps:
       - uses: actions/checkout@v5
 
@@ -59,32 +59,29 @@ jobs:
       - name: Load database secrets
         run: |
           source ~/.github_secrets/global.env
-          echo "MYSQL_USER=$MYSQL_GITHUB_ACTIONS_USER" >> $GITHUB_ENV
-          echo "MYSQL_PASS=$MYSQL_GITHUB_ACTIONS_PASSWORD" >> $GITHUB_ENV
-          echo "MYSQL_HOST=$MYSQL_DB_IP" >> $GITHUB_ENV
           echo "TEST_DB=test_laragod_dt_$(date +%s)" >> $GITHUB_ENV
           echo "TEST_USER=test_user_$(date +%s)" >> $GITHUB_ENV
           echo "TEST_PASS=secure_pass_$(date +%s)" >> $GITHUB_ENV
 
       - name: Create test database
         run: |
-          mysql --defaults-extra-file=<(printf "[client]\nuser=%s\npassword=%s\nhost=%s" "$MYSQL_USER" "$MYSQL_PASS" "$MYSQL_HOST") <<SQL
-          CREATE DATABASE IF NOT EXISTS \`$TEST_DB\`;
-          CREATE USER IF NOT EXISTS '$TEST_USER'@'%' IDENTIFIED BY '$TEST_PASS';
-          GRANT ALL PRIVILEGES ON \`$TEST_DB\`.* TO '$TEST_USER'@'%';
-          GRANT ALL PRIVILEGES ON \`$TEST_DB\_%\`.* TO '$TEST_USER'@'%';
-          FLUSH PRIVILEGES;
+          source ~/.github_secrets/global.env
+          # CREATEDB so parallel test runs can create their own <db>_N copies.
+          docker exec -i postgres psql -v ON_ERROR_STOP=1 -q -U "$PG_ADMIN_USER" -d postgres \
+            -v db="$TEST_DB" -v usr="$TEST_USER" -v pass="$TEST_PASS" <<'SQL'
+          SELECT format('CREATE ROLE %I LOGIN CREATEDB PASSWORD %L', :'usr', :'pass') \gexec
+          SELECT format('CREATE DATABASE %I OWNER %I', :'db', :'usr') \gexec
           SQL
 
       - name: Run PHPUnit tests
         run: |
           docker run --rm \
-            --network proxy-network \
+            --network db-network \
             -e APP_ENV=testing \
             -e APP_KEY=base64:DDeaUI5y3xoMuNudMG26HpwFwRaEgT7yDSPdYp26ndQ= \
-            -e DB_CONNECTION=mysql \
-            -e DB_HOST=$MYSQL_HOST \
-            -e DB_PORT=3306 \
+            -e DB_CONNECTION=pgsql \
+            -e DB_HOST=postgres \
+            -e DB_PORT=5432 \
             -e DB_DATABASE=$TEST_DB \
             -e DB_USERNAME=$TEST_USER \
             -e DB_PASSWORD=$TEST_PASS \
@@ -97,14 +94,17 @@ jobs:
       - name: Cleanup test database
         if: always()
         run: |
-          mysql --defaults-extra-file=<(printf "[client]\nuser=%s\npassword=%s\nhost=%s" "$MYSQL_USER" "$MYSQL_PASS" "$MYSQL_HOST") <<SQL
-          DROP DATABASE IF EXISTS \`$TEST_DB\`;
-          DROP USER IF EXISTS '$TEST_USER'@'%';
+          source ~/.github_secrets/global.env
+          docker exec -i postgres psql -q -U "$PG_ADMIN_USER" -d postgres \
+            -v db="$TEST_DB" -v usr="$TEST_USER" <<'SQL'
+          SELECT format('DROP DATABASE IF EXISTS %I WITH (FORCE)', datname)
+            FROM pg_database WHERE datname = :'db' OR datname LIKE :'db' || '\_%' \gexec
+          SELECT format('DROP ROLE IF EXISTS %I', :'usr') \gexec
           SQL
 
   mago-format:
     needs: build-test-image
-    runs-on: self-hosted
+    runs-on: eu2
     steps:
       - uses: actions/checkout@v5
 
@@ -124,7 +124,7 @@ jobs:
 
   mago-lint:
     needs: build-test-image
-    runs-on: self-hosted
+    runs-on: eu2
     steps:
       - uses: actions/checkout@v5
 
@@ -144,7 +144,7 @@ jobs:
 
   phpstan-app:
     needs: build-test-image
-    runs-on: self-hosted
+    runs-on: eu2
     steps:
       - uses: actions/checkout@v5
 
@@ -164,7 +164,7 @@ jobs:
 
   phpstan-tests:
     needs: build-test-image
-    runs-on: self-hosted
+    runs-on: eu2
     steps:
       - uses: actions/checkout@v5
 
@@ -184,7 +184,7 @@ jobs:
 
   rector:
     needs: build-test-image
-    runs-on: self-hosted
+    runs-on: eu2
     steps:
       - uses: actions/checkout@v5
 
