@@ -58,7 +58,11 @@
       "Bash(composer.bat test:*)",
       "Bash(php8.4 artisan:*)",
       "Bash(php.bat:*)",
-      "Bash(php84.bat artisan:*)"
+      "Bash(php84.bat artisan:*)",
+      "Skill(seo-audit)",
+      "WebFetch(domain:siege.laragod.com)",
+      "WebFetch(domain:emanager.pro)",
+      "WebFetch(domain:laragod.com)"
     ]
   }
 }

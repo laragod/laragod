@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0cfa8bcc51066d6cc6bd63ff4935c6f7",
+    "content-hash": "49054090198091377c143f1dfb223839",
     "packages": [
         {
             "name": "brick/math",
@@ -1054,16 +1054,16 @@
         },
         {
             "name": "laragod/toolkit",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laragod/toolkit.git",
-                "reference": "6cd35819fd21cc96c5e1e22773ecc0971436b592"
+                "reference": "7fff92b990966998d9e4e9ea759aad4ae757f133"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laragod/toolkit/zipball/6cd35819fd21cc96c5e1e22773ecc0971436b592",
-                "reference": "6cd35819fd21cc96c5e1e22773ecc0971436b592",
+                "url": "https://api.github.com/repos/laragod/toolkit/zipball/7fff92b990966998d9e4e9ea759aad4ae757f133",
+                "reference": "7fff92b990966998d9e4e9ea759aad4ae757f133",
                 "shasum": ""
             },
             "require": {
@@ -1103,9 +1103,9 @@
             "description": "Reusable backend toolkit for Laragod portfolio sites",
             "support": {
                 "issues": "https://github.com/laragod/toolkit/issues",
-                "source": "https://github.com/laragod/toolkit/tree/v1.0.0"
+                "source": "https://github.com/laragod/toolkit/tree/v1.1.0"
             },
-            "time": "2026-03-02T14:21:40+00:00"
+            "time": "2026-04-23T03:53:28+00:00"
         },
         {
             "name": "laravel/framework",
@@ -9222,5 +9222,5 @@
         "php": "^8.4"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
