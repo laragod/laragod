@@ -54,6 +54,23 @@ class LandingPageTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_about_page_lists_maintained_open_source_packages(): void
+    {
+        $this->get('/en/about')
+            ->assertStatus(200)
+            ->assertSee('Open Source')
+            ->assertSee('laragod/phpskills')
+            ->assertSee('laragod/toolkit')
+            ->assertSee('Filip Cieślik')
+            ->assertSee('https://github.com/laragod/PHPSkills', false)
+            ->assertSee('https://packagist.org/packages/laragod/phpskills', false);
+
+        $this->get('/pl/about')
+            ->assertStatus(200)
+            ->assertSee('laragod/phpskills')
+            ->assertSee('Filip Cieślik');
+    }
+
     public function test_contact_page_loads(): void
     {
         $response = $this->get('/en/contact');
