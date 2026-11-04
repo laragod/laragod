@@ -3,24 +3,26 @@
     :description="__('services.' . $service['key'] . '.meta_description', ['default' => __('services.' . $service['key'] . '.description')])">
 
     {{-- Service Schema Markup --}}
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "Service",
-        "name": "{{ __('services.' . $service['key'] . '.title') }}",
-        "description": "{{ __('services.' . $service['key'] . '.description') }}",
-        "provider": {
-            "@@type": "Organization",
-            "name": "Laragod Laravel Development",
-            "url": "https://laragod.com"
-        },
-        "areaServed": {
-            "@@type": "Country",
-            "name": "United Kingdom"
-        },
-        "serviceType": "Laravel Development"
-    }
-    </script>
+    @php
+        $serviceSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Service',
+            'name' => __('services.' . $service['key'] . '.title'),
+            'description' => __('services.' . $service['key'] . '.description'),
+            'provider' => [
+                '@type' => 'Organization',
+                'name' => 'Laragod Laravel Development',
+                'url' => 'https://laragod.com',
+            ],
+            'areaServed' => [
+                ['@type' => 'Country', 'name' => 'United Kingdom'],
+                ['@type' => 'Country', 'name' => 'Poland'],
+                ['@type' => 'AdministrativeArea', 'name' => 'European Union'],
+            ],
+            'serviceType' => 'Laravel Development',
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($serviceSchema, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 
     {{-- Breadcrumbs --}}
     <x-breadcrumbs :items="[
@@ -186,24 +188,7 @@
     </section>
 
     {{-- FAQ Schema --}}
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "FAQPage",
-        "mainEntity": [
-            @foreach(__('services.' . $service['key'] . '.faq') as $index => $faq)
-            {
-                "@@type": "Question",
-                "name": "{{ $faq['question'] }}",
-                "acceptedAnswer": {
-                    "@@type": "Answer",
-                    "text": "{{ $faq['answer'] }}"
-                }
-            }@if(!$loop->last),@endif
-            @endforeach
-        ]
-    }
-    </script>
+    <x-faq-schema :items="__('services.' . $service['key'] . '.faq')" />
     @endif
 
     {{-- Other Services --}}

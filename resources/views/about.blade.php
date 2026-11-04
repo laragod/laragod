@@ -30,6 +30,27 @@
         </div>
     </section>
 
+    <!-- Founder -->
+    <section class="bg-white dark:bg-gray-900 pb-16 lg:pb-24 transition-colors duration-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row gap-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-8 lg:p-12" data-reveal>
+                <div class="icon-box icon-box-lg" aria-hidden="true">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white">{{ __('about.founder.title') }}</h2>
+                    <p class="mt-3 font-semibold text-gray-900 dark:text-white">
+                        {{ __('about.founder.name') }}
+                        <span class="font-medium text-gray-500 dark:text-gray-400">&middot; {{ __('about.founder.role') }}</span>
+                    </p>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">{{ __('about.founder.bio') }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Origin Story -->
     <section class="bg-gray-50 dark:bg-gray-800 py-16 lg:py-24 transition-colors duration-200">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

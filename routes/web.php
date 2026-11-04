@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FrontController;
+use Illuminate\Support\Facades\Route;
 use Laragod\Toolkit\Http\Controllers\HealthController;
 use Laragod\Toolkit\Http\Controllers\SitemapController;
 use Laragod\Toolkit\Http\Middleware\RedirectToLocale;
-use Illuminate\Support\Facades\Route;
 
 // Health check routes (no locale prefix)
 Route::get('ping', [HealthController::class, 'ping']);
@@ -31,6 +31,13 @@ Route::prefix('{locale}')
             Route::get('/work', 'work')->name('work');
             Route::get('/work/{slug}', 'project')->name('work.show');
             Route::get('/about', 'about')->name('about');
+            Route::get('/pricing', 'pricing')->name('pricing');
+            Route::get('/how-we-work', 'process')->name('process');
+            Route::get('/for-agencies', 'agencies')->name('agencies');
+            Route::get('/audit', 'audit')->name('audit');
+            Route::get('/faq', 'faq')->name('faq');
+            Route::get('/industries', 'industries')->name('industries');
+            Route::get('/industries/{slug}', 'industry')->name('industries.show');
         });
 
         Route::controller(ContactController::class)->group(function (): void {

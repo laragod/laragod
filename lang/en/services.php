@@ -79,7 +79,7 @@ return [
         'title' => 'API Development & Integration',
         'description' => 'RESTful APIs, GraphQL, third-party integrations. Connect your systems seamlessly with payment gateways, CRMs, and more.',
         'meta_title' => 'API Development & Integration Services | Laravel | Laragod',
-        'meta_description' => 'Expert Laravel API development and system integration. RESTful APIs, GraphQL, third-party integrations with Stripe, Xero, HubSpot, and more.',
+        'meta_description' => 'Expert Laravel API development and system integration. RESTful APIs, GraphQL, third-party integrations with Stripe, BaseLinker, Google Sheets, and more.',
         'hero_heading' => 'Connect Your Systems with Robust APIs',
         'hero_description' => 'Stop copying data between systems. We build APIs that make your tools work together automatically.',
         'problems' => [
@@ -112,7 +112,7 @@ return [
         'faq' => [
             [
                 'question' => 'Which third-party services can you integrate with?',
-                'answer' => 'If it has an API, we can integrate it. We have experience with Stripe, Xero, QuickBooks, HubSpot, Salesforce, Mailchimp, and many more.',
+                'answer' => 'If it has an API, we can integrate it. We have built integrations with Stripe, Paddle, BaseLinker, Furgonetka, Google Sheets, Resend and Discord.',
             ],
             [
                 'question' => 'Do you build APIs for mobile apps?',
@@ -220,7 +220,7 @@ return [
             ],
             [
                 'question' => 'Can you help with product decisions, not just development?',
-                'answer' => 'Yes. We\'ve helped launch multiple SaaS products and can advise on feature prioritization, pricing, and go-to-market strategy.',
+                'answer' => 'Yes. We\'ve built and launched SaaS products such as SiegeForge and Skill Peak, and can advise on feature prioritization, pricing, and go-to-market strategy.',
             ],
         ],
     ],
@@ -421,6 +421,56 @@ return [
             [
                 'question' => 'How do you handle zero-downtime deployments?',
                 'answer' => 'We use blue-green deployments or rolling updates depending on your infrastructure. Your users won\'t notice deployments happening.',
+            ],
+        ],
+    ],
+
+    'automation' => [
+        'title' => 'Automation & Integrations',
+        'description' => 'Stop paying people to copy data between tools. We connect your systems with n8n, Make or custom code, whichever is simplest and will hold up.',
+        'meta_title' => 'Business Process Automation with n8n, Make & Laravel | Laragod',
+        'meta_description' => 'Automate repetitive work and connect your business tools with n8n, Make or custom Laravel code. We pick the simplest option that will hold up.',
+        'hero_heading' => 'Stop Paying People to Copy Data',
+        'hero_description' => 'If a task is repetitive, a system should do it. We start with the simplest thing that works, and write code only where it earns its place.',
+        'problems' => [
+            'Your team retypes the same data into several tools',
+            'Invoices, orders or leads wait until someone gets around to them',
+            'Mistakes creep in every time data is moved by hand',
+            'You have automations nobody understands or dares to change',
+        ],
+        'approach' => [
+            'title' => 'How We Automate',
+            'steps' => [
+                [
+                    'title' => 'Map the Process',
+                    'description' => 'We follow the work as it happens today and find the steps that cost the most time or cause the most errors.',
+                ],
+                [
+                    'title' => 'Choose the Simplest Tool',
+                    'description' => 'n8n or Make for straightforward workflows. Laravel code where the process is business-critical, needs testing or handles sensitive data.',
+                ],
+                [
+                    'title' => 'Build and Test',
+                    'description' => 'We build it with error handling and alerts, so a failed step gets noticed instead of quietly losing data.',
+                ],
+                [
+                    'title' => 'Hand Over',
+                    'description' => 'You get documentation and accounts in your own name, with optional monitoring if you would rather not think about it.',
+                ],
+            ],
+        ],
+        'faq' => [
+            [
+                'question' => 'Do you use n8n and Make, or only custom code?',
+                'answer' => 'Both. If n8n or Make does the job reliably, we will not write code for the sake of it. When a workflow outgrows them, we move it into code.',
+            ],
+            [
+                'question' => 'Who owns the automations?',
+                'answer' => 'You do. They run on your accounts, and we document them so someone else can maintain them.',
+            ],
+            [
+                'question' => 'Can you add AI to a process?',
+                'answer' => 'Yes, where it earns its place, such as sorting incoming requests or pulling data from documents. A person can review the results where mistakes would be costly.',
             ],
         ],
     ],

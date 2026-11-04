@@ -16,14 +16,14 @@ return [
         'mvp_subtitle' => 'Depending on scope',
         'response' => '24h Response',
         'response_subtitle' => 'We reply fast',
-        'pricing' => '£500/day',
-        'pricing_subtitle' => 'Transparent pricing',
+        'pricing' => 'Public prices',
+        'pricing_subtitle' => 'See them before you call',
     ],
     'faq' => [
         'title' => 'Quick Answers',
         'cost' => [
             'question' => 'How much does a project cost?',
-            'answer' => '£500/day for development. Full-service projects are priced individually. We\'ll give you a clear quote based on your actual requirements—no guesswork.',
+            'answer' => 'Monthly care starts from a small pool of hours, and all starting prices are on our pricing page. New builds get a fixed written quote after a discovery workshop, based on your actual requirements.',
         ],
         'time' => [
             'question' => 'How long does it take?',
@@ -58,15 +58,15 @@ return [
         'mvp' => 'Build an MVP',
         'ongoing_support' => 'Ongoing Support',
         'audit_review' => 'Audit & Code Review',
+        'fractional_cto' => 'Fractional CTO',
+        'agency_partner' => 'Agency Partnership',
         'mentoring_training' => 'Mentoring & Training',
         'other' => 'Other',
     ],
     'budget' => [
-        'under_5k' => 'Under £5,000',
-        '5k_10k' => '£5,000 - £10,000',
-        '10k_25k' => '£10,000 - £25,000',
-        '25k_50k' => '£25,000 - £50,000',
-        '50k_plus' => '£50,000+',
+        'under' => 'Under :amount',
+        'range' => ':from - :to',
+        'plus' => ':amount+',
         'not_sure' => 'Not sure yet',
     ],
     'timeline' => [

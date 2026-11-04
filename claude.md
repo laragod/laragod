@@ -48,13 +48,25 @@ Modified in `bootstrap/app.php`:
 
 ## Routes
 
+Every public page lives under a `{locale}` prefix (`/en`, `/pl`), and `/` redirects to it. `POST /contact` has no prefix.
+
 ```php
-GET  /        → return view('home')                        ->name('home')
-GET  /work    → return view('work', compact('projects'))   ->name('work')
-GET  /about   → return view('about')                       ->name('about')
-GET  /contact → return view('contact')                     ->name('contact.show')
-POST /contact → ContactController@store                    ->name('contact.store')
-              → middleware('throttle:5,1')
+GET  /{locale}/                  → FrontController@home      ->name('home')
+GET  /{locale}/services          → FrontController@services  ->name('services')
+GET  /{locale}/services/{slug}   → FrontController@service   ->name('services.show')
+GET  /{locale}/work              → FrontController@work      ->name('work')
+GET  /{locale}/work/{slug}       → FrontController@project   ->name('work.show')
+GET  /{locale}/about             → FrontController@about     ->name('about')
+GET  /{locale}/pricing           → FrontController@pricing   ->name('pricing')
+GET  /{locale}/how-we-work       → FrontController@process   ->name('process')
+GET  /{locale}/for-agencies      → FrontController@agencies  ->name('agencies')
+GET  /{locale}/audit             → FrontController@audit     ->name('audit')
+GET  /{locale}/faq               → FrontController@faq       ->name('faq')
+GET  /{locale}/industries        → FrontController@industries ->name('industries')
+GET  /{locale}/industries/{slug} → FrontController@industry  ->name('industries.show')
+GET  /{locale}/contact           → ContactController@index   ->name('contact.show')
+POST /contact                    → ContactController@store   ->name('contact.store')
+                                 → middleware('throttle:5,1')
 ```
 
 - All GET routes return static Blade views
@@ -68,18 +80,20 @@ POST /contact → ContactController@store                    ->name('contact.sto
 ### Design System
 
 **Colors:**
-- Primary: Kelly Green (#4cbb17)
-- Primary Dark: #3da614
+- Light theme (default): Primary #257f0c, Primary Dark #206f0a, Primary Vivid #3da614 (gradient accents only). Kelly Green fails contrast on white, so it is not used for text or buttons here.
+- Dark theme: Primary Kelly Green (#4cbb17), Primary Dark #3da614
 - Primary Light: #e8f8e0
-- Neutrals: Gray scale + Charcoal (#111827)
+- Neutrals: Gray scale + Charcoal (#111827). `gray-50`, `gray-100` and `gray-200` are green-tinted in the light theme.
+- Both palettes are CSS variables in `resources/css/app.css` (`@theme` and the `.dark` block), so use `primary` and `gray` utilities rather than hard-coded colors.
 
 **Typography:**
 - Font Sans: Inter (via Bunny Fonts CDN)
 - Font Heading: Manrope (via Bunny Fonts CDN)
 - Font Mono: JetBrains Mono
 
-**Dark Theme:**
-- Toggle button in navbar
+**Theme:**
+- Light white-and-green is the default for every first-time visitor; the OS color preference is deliberately ignored
+- Dark is opt-in through the large `x-theme-toggle` button (navbar, mobile top bar, mobile menu)
 - localStorage persistence
 - Vanilla JavaScript (no frameworks)
 - Tailwind CSS dark mode utilities
@@ -99,14 +113,18 @@ POST /contact → ContactController@store                    ->name('contact.sto
 - Vite asset loading
 - Mobile menu toggle script
 
+### Offer and Pricing
+
+- `config/offer.php` is the single source of truth for prices, currencies, budget ranges, the configurator and audit scoring. Wording lives in `lang/{en,pl}/`. Never hard-code a price in a view.
+- Prices render through `x-price` and `App\Support\Money`. The visitor's currency (PLN, GBP, EUR) stays in localStorage and is applied by `window.LaragodCurrency` in the layout, with no cookies, so GET pages stay cacheable.
+- The audit and configurator pass their summary to the contact form through sessionStorage (`window.LaragodContactNotes`), never through the URL. Only `?services=` is a query parameter.
+
 ### Pages
 
 1. **Home** (`resources/views/home.blade.php`)
-   - Hero section with CTA buttons
-   - Philosophy section (code quality messaging)
-   - 9 services cards (Custom Web Apps, API Development, Laravel + Filament, MVP Development, Legacy Modernization, Code Quality, Technical Consulting, DevOps, Team Augmentation)
-   - Pricing section (£500/day transparent pricing)
-   - Final CTA section
+   - Hero section with CTA buttons, offer packages and links to the audit and pricing pages
+
+Further pages built on the same components: `pricing`, `process`, `audit`, `agencies`, `faq`, `industries/index`, `industries/show`, `services/show`.
 
 2. **Work** (`resources/views/work.blade.php`)
    - Portfolio grid (2 columns on desktop)

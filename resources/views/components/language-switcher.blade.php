@@ -9,8 +9,8 @@
 
 <div {{ $attributes->merge(['class' => 'relative ' . $class]) }}>
     <select
-        id="language-switcher"
-        class="appearance-none bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 cursor-pointer transition-colors"
+        onchange="window.location.href = this.value"
+        class="w-full appearance-none bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 cursor-pointer transition-colors"
         aria-label="{{ __('meta.select_language') }}"
     >
         @foreach($locales as $code => $name)
@@ -30,9 +30,3 @@
         </svg>
     </div>
 </div>
-
-<script>
-    document.getElementById('language-switcher').addEventListener('change', function() {
-        window.location.href = this.value;
-    });
-</script>

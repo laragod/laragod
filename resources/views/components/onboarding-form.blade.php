@@ -1,4 +1,4 @@
-@props(['submitUrl', 'services', 'budgetOptions', 'timelineOptions'])
+@props(['submitUrl', 'services', 'budgetOptions', 'budgetByCurrency', 'timelineOptions'])
 
 <div id="onboarding-form"
      class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
@@ -162,6 +162,7 @@
         const $ = id => document.getElementById(id);
         const submitUrl = '{{ $submitUrl }}';
         const labels = {services: @json($services), budget: @json($budgetOptions), timeline: @json($timelineOptions) };
+        const budgetByCurrency = @json($budgetByCurrency);
         const stepTitles = ['', @json(__('form.step1.title')), @json(__('form.step2.title')), @json(__('form.step3.title'))];
         const i18n = {
             captcha: @json(__('form.captcha')),
@@ -173,7 +174,15 @@
             csrfTokenError: @json(__('form.error.csrf_token')),
             networkError: @json(__('form.error.network')),
             genericError: @json(__('form.error.generic') ?? 'An error occurred.'),
-            techNotes: @json(__('form.review.tech_notes'))
+            techNotes: @json(__('form.review.tech_notes')),
+            field: {
+                name: @json(__('form.field.name')),
+                company: @json(__('form.field.company')),
+                email: @json(__('form.field.email')),
+                phone: @json(__('form.field.phone')),
+                budget: @json(__('form.field.budget')),
+                timeline: @json(__('form.field.timeline'))
+            }
         };
         let step = 1;
 
@@ -224,9 +233,9 @@
                 .map(s => `<span class="px-2.5 py-1 bg-primary text-white text-xs rounded-full">${labels.services[s.value]}</span>`).join('');
 
             $('review-contact').innerHTML = [
-                field('Name', $('name').value), field('Company', $('company').value),
-                field('Email', $('email').value), field('Phone', $('phone').value),
-                field('Budget', labels.budget[$('budget').value]), field('Timeline', labels.timeline[$('timeline').value])
+                field(esc(i18n.field.name), $('name').value), field(esc(i18n.field.company), $('company').value),
+                field(esc(i18n.field.email), $('email').value), field(esc(i18n.field.phone), $('phone').value),
+                field(esc(i18n.field.budget), labels.budget[$('budget').value]), field(esc(i18n.field.timeline), labels.timeline[$('timeline').value])
             ].join('');
 
             const msg = $('message').value, tech = $('tech_notes').value;
@@ -260,7 +269,8 @@
                 name: $('name').value.trim(), company: $('company').value.trim(),
                 email: $('email').value.trim(), phone: $('phone').value.trim(),
                 budget: $('budget').value, timeline: $('timeline').value,
-                message: $('message').value.trim(), tech_notes: $('tech_notes').value.trim()
+                message: $('message').value.trim(), tech_notes: $('tech_notes').value.trim(),
+                currency: window.LaragodCurrency.current
             };
 
             try {
@@ -275,6 +285,7 @@
                 const json = await res.json();
 
                 if (res.ok && json.ok) {
+                    window.LaragodContactNotes.clear();
                     document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
                     document.querySelector('#multi-step-form > .flex')?.classList.add('hidden');
                     form.insertAdjacentHTML('afterbegin', `
@@ -297,6 +308,25 @@
             $('submit-text').classList.remove('hidden');
             $('submit-spinner').classList.add('hidden');
         };
+
+        // Budget amounts follow the currency chosen elsewhere on the site.
+        function syncBudgetLabels() {
+            labels.budget = budgetByCurrency[window.LaragodCurrency.current] || labels.budget;
+            $('budget').querySelectorAll('option').forEach(option => {
+                if (labels.budget[option.value]) option.textContent = labels.budget[option.value];
+            });
+        }
+        syncBudgetLabels();
+        document.addEventListener('currencychange', syncBudgetLabels);
+
+        // Prefill from the pricing, audit and agencies pages. Services are only matched against
+        // existing chips, and the summary is only ever assigned through .value, never rendered as HTML.
+        const requestedServices = (new URLSearchParams(window.location.search).get('services') || '').split(',');
+        form.querySelectorAll('input[name="services[]"]').forEach(input => {
+            if (requestedServices.includes(input.value)) input.checked = true;
+        });
+        const notes = window.LaragodContactNotes.get();
+        if (notes) $('tech_notes').value = notes.slice(0, 1000);
 
         goTo(1);
     });

@@ -86,6 +86,32 @@ class ContactControllerTest extends TestCase
             ->assertJson(['ok' => true]);
     }
 
+    public function test_budget_is_reported_in_the_currency_the_visitor_chose(): void
+    {
+        /** @var MockInterface&NotificationManager $manager */
+        $manager = Mockery::mock(NotificationManager::class);
+
+        /** @var Expectation $exp */
+        $exp = $manager->shouldReceive('sendContactNotification');
+        $exp->once()
+            ->withArgs(fn ($name, $email, $message) => str_contains($message, '€12,000 - €30,000'))
+            ->andReturn(true);
+
+        $this->app->instance(NotificationManager::class, $manager);
+
+        $this->postJson('/contact', $this->validFormData([
+            'budget' => '10k-25k',
+            'currency' => 'EUR',
+        ]))->assertStatus(200);
+    }
+
+    public function test_unknown_currency_is_rejected(): void
+    {
+        $this->postJson('/contact', $this->validFormData(['currency' => 'USD']))
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('currency');
+    }
+
     public function test_services_required_validation(): void
     {
         $response = $this->postJson('/contact', $this->validFormData([

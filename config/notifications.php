@@ -22,6 +22,18 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Signature
+     |--------------------------------------------------------------------------
+     |
+     | Prepended to every notification, including the email subject. Defaults to
+     | Laragod rather than APP_NAME so a generic APP_NAME never reaches a message.
+     |
+     */
+
+    'app_name' => env('NOTIFICATION_APP_NAME', 'Laragod'),
+
+    /*
+     |--------------------------------------------------------------------------
      | Channel Configurations
      |--------------------------------------------------------------------------
      |

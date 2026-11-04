@@ -16,14 +16,14 @@ return [
         'mvp_subtitle' => 'W zależności od zakresu',
         'response' => 'Odpowiedź w 24h',
         'response_subtitle' => 'Odpowiadamy szybko',
-        'pricing' => '£500/dzień',
-        'pricing_subtitle' => 'Przejrzyste ceny',
+        'pricing' => 'Publiczne ceny',
+        'pricing_subtitle' => 'Znasz je przed rozmową',
     ],
     'faq' => [
         'title' => 'Szybkie odpowiedzi',
         'cost' => [
             'question' => 'Ile kosztuje projekt?',
-            'answer' => '£500/dzień za development. Projekty full-service wyceniamy indywidualnie. Damy Ci konkretną wycenę na podstawie Twoich rzeczywistych wymagań—żadnego zgadywania.',
+            'answer' => 'Miesięczna opieka zaczyna się od małej puli godzin, a wszystkie ceny startowe są w naszym cenniku. Nowe systemy wyceniamy stałą kwotą na piśmie, po warsztatach, na podstawie Twoich rzeczywistych wymagań.',
         ],
         'time' => [
             'question' => 'Jak długo to trwa?',
@@ -58,15 +58,15 @@ return [
         'mvp' => 'Budowa MVP',
         'ongoing_support' => 'Bieżące wsparcie',
         'audit_review' => 'Audyt i przegląd kodu',
+        'fractional_cto' => 'Fractional CTO',
+        'agency_partner' => 'Współpraca dla agencji',
         'mentoring_training' => 'Mentoring i szkolenia',
         'other' => 'Inne',
     ],
     'budget' => [
-        'under_5k' => 'Poniżej £5,000',
-        '5k_10k' => '£5,000 - £10,000',
-        '10k_25k' => '£10,000 - £25,000',
-        '25k_50k' => '£25,000 - £50,000',
-        '50k_plus' => '£50,000+',
+        'under' => 'Poniżej :amount',
+        'range' => ':from - :to',
+        'plus' => ':amount+',
         'not_sure' => 'Jeszcze nie wiem',
     ],
     'timeline' => [

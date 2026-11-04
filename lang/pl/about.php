@@ -9,6 +9,12 @@ return [
         'title_part2' => 'Przede wszystkim.',
         'description' => 'Laragod prowadzony jest przez założyciela z Wielkiej Brytanii, z zaufanymi seniorami deweloperami angażowanymi w miarę potrzeb projektu. Jesteśmy deweloperami, którzy są dumni z dobrej roboty—i z którymi całkiem przyjemnie się współpracuje.',
     ],
+    'founder' => [
+        'title' => 'Z kim faktycznie będziesz pracować',
+        'name' => 'Filip Cieślik',
+        'role' => 'Założyciel',
+        'bio' => 'Filip od 10 lat buduje aplikacje webowe, od 8 lat pracuje z Laravelem i utrzymuje pakiety open source opisane niżej na tej stronie. Za każdy projekt Laragod odpowiada Filip albo wskazany senior, od pierwszej rozmowy do przekazania.',
+    ],
     'origin' => [
         'title' => 'Nazwa',
         'paragraph1' => 'Laragod Laravel Development to agencja z siedzibą w UK, założona aby dostarczać aplikacje Laravel klasy enterprise. Nazwa? Kolega żartobliwie nazwał założyciela „Laragod" lata temu, po szczególnie intensywnej migracji legacy aplikacji. Nazwa się przyjęła—tak samo jak nasze podejście do robienia rzeczy porządnie.',

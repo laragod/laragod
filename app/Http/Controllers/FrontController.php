@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Laragod\Toolkit\Attributes\Sitemap;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Laragod\Toolkit\Attributes\Sitemap;
 
 final class FrontController extends Controller
 {
@@ -31,6 +31,27 @@ final class FrontController extends Controller
     }
 
     /**
+     * Get all industry slugs for sitemap generation.
+     *
+     * @return array<int, string>
+     */
+    public static function getIndustrySlugs(): array
+    {
+        return array_keys(self::getIndustriesData());
+    }
+
+    /**
+     * Get all industries with their showcase project.
+     *
+     * @return array<string, array{project: string}>
+     */
+    private static function getIndustriesData(): array
+    {
+        /** @var array<string, array{project: string}> */
+        return config('offer.industries');
+    }
+
+    /**
      * Get all services with their metadata.
      *
      * @return array<string, array<string, mixed>>
@@ -47,6 +68,11 @@ final class FrontController extends Controller
                 'key' => 'api_development',
                 'icon' => 'terminal',
                 'keywords' => ['laravel api development', 'api integration services', 'restful api'],
+            ],
+            'automation-integrations' => [
+                'key' => 'automation',
+                'icon' => 'refresh',
+                'keywords' => ['n8n automation', 'make automation', 'business process automation'],
             ],
             'filament-admin-panels' => [
                 'key' => 'laravel_filament',
@@ -160,10 +186,35 @@ final class FrontController extends Controller
         ];
     }
 
+    /**
+     * Get the localized summary of a project shown outside the portfolio pages.
+     *
+     * @return array<string, mixed>
+     */
+    private function getProjectSummary(string $slug): array
+    {
+        $data = self::getProjectsData()[$slug];
+
+        /** @var string $key */
+        $key = $data['key'];
+
+        return [
+            'slug' => $slug,
+            'title' => __(sprintf('work.projects.%s.title', $key)),
+            'excerpt' => __(sprintf('work.projects.%s.excerpt', $key)),
+            'technologies' => $data['technologies'],
+        ];
+    }
+
     #[Sitemap(priority: 1.0, changefreq: 'weekly')]
     public function home(): View|Factory
     {
-        return view('home');
+        /** @var array<int, string> $slugs */
+        $slugs = config('offer.home_projects');
+
+        return view('home', [
+            'projects' => array_map($this->getProjectSummary(...), $slugs),
+        ]);
     }
 
     #[Sitemap(priority: 0.9, changefreq: 'weekly')]
@@ -192,13 +243,16 @@ final class FrontController extends Controller
         $projects = [];
 
         foreach ($projectsData as $slug => $data) {
+            /** @var string $key */
+            $key = $data['key'];
+
             $projects[] = [
-                'title' => __("work.projects.{$data['key']}.title"),
+                'title' => __(sprintf('work.projects.%s.title', $key)),
                 'slug' => $slug,
-                'excerpt' => __("work.projects.{$data['key']}.excerpt"),
-                'description' => __("work.projects.{$data['key']}.description"),
-                'challenge' => __("work.projects.{$data['key']}.challenge"),
-                'solution' => __("work.projects.{$data['key']}.solution"),
+                'excerpt' => __(sprintf('work.projects.%s.excerpt', $key)),
+                'description' => __(sprintf('work.projects.%s.description', $key)),
+                'challenge' => __(sprintf('work.projects.%s.challenge', $key)),
+                'solution' => __(sprintf('work.projects.%s.solution', $key)),
                 'technologies' => $data['technologies'],
                 'image' => $data['image'],
                 'github_url' => $data['github_url'],
@@ -219,13 +273,16 @@ final class FrontController extends Controller
 
         $data = $projects[$slug];
 
+        /** @var string $key */
+        $key = $data['key'];
+
         $project = [
-            'title' => __("work.projects.{$data['key']}.title"),
+            'title' => __(sprintf('work.projects.%s.title', $key)),
             'slug' => $slug,
-            'excerpt' => __("work.projects.{$data['key']}.excerpt"),
-            'description' => __("work.projects.{$data['key']}.description"),
-            'challenge' => __("work.projects.{$data['key']}.challenge"),
-            'solution' => __("work.projects.{$data['key']}.solution"),
+            'excerpt' => __(sprintf('work.projects.%s.excerpt', $key)),
+            'description' => __(sprintf('work.projects.%s.description', $key)),
+            'challenge' => __(sprintf('work.projects.%s.challenge', $key)),
+            'solution' => __(sprintf('work.projects.%s.solution', $key)),
             'technologies' => $data['technologies'],
             'image' => $data['image'],
             'github_url' => $data['github_url'],
@@ -245,5 +302,54 @@ final class FrontController extends Controller
     public function about(): View|Factory
     {
         return view('about');
+    }
+
+    #[Sitemap(priority: 0.9, changefreq: 'monthly')]
+    public function pricing(): View|Factory
+    {
+        return view('pricing');
+    }
+
+    #[Sitemap(priority: 0.7, changefreq: 'monthly')]
+    public function process(): View|Factory
+    {
+        return view('process');
+    }
+
+    #[Sitemap(priority: 0.7, changefreq: 'monthly')]
+    public function agencies(): View|Factory
+    {
+        return view('agencies');
+    }
+
+    #[Sitemap(priority: 0.8, changefreq: 'monthly')]
+    public function audit(): View|Factory
+    {
+        return view('audit');
+    }
+
+    #[Sitemap(priority: 0.7, changefreq: 'monthly')]
+    public function faq(): View|Factory
+    {
+        return view('faq', ['services' => self::getServicesData()]);
+    }
+
+    #[Sitemap(priority: 0.8, changefreq: 'monthly')]
+    public function industries(): View|Factory
+    {
+        return view('industries.index');
+    }
+
+    #[Sitemap(priority: 0.7, changefreq: 'monthly', slugsMethod: 'getIndustrySlugs')]
+    public function industry(string $locale, string $slug): View|Factory
+    {
+        $industries = self::getIndustriesData();
+        abort_unless(isset($industries[$slug]), 404);
+
+        return view('industries.show', [
+            'slug' => $slug,
+            'project' => $this->getProjectSummary($industries[$slug]['project']),
+            'otherSlugs' => array_values(array_diff(array_keys($industries), [$slug])),
+        ]);
     }
 }

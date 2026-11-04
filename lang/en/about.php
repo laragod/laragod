@@ -9,6 +9,12 @@ return [
         'title_part2' => 'Always.',
         'description' => 'Laragod is founder-led out of the UK, with trusted senior developers brought into the fold as project scope demands. We\'re developers who take pride in doing a good job—and we\'re pretty easy to work with, too.',
     ],
+    'founder' => [
+        'title' => 'Who you will actually work with',
+        'name' => 'Filip Cieślik',
+        'role' => 'Founder',
+        'bio' => 'Filip has spent 10 years building web applications and 8 years with Laravel, and maintains the open-source packages further down this page. Every Laragod project has Filip or a named senior developer responsible for it, from the first call to handover.',
+    ],
     'origin' => [
         'title' => 'The Name',
         'paragraph1' => 'Laragod Laravel Development is a UK-based agency founded to deliver enterprise-grade Laravel applications. The name? A colleague jokingly called the founder "Laragod" years ago after a particularly intense legacy migration. The name stuck—and so did our commitment to doing things properly.',

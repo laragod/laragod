@@ -65,7 +65,7 @@ class ContactFormSubmissionTest extends TestCase
     {
         $mail = new ContactFormSubmission('John', 'test@example.com', 'Test');
 
-        $this->assertSame('New Contact Form Submission', $mail->envelope()->subject);
+        $this->assertSame('[Laragod] New Contact Form Submission', $mail->envelope()->subject);
     }
 
     public function test_has_reply_to_set(): void

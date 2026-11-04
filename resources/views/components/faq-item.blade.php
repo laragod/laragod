@@ -1,6 +1,10 @@
-@props(['question'])
+@props(['question', 'raised' => false])
 
-<div class="group bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-transparent hover:border-primary/20 hover:bg-white dark:hover:bg-gray-700/50 transition-all duration-300">
+<div @class([
+    'group rounded-2xl p-6 border border-transparent hover:border-primary/20 hover:bg-white dark:hover:bg-gray-700/50 transition-all duration-300',
+    'bg-gray-50 dark:bg-gray-800' => !$raised,
+    'bg-white dark:bg-gray-900 shadow-sm' => $raised,
+])>
     <h3 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-start gap-3">
         <span class="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
             <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">

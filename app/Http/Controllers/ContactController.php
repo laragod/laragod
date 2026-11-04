@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Laragod\Toolkit\Attributes\Sitemap;
-use Laragod\Toolkit\Services\NotificationManager;
+use App\Support\Money;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Laragod\Toolkit\Attributes\Sitemap;
+use Laragod\Toolkit\Services\NotificationManager;
 
 class ContactController extends Controller
 {
@@ -28,6 +29,8 @@ class ContactController extends Controller
         'mvp',
         'ongoing-support',
         'audit-review',
+        'fractional-cto',
+        'agency-partner',
         'mentoring-training',
         'other',
     ];
@@ -81,26 +84,42 @@ class ContactController extends Controller
             'mvp' => __('contact.services.mvp'),
             'ongoing-support' => __('contact.services.ongoing_support'),
             'audit-review' => __('contact.services.audit_review'),
+            'fractional-cto' => __('contact.services.fractional_cto'),
+            'agency-partner' => __('contact.services.agency_partner'),
             'mentoring-training' => __('contact.services.mentoring_training'),
             'other' => __('contact.services.other'),
         ];
     }
 
     /**
-     * Get localized budget labels.
+     * Get localized budget labels with amounts in the given currency.
      *
      * @return array<string, string>
      */
-    public static function getBudgetLabels(): array
+    public static function getBudgetLabels(?string $currency = null): array
     {
-        return [
-            'under-5k' => __('contact.budget.under_5k'),
-            '5k-10k' => __('contact.budget.5k_10k'),
-            '10k-25k' => __('contact.budget.10k_25k'),
-            '25k-50k' => __('contact.budget.25k_50k'),
-            '50k-plus' => __('contact.budget.50k_plus'),
-            'not-sure' => __('contact.budget.not_sure'),
-        ];
+        $currency ??= Money::defaultCurrency();
+        $labels = [];
+
+        /** @var array<string, array<string, array{0: int|null, 1: int|null}>> $ranges */
+        $ranges = config('offer.budget_ranges');
+
+        foreach ($ranges as $key => $range) {
+            [$from, $to] = $range[$currency];
+
+            $labels[$key] = match (true) {
+                $from === null => __('contact.budget.under', ['amount' => Money::format((int) $to, $currency)]),
+                $to === null => __('contact.budget.plus', ['amount' => Money::format($from, $currency)]),
+                default => __('contact.budget.range', [
+                    'from' => Money::format($from, $currency),
+                    'to' => Money::format($to, $currency),
+                ]),
+            };
+        }
+
+        $labels['not-sure'] = __('contact.budget.not_sure');
+
+        return $labels;
     }
 
     /**
@@ -125,6 +144,8 @@ class ContactController extends Controller
         return view('contact', [
             'services' => self::getServiceLabels(),
             'budgetOptions' => self::getBudgetLabels(),
+            'budgetByCurrency' => collect(array_keys((array) config('offer.currencies')))
+                ->mapWithKeys(fn (string $currency): array => [$currency => self::getBudgetLabels($currency)])->all(),
             'timelineOptions' => self::getTimelineLabels(),
         ]);
     }
@@ -139,6 +160,7 @@ class ContactController extends Controller
             'email' => ['required', 'email:rfc', 'max:200'],
             'phone' => ['nullable', 'string', 'max:50'],
             'budget' => ['nullable', 'string', 'in:' . implode(',', self::BUDGET_KEYS)],
+            'currency' => ['nullable', 'string', 'in:' . implode(',', array_keys((array) config('offer.currencies')))],
             'timeline' => ['nullable', 'string', 'in:' . implode(',', self::TIMELINE_KEYS)],
             'message' => ['required', 'string', 'max:2000'],
             'tech_notes' => ['nullable', 'string', 'max:1000'],
@@ -152,7 +174,7 @@ class ContactController extends Controller
         }
 
         /**
-         * @var array{services: array<int, string>, name: string, company: string, email: string, phone: string, budget: string, timeline: string, message: string, tech_notes: string} $validated
+         * @var array{services: array<int, string>, name: string, company: string, email: string, phone: string, budget: string, currency?: string|null, timeline: string, message: string, tech_notes: string} $validated
          */
         $validated = $validator->validated();
 
@@ -179,12 +201,12 @@ class ContactController extends Controller
     }
 
     /**
-     * @param array{services: array<int, string>, name: string, company: string, email: string, phone: string, budget: string, timeline: string, message: string, tech_notes: string} $data
+     * @param array{services: array<int, string>, name: string, company: string, email: string, phone: string, budget: string, currency?: string|null, timeline: string, message: string, tech_notes: string} $data
      */
     private function formatMessage(array $data): string
     {
         $serviceLabels = self::getServiceLabels();
-        $budgetLabels = self::getBudgetLabels();
+        $budgetLabels = self::getBudgetLabels($data['currency'] ?? null);
         $timelineLabels = self::getTimelineLabels();
 
         $services = array_map(

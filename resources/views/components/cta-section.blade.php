@@ -12,13 +12,14 @@
     <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-reveal>
         <h2 class="text-4xl lg:text-5xl font-heading font-bold text-gray-900 dark:text-white leading-tight">{!! $heading !!}</h2>
         <p class="mt-6 text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">{{ $description }}</p>
-        <div class="mt-10">
+        <div class="mt-10 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-4">
             <a href="{{ $buttonUrl }}" class="group btn btn-primary btn-shimmer px-10 py-4 text-lg">
                 {{ $buttonText }}
                 <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                 </svg>
             </a>
+            {{ $slot }}
         </div>
     </div>
 </section>

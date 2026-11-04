@@ -79,7 +79,7 @@ return [
         'title' => 'Rozwój i integracja API',
         'description' => 'RESTful API, GraphQL, integracje z zewnętrznymi systemami. Płynne połączenie z bramkami płatności, CRM-ami i innymi usługami.',
         'meta_title' => 'Usługi rozwoju i integracji API | Laravel | Laragod',
-        'meta_description' => 'Eksperci w rozwoju API Laravel i integracji systemów. RESTful API, GraphQL, integracje ze Stripe, Xero, HubSpot i innymi.',
+        'meta_description' => 'Eksperci w rozwoju API Laravel i integracji systemów. RESTful API, GraphQL, integracje ze Stripe, BaseLinkerem, Arkuszami Google i innymi.',
         'hero_heading' => 'Połącz swoje systemy z solidnym API',
         'hero_description' => 'Przestań kopiować dane między systemami. Budujemy API, które sprawiają, że Twoje narzędzia działają razem automatycznie.',
         'problems' => [
@@ -112,7 +112,7 @@ return [
         'faq' => [
             [
                 'question' => 'Z jakimi usługami zewnętrznymi możecie się integrować?',
-                'answer' => 'Jeśli ma API, możemy się z nim zintegrować. Mamy doświadczenie ze Stripe, Xero, QuickBooks, HubSpot, Salesforce, Mailchimp i wieloma innymi.',
+                'answer' => 'Jeśli ma API, możemy się z nim zintegrować. Budowaliśmy integracje ze Stripe, Paddle, BaseLinkerem, Furgonetką, Arkuszami Google, Resendem i Discordem.',
             ],
             [
                 'question' => 'Czy budujecie API dla aplikacji mobilnych?',
@@ -220,7 +220,7 @@ return [
             ],
             [
                 'question' => 'Czy możecie pomóc z decyzjami produktowymi, nie tylko rozwojem?',
-                'answer' => 'Tak. Pomogliśmy uruchomić wiele produktów SaaS i możemy doradzić w zakresie priorytetyzacji funkcji, cen i strategii wejścia na rynek.',
+                'answer' => 'Tak. Zbudowaliśmy i uruchomiliśmy produkty SaaS, takie jak SiegeForge i Skill Peak, i możemy doradzić w zakresie priorytetyzacji funkcji, cen i strategii wejścia na rynek.',
             ],
         ],
     ],
@@ -421,6 +421,56 @@ return [
             [
                 'question' => 'Jak obsługujecie wdrożenia bez przestojów?',
                 'answer' => 'Używamy wdrożeń blue-green lub aktualizacji rolling w zależności od Twojej infrastruktury. Twoi użytkownicy nie zauważą trwających wdrożeń.',
+            ],
+        ],
+    ],
+
+    'automation' => [
+        'title' => 'Automatyzacje i integracje',
+        'description' => 'Przestań płacić ludziom za kopiowanie danych między narzędziami. Łączymy Twoje systemy przez n8n, Make albo własny kod, zależnie od tego, co jest najprostsze i wytrzyma.',
+        'meta_title' => 'Automatyzacja procesów w n8n, Make i Laravelu | Laragod',
+        'meta_description' => 'Automatyzuj powtarzalną pracę i połącz narzędzia firmowe przez n8n, Make albo kod w Laravelu. Wybieramy najprostsze rozwiązanie, które wytrzyma.',
+        'hero_heading' => 'Przestań płacić za kopiowanie danych',
+        'hero_description' => 'Jeśli zadanie się powtarza, powinien robić je system. Zaczynamy od najprostszego rozwiązania, a kod piszemy tylko tam, gdzie ma to sens.',
+        'problems' => [
+            'Zespół przepisuje te same dane do kilku narzędzi',
+            'Faktury, zamówienia lub leady czekają, aż ktoś się nimi zajmie',
+            'Przy każdym ręcznym przenoszeniu danych pojawiają się błędy',
+            'Masz automatyzacje, których nikt nie rozumie i nie chce ruszać',
+        ],
+        'approach' => [
+            'title' => 'Jak automatyzujemy',
+            'steps' => [
+                [
+                    'title' => 'Mapa procesu',
+                    'description' => 'Sprawdzamy, jak praca wygląda dziś, i szukamy kroków, które zabierają najwięcej czasu albo powodują najwięcej błędów.',
+                ],
+                [
+                    'title' => 'Wybór najprostszego narzędzia',
+                    'description' => 'n8n lub Make do prostych procesów. Kod w Laravelu, gdy proces jest kluczowy dla firmy, wymaga testów albo dotyczy wrażliwych danych.',
+                ],
+                [
+                    'title' => 'Budowa i testy',
+                    'description' => 'Budujemy z obsługą błędów i alertami, żeby nieudany krok został zauważony, a nie po cichu gubił dane.',
+                ],
+                [
+                    'title' => 'Przekazanie',
+                    'description' => 'Dostajesz dokumentację i konta na siebie, a jeśli wolisz o tym nie myśleć, także opcjonalny monitoring.',
+                ],
+            ],
+        ],
+        'faq' => [
+            [
+                'question' => 'Korzystacie z n8n i Make czy tylko z własnego kodu?',
+                'answer' => 'Z obu. Jeśli n8n lub Make niezawodnie załatwia sprawę, nie piszemy kodu na siłę. Gdy proces z nich wyrośnie, przenosimy go do kodu.',
+            ],
+            [
+                'question' => 'Do kogo należą automatyzacje?',
+                'answer' => 'Do Ciebie. Działają na Twoich kontach, a my je dokumentujemy, żeby mógł je utrzymywać ktoś inny.',
+            ],
+            [
+                'question' => 'Czy możecie dodać AI do procesu?',
+                'answer' => 'Tak, tam gdzie ma to sens, na przykład przy sortowaniu zgłoszeń albo wyciąganiu danych z dokumentów. Gdy błąd byłby kosztowny, wyniki może sprawdzać człowiek.',
             ],
         ],
     ],
