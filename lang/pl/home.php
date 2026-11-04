@@ -12,8 +12,6 @@ return [
         'cta_call' => 'Umów bezpłatną rozmowę (30 min)',
         'cta_audit' => 'Zrób audyt w 10 pytaniach',
         'cta_pricing' => 'Zobacz ceny',
-        'experience_years' => '10 lat budowania aplikacji',
-        'laravel_years' => '8 lat z Laravelem',
     ],
     'pains' => [
         'badge' => 'Brzmi znajomo?',
@@ -55,18 +53,11 @@ return [
         'cta' => 'Zobacz, jak możemy pomóc',
     ],
     'proof' => [
-        'badge' => 'Dowody',
-        'title' => 'Nie musisz wierzyć nam na słowo',
-        'description' => 'Nasz kod open source jest publiczny. Zanim do nas napiszesz, możesz dać go do przeczytania komuś, komu ufasz.',
-        'stats' => [
-            ['value' => '10 lat', 'label' => 'budowania aplikacji webowych'],
-            ['value' => '8 lat', 'label' => 'pracy z Laravelem'],
-            ['value' => '14 000+', 'label' => 'instalacji laragod/phpskills na Packagist'],
-            ['value' => '97%', 'label' => 'pokrycia testami laragod/phpskills, PHPStan poziom 9'],
-        ],
-        'projects_title' => 'Ostatnie projekty',
+        'badge' => 'Realizacje',
+        'title' => 'Ostatnie projekty',
+        'description' => 'Co każdy z nich miał robić i jak go zbudowaliśmy.',
         'view_project' => 'Zobacz projekt',
-        'view_code' => 'Przeczytaj nasz kod open source',
+        'view_code' => 'Zobacz nasz kod na GitHubie',
     ],
     'process' => [
         'badge' => 'Jak to działa',

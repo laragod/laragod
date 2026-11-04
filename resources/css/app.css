@@ -8,10 +8,11 @@
 @variant dark (&:is(.dark *));
 
 @theme {
-    /* Typography - Plus Jakarta Sans for distinctive, modern feel */
-    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    /* Typography - chosen for legibility. Check the space glyph before swapping fonts: Plus Jakarta Sans
+       (0.17em, against 0.28em for Inter) made small text read as one word. */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-heading: 'Clash Display', 'Manrope', var(--font-sans);
+    --font-heading: 'Manrope', var(--font-sans);
     --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
 
     /* Light white-and-green theme is the default. Kelly Green (#4cbb17) only reaches about 2.6:1
@@ -53,6 +54,7 @@
 /* Utility classes */
 .font-heading {
     font-family: var(--font-heading);
+    word-spacing: 0.06em; /* Manrope's space is narrow, and headings also use tight tracking */
 }
 
 .text-primary {

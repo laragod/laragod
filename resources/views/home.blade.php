@@ -29,7 +29,7 @@
                     <span class="text-sm font-medium text-primary">{{ __('home.hero.badge') }}</span>
                 </div>
 
-                <h1 class="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-gray-900 dark:text-white leading-[1.1] tracking-tight text-hero" style="animation-delay: 0.1s">
+                <h1 class="animate-fade-in-up text-3xl min-[360px]:text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-gray-900 dark:text-white leading-[1.1] tracking-tight text-hero" style="animation-delay: 0.1s">
                     {{ __('home.hero.title_part1') }}<br>
                     <span class="text-gradient">{{ __('home.hero.title_part2') }}</span>
                 </h1>
@@ -54,17 +54,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                         </svg>
                     </a>
-                </p>
-                <p class="animate-fade-in-up mt-8 text-sm text-gray-500 dark:text-gray-500 flex flex-wrap items-center justify-center gap-3" style="animation-delay: 0.4s">
-                    <span class="flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                        {{ __('home.hero.experience_years') }}
-                    </span>
-                    <span class="w-1 h-1 rounded-full bg-gray-400"></span>
-                    <span class="flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                        {{ __('home.hero.laravel_years') }}
-                    </span>
                 </p>
             </div>
         </div>
@@ -146,20 +135,6 @@
     <section class="relative bg-white dark:bg-gray-900 py-20 lg:py-28 transition-colors duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <x-section-heading :badge="__('home.proof.badge')" :title="__('home.proof.title')" :description="__('home.proof.description')" />
-
-            <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-reveal">
-                @foreach(__('home.proof.stats') as $stat)
-                    <div class="p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700/50 text-center" data-reveal>
-                        <dt class="sr-only">{{ $stat['label'] }}</dt>
-                        <dd>
-                            <span class="block text-3xl font-heading font-bold text-gradient">{{ $stat['value'] }}</span>
-                            <span class="block mt-2 text-sm text-gray-600 dark:text-gray-400" aria-hidden="true">{{ $stat['label'] }}</span>
-                        </dd>
-                    </div>
-                @endforeach
-            </dl>
-
-            <h3 class="mt-16 mb-8 text-2xl font-heading font-bold text-gray-900 dark:text-white text-center" data-reveal>{{ __('home.proof.projects_title') }}</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-reveal">
                 @foreach($projects as $project)

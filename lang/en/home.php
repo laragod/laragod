@@ -12,8 +12,6 @@ return [
         'cta_call' => 'Book a free 30-minute call',
         'cta_audit' => 'Take the 10-question audit',
         'cta_pricing' => 'See prices',
-        'experience_years' => '10 years building web apps',
-        'laravel_years' => '8 years with Laravel',
     ],
     'pains' => [
         'badge' => 'Sound familiar?',
@@ -55,18 +53,11 @@ return [
         'cta' => 'See how we can help',
     ],
     'proof' => [
-        'badge' => 'Proof',
-        'title' => 'You do not have to take our word for it',
-        'description' => 'Our open-source code is public, so you can have anyone you trust read it before you ever talk to us.',
-        'stats' => [
-            ['value' => '10 years', 'label' => 'building web applications'],
-            ['value' => '8 years', 'label' => 'working with Laravel'],
-            ['value' => '14,000+', 'label' => 'Packagist installs of laragod/phpskills'],
-            ['value' => '97%', 'label' => 'test coverage on laragod/phpskills, PHPStan level 9'],
-        ],
-        'projects_title' => 'Recent projects',
+        'badge' => 'Our work',
+        'title' => 'Recent projects',
+        'description' => 'What each one had to do, and how we built it.',
         'view_project' => 'View project',
-        'view_code' => 'Read our open-source code',
+        'view_code' => 'See our code on GitHub',
     ],
     'process' => [
         'badge' => 'How it works',

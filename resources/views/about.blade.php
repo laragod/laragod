@@ -196,7 +196,7 @@
                     'phpskills' => [
                         'github' => 'https://github.com/laragod/PHPSkills',
                         'packagist' => 'https://packagist.org/packages/laragod/phpskills',
-                        'facts' => ['fact_versions', 'fact_quality', 'fact_coverage', 'fact_installs'],
+                        'facts' => ['fact_versions'],
                         'icon' => 'M13 10V3L4 14h7v7l9-11h-7z',
                     ],
                     'toolkit' => [

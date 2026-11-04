@@ -11,10 +11,44 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Lang;
 use Laragod\Toolkit\Services\NotificationManager;
 use Mockery;
+use Mockery\Expectation;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tests\TestCase;
 
+/**
+ * @phpstan-type Prices array<string, int>
+ * @phpstan-type Option array{prices: Prices}
+ * @phpstan-type Offer array{
+ *     default_currency: array<string, string>,
+ *     currencies: array<string, array<string, mixed>>,
+ *     packages: array<string, array{from: Prices, service: string}>,
+ *     configurator: array{
+ *         hours: array<array-key, array{bonus: int, prices: Prices}>,
+ *         default_hours: string,
+ *         response: array<string, Option>,
+ *         default_response: string,
+ *         cto: array<string, Option>,
+ *         default_cto: string,
+ *         addons: array<string, Option>,
+ *         one_off: array<string, Option>,
+ *     },
+ *     audit: array{
+ *         thresholds: array<string, float>,
+ *         questions: array<string, array{dimension: string|null, answers: array<string, int>}>,
+ *         recommendations: array<string, string>,
+ *     },
+ *     industries: array<string, array{project: string}>,
+ *     home_projects: array<int, string>,
+ * }
+ * @phpstan-type Schema array{
+ *     '@type': string,
+ *     name: string,
+ *     areaServed: array<int, array{name: string}>,
+ *     mainEntity: array<int, array{acceptedAnswer: array{'@type': string}}>,
+ * }
+ */
 final class CommercialPagesTest extends TestCase
 {
     private const array LOCALES = ['en', 'pl'];
@@ -71,7 +105,7 @@ final class CommercialPagesTest extends TestCase
     {
         DB::enableQueryLog();
 
-        $html = $this->get($url)->assertOk()->getContent();
+        $html = $this->html($url);
 
         $this->assertSame([], DB::getQueryLog(), "{$url} ran a database query");
 
@@ -101,7 +135,7 @@ final class CommercialPagesTest extends TestCase
 
     public function test_pricing_shows_locale_default_amounts_from_config(): void
     {
-        $care = config('offer.packages.care.from');
+        $care = $this->offer()['packages']['care']['from'];
 
         $this->get('/pl/pricing')
             ->assertSee(number_format($care['PLN'], 0, '', "\u{00A0}") . "\u{00A0}zł", false)
@@ -117,7 +151,7 @@ final class CommercialPagesTest extends TestCase
     {
         $response = $this->get('/en/pricing')->assertOk();
 
-        $response->assertSee("data-price='" . json_encode(config('offer.packages.care.from')) . "'", false);
+        $response->assertSee("data-price='" . json_encode($this->offer()['packages']['care']['from'], JSON_THROW_ON_ERROR) . "'", false);
         $response->assertSee('data-currency-switch="PLN"', false);
         $response->assertSee('data-currency-switch="GBP"', false);
         $response->assertSee('data-currency-switch="EUR"', false);
@@ -125,11 +159,11 @@ final class CommercialPagesTest extends TestCase
 
     public function test_configurator_renders_defaults_with_correct_total(): void
     {
-        $offer = config('offer.configurator');
+        $offer = $this->offer()['configurator'];
         $hours = $offer['hours'][$offer['default_hours']];
         $expected = [];
 
-        foreach (array_keys(config('offer.currencies')) as $currency) {
+        foreach (array_keys($this->offer()['currencies']) as $currency) {
             $expected[$currency] = $hours['prices'][$currency]
                 + $offer['response'][$offer['default_response']]['prices'][$currency]
                 + $offer['cto'][$offer['default_cto']]['prices'][$currency];
@@ -137,7 +171,7 @@ final class CommercialPagesTest extends TestCase
 
         $response = $this->get('/en/pricing')->assertOk();
 
-        $response->assertSee("data-price='" . json_encode($expected) . "' id=\"cfg-monthly-total\"", false);
+        $response->assertSee("data-price='" . json_encode($expected, JSON_THROW_ON_ERROR) . "' id=\"cfg-monthly-total\"", false);
         $response->assertSee('£' . number_format($expected['GBP']), false);
         $response->assertSee(__('offer.configurator.summary.hours_bonus_line', ['hours' => $offer['default_hours'], 'bonus' => $hours['bonus']]), false);
         $response->assertSee('name="cfg_h" value="' . $offer['default_hours'] . '" data-cfg="h" class="peer sr-only" checked', false);
@@ -145,11 +179,11 @@ final class CommercialPagesTest extends TestCase
 
     public function test_every_priced_item_has_a_whole_amount_in_every_currency(): void
     {
-        $currencies = array_keys(config('offer.currencies'));
-        $offer = config('offer.configurator');
+        $currencies = array_keys($this->offer()['currencies']);
+        $offer = $this->offer()['configurator'];
         $priced = [];
 
-        foreach (config('offer.packages') as $key => $package) {
+        foreach ($this->offer()['packages'] as $key => $package) {
             $priced["packages.{$key}"] = $package['from'];
         }
 
@@ -161,6 +195,8 @@ final class CommercialPagesTest extends TestCase
 
         $this->assertNotEmpty($priced);
 
+        // Amounts are what this test verifies, so they are not assumed to match the Offer shape.
+        /** @var array<string, array<string, mixed>> $priced */
         foreach ($priced as $item => $prices) {
             $this->assertEqualsCanonicalizing($currencies, array_keys($prices), "{$item} currencies");
 
@@ -170,7 +206,7 @@ final class CommercialPagesTest extends TestCase
             }
         }
 
-        foreach (config('offer.default_currency') as $locale => $currency) {
+        foreach ($this->offer()['default_currency'] as $locale => $currency) {
             $this->assertContains($currency, $currencies, $locale);
         }
 
@@ -181,7 +217,7 @@ final class CommercialPagesTest extends TestCase
 
     public function test_every_configurator_option_has_a_label_in_both_locales(): void
     {
-        $offer = config('offer.configurator');
+        $offer = $this->offer()['configurator'];
 
         foreach (self::LOCALES as $locale) {
             foreach (['hours', 'response', 'cto', 'addons', 'one_off'] as $group) {
@@ -190,7 +226,7 @@ final class CommercialPagesTest extends TestCase
                 }
             }
 
-            foreach (array_keys(config('offer.packages')) as $package) {
+            foreach (array_keys($this->offer()['packages']) as $package) {
                 $this->assertTrue(Lang::has("offer.packages.{$package}.title", $locale), "{$locale}: {$package}");
             }
         }
@@ -199,7 +235,7 @@ final class CommercialPagesTest extends TestCase
     public function test_every_audit_question_and_option_has_a_label_in_both_locales(): void
     {
         foreach (self::LOCALES as $locale) {
-            foreach (config('offer.audit.questions') as $key => $question) {
+            foreach ($this->offer()['audit']['questions'] as $key => $question) {
                 $this->assertTrue(Lang::has("audit.questions.{$key}.title", $locale), "{$locale}: {$key}");
 
                 foreach (array_keys($question['answers']) as $answer) {
@@ -220,43 +256,45 @@ final class CommercialPagesTest extends TestCase
         $pl = Lang::get($group, [], 'pl');
 
         $this->assertIsArray($en);
+        $this->assertIsArray($pl);
         $this->assertSame($this->keyPaths($en), $this->keyPaths($pl));
     }
 
     public function test_recommendations_and_projects_resolve(): void
     {
-        $packages = config('offer.packages');
-        $needs = config('offer.audit.questions.need.answers');
+        $offer = $this->offer();
+        $packages = $offer['packages'];
+        $needs = $offer['audit']['questions']['need']['answers'];
 
-        foreach (config('offer.audit.recommendations') as $need => $package) {
+        foreach ($offer['audit']['recommendations'] as $need => $package) {
             $this->assertArrayHasKey($need, $needs);
             $this->assertArrayHasKey($package, $packages);
         }
 
         // "unsure" has no mapping: it resolves to one of these two at runtime.
         $this->assertArrayHasKey('unsure', $needs);
-        $this->assertArrayNotHasKey('unsure', config('offer.audit.recommendations'));
+        $this->assertArrayNotHasKey('unsure', $offer['audit']['recommendations']);
         $this->assertArrayHasKey('audit', $packages);
         $this->assertArrayHasKey('care', $packages);
 
         $projects = FrontController::getProjectSlugs();
 
-        foreach (config('offer.industries') as $industry) {
+        foreach ($offer['industries'] as $industry) {
             $this->assertContains($industry['project'], $projects);
         }
 
-        foreach (config('offer.home_projects') as $project) {
+        foreach ($offer['home_projects'] as $project) {
             $this->assertContains($project, $projects);
         }
 
-        $this->assertSame(array_keys(config('offer.industries')), array_keys(__('industries.items')));
+        $this->assertSame(array_keys($offer['industries']), array_keys($this->lines('industries.items')));
     }
 
     public function test_every_package_links_to_a_contact_form_service(): void
     {
         $labels = ContactController::getServiceLabels();
 
-        foreach (config('offer.packages') as $package) {
+        foreach ($this->offer()['packages'] as $package) {
             $this->assertArrayHasKey($package['service'], $labels);
         }
     }
@@ -266,15 +304,21 @@ final class CommercialPagesTest extends TestCase
         foreach (self::LOCALES as $locale) {
             app()->setLocale($locale);
 
-            $length = mb_strlen(__('audit.result.contact_note'));
+            $length = mb_strlen($this->text('audit.result.contact_note'));
 
-            foreach (config('offer.audit.questions') as $key => $question) {
-                $labels = array_map(fn (string|int $answer): int => mb_strlen(__("audit.questions.{$key}.options.{$answer}")), array_keys($question['answers']));
-                $length += mb_strlen(__("audit.questions.{$key}.title")) + 2 + max($labels);
+            foreach ($this->offer()['audit']['questions'] as $key => $question) {
+                $labels = array_map(fn (string|int $answer): int => mb_strlen($this->text("audit.questions.{$key}.options.{$answer}")), array_keys($question['answers']));
+                $length += mb_strlen($this->text("audit.questions.{$key}.title")) + 2 + max([0, ...$labels]);
             }
 
-            foreach (__('audit.result.dimensions') as $dimension) {
-                $length += mb_strlen($dimension['title']) + 3 + max(array_map(mb_strlen(...), __('audit.result.levels')));
+            /** @var array<string, array{title: string}> $dimensions */
+            $dimensions = $this->lines('audit.result.dimensions');
+
+            /** @var array<string, string> $levels */
+            $levels = $this->lines('audit.result.levels');
+
+            foreach ($dimensions as $dimension) {
+                $length += mb_strlen($dimension['title']) + 3 + max([0, ...array_map(mb_strlen(...), $levels)]);
             }
 
             $this->assertLessThanOrEqual(1000, $length, $locale);
@@ -297,9 +341,12 @@ final class CommercialPagesTest extends TestCase
 
     public function test_contact_store_accepts_the_new_services_and_rejects_unknown_ones(): void
     {
+        /** @var MockInterface&NotificationManager $manager */
         $manager = Mockery::mock(NotificationManager::class);
-        $manager->shouldReceive('sendContactNotification')
-            ->once()
+
+        /** @var Expectation $expectation */
+        $expectation = $manager->shouldReceive('sendContactNotification');
+        $expectation->once()
             ->withArgs(fn (string $name, string $email, string $message): bool => str_contains($message, 'Fractional CTO') && str_contains($message, 'Agency Partnership'))
             ->andReturn(true);
 
@@ -333,6 +380,21 @@ final class CommercialPagesTest extends TestCase
         }
     }
 
+    public function test_vanity_numbers_are_gone(): void
+    {
+        foreach (['/en', '/pl', '/en/about', '/pl/about'] as $url) {
+            $this->get($url)
+                ->assertOk()
+                ->assertDontSee('10 years', false)
+                ->assertDontSee('8 years', false)
+                ->assertDontSee('10 lat', false)
+                ->assertDontSee('8 lat', false)
+                ->assertDontSee('14,000', false)
+                ->assertDontSee('14 000', false)
+                ->assertDontSee('97%', false);
+        }
+    }
+
     public function test_views_do_not_hardcode_amounts(): void
     {
         foreach (File::allFiles(resource_path('views')) as $view) {
@@ -361,11 +423,11 @@ final class CommercialPagesTest extends TestCase
     {
         $response = $this->get('/en')->assertOk();
 
-        foreach (array_keys(config('offer.packages')) as $package) {
+        foreach (array_keys($this->offer()['packages']) as $package) {
             $response->assertSee(url('/en/pricing') . '#' . $package, false);
         }
 
-        foreach (config('offer.home_projects') as $project) {
+        foreach ($this->offer()['home_projects'] as $project) {
             $response->assertSee(url("/en/work/{$project}"), false);
         }
 
@@ -379,7 +441,7 @@ final class CommercialPagesTest extends TestCase
         $response->assertSee('id="configurator"', false);
         $response->assertSee('href="#configurator"', false);
 
-        foreach (config('offer.packages') as $key => $package) {
+        foreach ($this->offer()['packages'] as $key => $package) {
             $response->assertSee('id="' . $key . '"', false);
 
             if ($key !== 'care') {
@@ -391,7 +453,7 @@ final class CommercialPagesTest extends TestCase
     public function test_agencies_and_faq_expose_valid_faq_schema(): void
     {
         foreach (['/en/for-agencies', '/pl/for-agencies', '/en/faq', '/pl/faq', '/en/services/automation-integrations'] as $url) {
-            $schemas = $this->jsonLd($this->get($url)->assertOk()->getContent());
+            $schemas = $this->jsonLd($this->html($url));
             $faq = array_values(array_filter($schemas, fn (array $schema): bool => $schema['@type'] === 'FAQPage'));
 
             $this->assertCount(1, $faq, $url);
@@ -399,20 +461,22 @@ final class CommercialPagesTest extends TestCase
             $this->assertSame('Answer', $faq[0]['mainEntity'][0]['acceptedAnswer']['@type'], $url);
         }
 
-        $itemCount = array_sum(array_map(fn (array $group): int => count($group['items']), __('faq.groups')));
+        /** @var array<array-key, array{items: array<array-key, mixed>}> $groups */
+        $groups = $this->lines('faq.groups');
+        $itemCount = array_sum(array_map(fn (array $group): int => count($group['items']), $groups));
 
-        foreach (Lang::get('services') as $section) {
-            $itemCount += is_array($section) && isset($section['faq']) ? count($section['faq']) : 0;
+        foreach ($this->lines('services') as $section) {
+            $itemCount += is_array($section) && isset($section['faq']) && is_array($section['faq']) ? count($section['faq']) : 0;
         }
 
-        $faqPage = array_values(array_filter($this->jsonLd($this->get('/en/faq')->getContent()), fn (array $schema): bool => $schema['@type'] === 'FAQPage'));
+        $faqPage = array_values(array_filter($this->jsonLd($this->html('/en/faq')), fn (array $schema): bool => $schema['@type'] === 'FAQPage'));
 
         $this->assertCount($itemCount, $faqPage[0]['mainEntity']);
     }
 
     public function test_service_schema_covers_uk_poland_and_eu(): void
     {
-        $schemas = $this->jsonLd($this->get('/en/services/automation-integrations')->assertOk()->getContent());
+        $schemas = $this->jsonLd($this->html('/en/services/automation-integrations'));
         $service = array_values(array_filter($schemas, fn (array $schema): bool => $schema['@type'] === 'Service'))[0];
 
         $this->assertSame('Automation & Integrations', $service['name']);
@@ -421,7 +485,7 @@ final class CommercialPagesTest extends TestCase
 
     public function test_industry_page_shows_its_project(): void
     {
-        foreach (config('offer.industries') as $slug => $industry) {
+        foreach ($this->offer()['industries'] as $slug => $industry) {
             $this->get("/en/industries/{$slug}")
                 ->assertOk()
                 ->assertSee(url("/en/work/{$industry['project']}"), false);
@@ -430,14 +494,15 @@ final class CommercialPagesTest extends TestCase
 
     public function test_audit_page_passes_questions_in_config_order(): void
     {
-        $html = $this->get('/en/audit')->assertOk()->getContent();
+        $html = $this->html('/en/audit');
 
         $this->assertSame(1, preg_match('/const data = (\{.*?\});\n/s', $html, $match));
 
+        /** @var array{questions: array<int, array{key: string}>, thresholds: array<string, float>} $data */
         $data = json_decode($match[1], true, flags: JSON_THROW_ON_ERROR);
 
-        $this->assertSame(array_keys(config('offer.audit.questions')), array_column($data['questions'], 'key'));
-        $this->assertSame(config('offer.audit.thresholds'), $data['thresholds']);
+        $this->assertSame(array_keys($this->offer()['audit']['questions']), array_column($data['questions'], 'key'));
+        $this->assertSame($this->offer()['audit']['thresholds'], $data['thresholds']);
     }
 
     public function test_light_theme_is_the_default_and_a_labelled_toggle_is_present(): void
@@ -482,6 +547,43 @@ final class CommercialPagesTest extends TestCase
     }
 
     /**
+     * @return Offer
+     */
+    private function offer(): array
+    {
+        /** @var Offer $offer */
+        $offer = config('offer');
+
+        return $offer;
+    }
+
+    private function html(string $url): string
+    {
+        return (string) $this->get($url)->assertOk()->getContent();
+    }
+
+    private function text(string $key): string
+    {
+        $line = __($key);
+
+        $this->assertIsString($line, $key);
+
+        return $line;
+    }
+
+    /**
+     * @return array<array-key, mixed>
+     */
+    private function lines(string $key): array
+    {
+        $lines = __($key);
+
+        $this->assertIsArray($lines, $key);
+
+        return $lines;
+    }
+
+    /**
      * The form receives its labels through @json, which escapes non-ASCII characters.
      */
     private function jsonEscaped(string $value): string
@@ -510,12 +612,22 @@ final class CommercialPagesTest extends TestCase
     }
 
     /**
-     * @return array<int, array<string, mixed>>
+     * Only the fields these tests read are described; each schema type carries its own subset.
+     *
+     * @return array<int, Schema>
      */
     private function jsonLd(string $html): array
     {
         preg_match_all('#<script type="application/ld\+json">(.*?)</script>#s', $html, $matches);
 
-        return array_map(fn (string $json): array => json_decode($json, true, flags: JSON_THROW_ON_ERROR), $matches[1]);
+        $schemas = [];
+
+        foreach ($matches[1] as $json) {
+            /** @var Schema $schema */
+            $schema = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+            $schemas[] = $schema;
+        }
+
+        return $schemas;
     }
 }
