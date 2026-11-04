@@ -20,7 +20,7 @@ final class SitemapControllerTest extends TestCase
     {
         $response = $this->get('/sitemap.xml');
 
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         $this->assertStringContains('<?xml version="1.0" encoding="UTF-8"?>', $content);
         $this->assertStringContains('<urlset', $content);
@@ -32,7 +32,7 @@ final class SitemapControllerTest extends TestCase
     {
         $response = $this->get('/sitemap.xml');
 
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         $this->assertStringContains('<loc>https://laragod.com/en</loc>', $content);
         $this->assertStringContains('<priority>1</priority>', $content);
@@ -42,7 +42,7 @@ final class SitemapControllerTest extends TestCase
     {
         $response = $this->get('/sitemap.xml');
 
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         $this->assertStringContains('hreflang="en"', $content);
         $this->assertStringContains('hreflang="pl"', $content);
@@ -52,7 +52,7 @@ final class SitemapControllerTest extends TestCase
     {
         $response = $this->get('/sitemap.xml');
 
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         $this->assertStringContains('/en/services</loc>', $content);
         $this->assertStringContains('/en/services/custom-web-applications</loc>', $content);
@@ -63,7 +63,7 @@ final class SitemapControllerTest extends TestCase
     {
         $response = $this->get('/sitemap.xml');
 
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         $this->assertStringContains('/en/work</loc>', $content);
         $this->assertStringContains('/en/work/skill-peak</loc>', $content);
@@ -73,7 +73,7 @@ final class SitemapControllerTest extends TestCase
     {
         $response = $this->get('/sitemap.xml');
 
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         $this->assertStringContains('/en/contact</loc>', $content);
     }
@@ -82,7 +82,7 @@ final class SitemapControllerTest extends TestCase
     {
         $response = $this->get('/sitemap.xml');
 
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         $this->assertStringContains('<loc>https://laragod.com/pl</loc>', $content);
         $this->assertStringContains('/pl/services</loc>', $content);
@@ -95,7 +95,7 @@ final class SitemapControllerTest extends TestCase
     {
         $response = $this->get('/sitemap.xml');
 
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($content);

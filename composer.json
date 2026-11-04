@@ -72,10 +72,10 @@
         "test": [
             "php artisan view:clear",
             "php artisan config:clear --ansi",
-            "php artisan test --parallel"
+            "php artisan test"
         ],
         "coverage": [
-            "@php artisan test --coverage-clover coverage/clover.xml --coverage-html coverage/html --parallel"
+            "@php artisan test --coverage-clover coverage/clover.xml --coverage-html coverage/html"
         ],
         "mago:format": [
             "vendor/bin/mago format"
